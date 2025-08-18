@@ -2,9 +2,2187 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JobSpark | Job Searching Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobico - Find Your Dream Job in Sri Lanka</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 20px; height: 20px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 15px; height: 15px; left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { width: 25px; height: 25px; left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { width: 18px; height: 18px; left: 40%; animation-delay: 3s; }
+        .particle:nth-child(5) { width: 22px; height: 22px; left: 50%; animation-delay: 4s; }
+        .particle:nth-child(6) { width: 16px; height: 16px; left: 60%; animation-delay: 5s; }
+        .particle:nth-child(7) { width: 24px; height: 24px; left: 70%; animation-delay: 0.5s; }
+        .particle:nth-child(8) { width: 19px; height: 19px; left: 80%; animation-delay: 1.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 20px 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo::after {
+            content: "💼";
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ff6b35;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff6b35;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropdown::after {
+            content: "▼";
+            font-size: 12px;
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover::after {
+            transform: rotate(180deg);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 15px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-outline {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ff6b35;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b35, #f56500);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Crect fill='%23ff6b35' width='1200' height='800'/%3E%3Cpolygon fill='%23e55a2b' points='0,800 400,600 0,400'/%3E%3Cpolygon fill='%23f7931e' points='1200,0 800,200 1200,400'/%3E%3Cpolygon fill='%23ff8c42' points='400,800 800,600 400,400'/%3E%3Cpolygon fill='%23ffad5a' points='800,800 1200,600 800,400'/%3E%3C/svg%3E") no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            padding: 140px 0 120px;
+            text-align: center;
+            position: relative;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("assets/7676.png") no-repeat center center fixed;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffd700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .hero-title {
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ffffff 0%, #ff6b35 50%, #f7931e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: slideInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 40px 0;
+            animation: slideInUp 1s ease-out 0.4s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #ffffff;
+            display: block;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 5px;
+        }
+
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 50px;
+            animation: slideInUp 1s ease-out 0.6s both;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            padding: 18px 36px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .cta-btn::after {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-btn:hover::after {
+            transform: translateX(5px);
+        }
+
+        .trusted-companies {
+            margin-top: 60px;
+            text-align: center;
+            animation: slideInUp 1s ease-out 0.8s both;
+        }
+
+        .companies-label {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .companies-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .company-logo {
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .company-logo:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .job-search {
+            padding: 80px 0;
+            background: #FAF7F3;
+            color: #333;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .section-title .highlight {
+            color: #ff6b35;
+            position: relative;
+        }
+
+        .section-title .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        .search-form {
+            display: flex;
+            max-width: 900px;
+            margin: 0 auto 60px;
+            background: white;
+            border-radius: 60px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 8px;
+            border: 3px solid #f8f9fa;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 20px 30px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            background: transparent;
+        }
+
+        .search-input::placeholder {
+            color: #999;
+        }
+
+
+        .location-dropdown {
+            padding: 20px 30px;
+            padding-right: 50px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            background: transparent;
+            border-left: 2px solid #f0f0f0;
+            min-width: 220px;
+            cursor: pointer;
+            position: relative;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .location-dropdown::after {
+            content: "";
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid #666;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+
+        .location-dropdown option {
+            padding: 10px;
+            font-size: 16px;
+            color: #333;
+            background: white;
+        }
+
+        .location-dropdown option:hover {
+            background: #f8f9fa;
+        }
+
+
+        .location-dropdown:focus::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .location-dropdown:hover::after {
+            border-top-color: #333;
+        }
+
+        /*.dropdown-wrapper {*/
+        /*    position: relative;*/
+        /*    display: inline-block;*/
+        /*}*/
+
+        /*.dropdown-wrapper::after {*/
+        /*    content: "";*/
+        /*    position: absolute;*/
+        /*    right: 20px;*/
+        /*    top: 50%;*/
+        /*    transform: translateY(-50%);*/
+        /*    width: 0;*/
+        /*    height: 0;*/
+        /*    border-left: 5px solid transparent;*/
+        /*    border-right: 5px solid transparent;*/
+        /*    border-top: 6px solid #666;*/
+        /*    pointer-events: none;*/
+        /*}*/
+        /* Style the dropdown container */
+        .dropdown-wrapper {
+            position: relative;
+            display: inline-block;
+            min-width: 220px;
+        }
+
+        /* Style the select element */
+        .location-dropdown {
+            appearance: none; /* Remove default styling */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 100%;
+            padding: 15px 30px;
+            padding-right: 50px; /* Space for custom arrow */
+            font-size: 16px;
+            color: #333;
+            background-color: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 30px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-left: -10px;
+        }
+
+        /* Hover state */
+        .location-dropdown:hover {
+            border-color: #ff6b35;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.1);
+        }
+
+        /* Focus state */
+        .location-dropdown:focus {
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+        }
+
+        /* Custom dropdown arrow */
+        .dropdown-wrapper::after {
+            content: "▼";
+            font-size: 12px;
+            color: #666;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Style the dropdown options */
+        .location-dropdown option {
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #333;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+
+        /* Hover state for options */
+        .location-dropdown option:hover {
+            background-color: #ff6b35;
+            color: white;
+        }
+
+        /* Selected option */
+        .location-dropdown option:checked {
+            background-color: #ff6b35;
+            color: white;
+        }
+
+        /* Style the dropdown when open */
+        .location-dropdown:focus ~ .dropdown-wrapper::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        /* Vendor prefixes for full browser support */
+        .location-dropdown::-ms-expand {
+            display: none; /* Hide default arrow in IE */
+        }
+
+        /* Firefox focus fix */
+        .location-dropdown:-moz-focusring {
+            color: transparent;
+            text-shadow: 0 0 0 #000;
+        }
+
+        .search-btn {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            border: none;
+            padding: 20px 45px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            min-width: 180px;
+        }
+
+        .search-btn i {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .search-btn:hover i {
+            transform: scale(1.1);
+        }
+
+        .search-btn:active {
+            transform: translateY(0px);
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #666;
+            max-width: 560px;
+            margin: 35px auto;
+        }
+
+        /* Updated Recent Jobs Section with Category Style */
+        .recent-jobs {
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .job-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .job-tab {
+            padding: 15px 35px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .job-tab.active,
+        .job-tab:hover {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .job-listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+
+        .job-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            /*background: linear-gradient(135deg, #ff6b35, #f7931e);*/
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #ff6b35;
+        }
+
+        .job-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .job-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .days-left {
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .days-left i {
+            font-size: 12px;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 10px;
+        }
+
+        .job-type {
+            background: #e8f5e9;
+            color: #28a745;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .company-logo-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border: 1px solid #f0f0f0;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .post-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        .job-salary {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            color: #856404;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .job-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .job-company {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .job-location {
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .job-meta {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .job-salary {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .job-footer {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .apply-btn {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 60%;
+            font-size: 14px;
+            margin: 10px auto;
+        }
+
+        .apply-btn:hover {
+            background: linear-gradient(45deg, #e55a2b, #e8831a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Job Type Variations */
+        .job-type[data-type="Remote"] {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .job-type[data-type="Part-time"] {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
+        .browse-all-btn {
+            font-size: 16px;
+            font-weight: 600;
+            padding: 15px 30px;
+            width: 200px;
+            cursor: pointer;
+            z-index: 10;
+            display: block;
+            margin: 40px auto 0;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .browse-all-btn:hover {
+            background: linear-gradient(45deg, #e55a2b, #e8831a);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+        }
+
+        .browse-all-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Categories Section with Pagination */
+        .categories-section {
+            margin-top: 60px;
+        }
+
+        .categories-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-color: #ff6b35;
+        }
+
+        .category-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .category-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .job-count {
+            text-align: right;
+            margin-left: 20px;
+        }
+
+        .job-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ff6b35;
+            display: block;
+            line-height: 1;
+        }
+
+        .job-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            gap: 10px;
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            border: none;
+            color: #666;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-btn.active,
+        .pagination-btn:hover {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        .pagination-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: #f8f9fa;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .categories-grid,
+            .job-listings {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .company-logo-container {
+                width: 70px;
+                height: 70px;
+            }
+
+            .category-card,
+            .job-card {
+                padding: 20px;
+            }
+
+            .category-title,
+            .job-title {
+                font-size: 15px;
+            }
+
+            .category-description,
+            .job-company,
+            .job-location {
+                font-size: 12px;
+            }
+
+            .job-number {
+                font-size: 24px;
+            }
+
+            .browse-all-btn {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+
+        /* Animation for loading effect */
+        .category-card,
+        .job-card {
+            opacity: 0;
+            animation: slideUp 0.6s ease forwards;
+        }
+
+        .category-card:nth-child(1),
+        .job-card:nth-child(1) { animation-delay: 0.1s; }
+        .category-card:nth-child(2),
+        .job-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3),
+        .job-card:nth-child(3) { animation-delay: 0.3s; }
+        .category-card:nth-child(4),
+        .job-card:nth-child(4) { animation-delay: 0.4s; }
+        .category-card:nth-child(5),
+        .job-card:nth-child(5) { animation-delay: 0.5s; }
+        .category-card:nth-child(6),
+        .job-card:nth-child(6) { animation-delay: 0.6s; }
+        .category-card:nth-child(7),
+        .job-card:nth-child(7) { animation-delay: 0.1s; }
+        .category-card:nth-child(8),
+        .job-card:nth-child(8) { animation-delay: 0.2s; }
+        .category-card:nth-child(9),
+        .job-card:nth-child(9) { animation-delay: 0.3s; }
+        .category-card:nth-child(10),
+        .job-card:nth-child(10) { animation-delay: 0.4s; }
+        .category-card:nth-child(11),
+        .job-card:nth-child(11) { animation-delay: 0.5s; }
+        .category-card:nth-child(12),
+        .job-card:nth-child(12) { animation-delay: 0.6s; }
+        .category-card:nth-child(13),
+        .job-card:nth-child(13) { animation-delay: 0.1s; }
+        .category-card:nth-child(14),
+        .job-card:nth-child(14) { animation-delay: 0.2s; }
+        .category-card:nth-child(15),
+        .job-card:nth-child(15) { animation-delay: 0.3s; }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-summary {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .total-jobs {
+            font-size: 48px;
+            font-weight: 900;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .total-label {
+            font-size: 18px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .features {
+            padding: 100px 0;
+            background: #EEEEEE;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 30px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid #ff6b35;
+        }
+
+        #top-companies-card,
+        #career-growth-card,
+        #expert-growth-card,
+        #job-matching-card,
+        #job-alerts-card,
+        #instant-application-card {
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            background: #FF9B2F;
+        }
+
+        #top-companies-card::before,
+        #career-growth-card::before,
+        #expert-growth-card::before,
+        #job-matching-card::before,
+        #job-alerts-card::before,
+        #instant-application-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            background-size: cover;
+            transform: skewY(-5deg);
+            transform-origin: top left;
+            transition: transform 0.5s ease, background-size 0.5s ease;
+            z-index: 1;
+        }
+
+        #top-companies-card::before {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../Front_End/assets/Top Companies.jpg");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        #career-growth-card::before {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../Front_End/assets/Career Growth.jpg");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        #expert-growth-card::before {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../Front_End/assets/Expert Support.webp");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        #job-matching-card::before {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../Front_End/assets/Smart Job Matching.jpeg");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        #job-alerts-card::before {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../Front_End/assets/Job Alerts.jpeg");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        #instant-application-card::before {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../Front_End/assets/Instant Applications.jpeg");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        /* Shared hover effects */
+        #top-companies-card:hover::before,
+        #career-growth-card:hover::before,
+        #expert-growth-card:hover::before,
+        #job-matching-card:hover::before,
+        #job-alerts-card:hover::before,
+        #instant-application-card:hover::before {
+            transform: skewY(-5deg) scale(1.1);
+        }
+
+        /* Shared z-index for content */
+        #top-companies-card *,
+        #career-growth-card *,
+        #expert-growth-card *,
+        #job-matching-card *,
+        #job-alerts-card *,
+        #instant-application-card * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Shared icon styles */
+        #top-companies-card .feature-icon,
+        #career-growth-card .feature-icon,
+        #expert-growth-card .feature-icon,
+        #job-matching-card .feature-icon,
+        #job-alerts-card .feature-icon,
+        #instant-application-card .feature-icon {
+            font-size: 2rem;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 64px;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #FFFFF0;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 80px 0 0;
+            margin-top: 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 2fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-logo {
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo::after {
+            content: "💼";
+            font-size: 32px;
+        }
+
+        .footer-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+            margin-bottom: 35px;
+            font-size: 16px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .social-icon:hover {
+            background: #ff6b35;
+            transform: translateY(-5px);
+        }
+
+        .footer-section h3 {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: #ff6b35;
+            padding-left: 10px;
+        }
+
+        .newsletter {
+            margin-bottom: 30px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .newsletter-btn {
+            padding: 15px 25px;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-btn:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+        }
+
+        .contact-info {
+            margin-top: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+        }
+
+        .copyright {
+            background: #ff6b35;
+            padding: 25px 0;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .hero {
+                padding: 120px 0 80px;
+                min-height: 90vh;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .companies-grid {
+                gap: 20px;
+            }
+
+            .search-form {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .location-dropdown {
+                border-left: none;
+                border-top: 2px solid #f0f0f0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+    </style>
 </head>
 <body>
+<!-- Header -->
+<header>
+    <nav>
+        <a href="#" class="logo">JOBICO</a>
+        <ul class="nav-links">
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Browse Jobs</a></li>
+            <li><a href="#" class="dropdown">For Employers</a></li>
+            <li><a href="#" class="dropdown">Resources</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="#" class="btn btn-outline">Sign Up</a>
+            <a href="#" class="btn btn-primary">Post a Job</a>
+        </div>
+    </nav>
+</header>
 
+<main>
+    <section class="hero">
+        <!-- Hero particles only for hero section -->
+        <div class="hero-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">🇱🇰 SRI LANKA'S #1 JOB PORTAL</div>
+                <h1 class="hero-title">
+                    Find Your Dream Job<br>
+                    in <span style="color: #ff6b35;">Sri Lanka</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Connect with top employers across Sri Lanka. Whether you're looking for your first job,
+                    a career change, or the next step up, Jobico is your gateway to opportunities that match your skills and ambitions.
+                </p>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">15K+</span>
+                        <span class="stat-label">Active Jobs</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Job Seekers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">2K+</span>
+                        <span class="stat-label">Companies</span>
+                    </div>
+                </div>
+
+                <div class="hero-cta">
+                    <a href="#search" class="cta-btn">Start Your Job Search <i class="fa-solid fa-circle-arrow-right" ></i></a>
+                </div>
+
+                <div class="trusted-companies">
+                    <p class="companies-label">Trusted by leading companies in Sri Lanka</p>
+                    <div class="companies-grid">
+                        <div class="company-logo">Dialog Axiata</div>
+                        <div class="company-logo">John Keells</div>
+                        <div class="company-logo">Commercial Bank</div>
+                        <div class="company-logo">Virtusa</div>
+                        <div class="company-logo">99X Technology</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Search Section -->
+    <section id="search" class="job-search">
+        <div class="container">
+            <h2 class="section-title">Your Career Journey <span class="highlight">Starts Here</span></h2>
+            <p class="section-subtitle">Search through thousands of job opportunities across all industries in Sri Lanka</p>
+
+            <form class="search-form">
+                <input type="text" class="search-input" placeholder="Job title, keywords, or company name">
+                <div class="dropdown-wrapper">
+                    <select class="location-dropdown">
+                        <option>Select Location</option>
+                        <option>Colombo</option>
+                        <option>Kandy</option>
+                        <option>Galle</option>
+                        <option>Jaffna</option>
+                        <option>Negombo</option>
+                        <option>Kurunegala</option>
+                        <option>Anuradhapura</option>
+                        <option>Ratnapura</option>
+                    </select>
+                </div>
+                <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i> Find Jobs </button>
+            </form>
+
+            <div class="recent-jobs">
+                <h3 class="section-title"> Latest Job <span class="highlight">Opportunities</span></h3>
+
+                <div class="job-listings" id="job-listings">
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="days-left">
+                                <i class="fas fa-clock"></i> 3 days left
+                            </div>
+                            <div class="job-type">Full-time</div>
+                        </div>
+                        <div class="company-logo-container">
+                            <img src="https://via.placeholder.com/80x80?text=99X" alt="99X Technology" class="post-logo">
+                        </div>
+                        <h4 class="job-title">Senior Software Engineer</h4>
+                        <p class="job-company">99X Technology</p>
+                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Colombo 03, Sri Lanka</p>
+<!--                        <div class="job-meta">-->
+<!--                            <span class="job-salary">Rs. 80K - 120K</span>-->
+<!--                        </div>-->
+                        <div class="job-footer">
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="days-left">
+                                <i class="fas fa-clock"></i> 5 days left
+                            </div>
+                            <div class="job-type">Full-time</div>
+                        </div>
+                        <div class="company-logo-container">
+                            <img src="https://via.placeholder.com/80x80?text=Brandix" alt="Brandix Lanka" class="post-logo">
+                        </div>
+                        <h4 class="job-title">Digital Marketing Manager</h4>
+                        <p class="job-company">Brandix Lanka</p>
+                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Colombo 01, Sri Lanka</p>
+<!--                        <div class="job-meta">-->
+<!--                            <span class="job-salary">Rs. 60K - 90K</span>-->
+<!--                        </div>-->
+                        <div class="job-footer">
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="days-left">
+                                <i class="fas fa-clock"></i> 7 days left
+                            </div>
+                            <div class="job-type">Full-time</div>
+                        </div>
+                        <div class="company-logo-container">
+                            <img src="https://via.placeholder.com/80x80?text=Commercial" alt="Commercial Bank" class="post-logo">
+                        </div>
+                        <h4 class="job-title">Business Analyst</h4>
+                        <p class="job-company">Commercial Bank</p>
+                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Kandy, Sri Lanka</p>
+<!--                        <div class="job-meta">-->
+<!--                            <span class="job-salary">Rs. 70K - 100K</span>-->
+<!--                        </div>-->
+                        <div class="job-footer">
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="days-left">
+                                <i class="fas fa-clock"></i> 10 days left
+                            </div>
+                            <div class="job-type">Full-time</div>
+                        </div>
+                        <div class="company-logo-container">
+                            <img src="https://via.placeholder.com/80x80?text=Virtusa" alt="Virtusa Corporation" class="post-logo">
+                        </div>
+                        <h4 class="job-title">UX/UI Designer</h4>
+                        <p class="job-company">Virtusa Corporation</p>
+                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Colombo 07, Sri Lanka</p>
+<!--                        <div class="job-meta">-->
+<!--                            <span class="job-salary">Rs. 55K - 75K</span>-->
+<!--                        </div>-->
+                        <div class="job-footer">
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="days-left">
+                                <i class="fas fa-clock"></i> 2 days left
+                            </div>
+                            <div class="job-type">Remote</div>
+                        </div>
+                        <div class="company-logo-container">
+                            <img src="https://via.placeholder.com/80x80?text=WSO2" alt="WSO2" class="post-logo">
+                        </div>
+                        <h4 class="job-title">DevOps Engineer</h4>
+                        <p class="job-company">WSO2</p>
+                        <p class="job-location">🌐 Remote (Sri Lanka)</p>
+<!--                        <div class="job-meta">-->
+<!--                            <span class="job-salary">Rs. 90K - 140K</span>-->
+<!--                        </div>-->
+                        <div class="job-footer">
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="days-left">
+                                <i class="fas fa-clock"></i> 15 days left
+                            </div>
+                            <div class="job-type">Part-time</div>
+                        </div>
+                        <div class="company-logo-container">
+                            <img src="https://via.placeholder.com/80x80?text=Hype" alt="Hype Digital" class="post-logo">
+                        </div>
+                        <h4 class="job-title">Content Writer</h4>
+                        <p class="job-company">Hype Digital</p>
+                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Galle, Sri Lanka</p>
+<!--                        <div class="job-meta">-->
+<!--                            <span class="job-salary">Rs. 40K - 60K</span>-->
+<!--                        </div>-->
+                        <div class="job-footer">
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="browse-all-btn">Browse All <i class="fa-solid fa-circle-arrow-right" ></i></button>
+            </div>
+
+            <!-- Categories Section with Pagination -->
+            <div class="categories-section">
+                <div class="categories-header">
+                    <h2 class="section-title">Browse Jobs by <span class="highlight">Category</span></h2>
+                    <p class="section-subtitle">
+                        Discover thousands of job opportunities across various industries in Sri Lanka
+                    </p>
+                </div>
+
+                <div class="categories-grid" id="categories-grid">
+                    <div class="category-card" onclick="searchCategory('IT')">
+                        <div class="category-info">
+                            <div class="category-title">Information Technology (IT) & Software Development</div>
+                            <div class="category-description">Software Engineer, Web Developer, Data Scientist, IT Support, Cybersecurity Specialist</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">2,847</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Healthcare')">
+                        <div class="category-info">
+                            <div class="category-title">Healthcare & Medical</div>
+                            <div class="category-description">Doctor, Nurse, Pharmacist, Medical Technician, Healthcare Assistant</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">1,523</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Education')">
+                        <div class="category-info">
+                            <div class="category-title">Education & Training</div>
+                            <div class="category-description">Teacher, Lecturer, Tutor, Corporate Trainer, Education Consultant</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">892</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Engineering')">
+                        <div class="category-info">
+                            <div class="category-title">Engineering & Manufacturing</div>
+                            <div class="category-description">Mechanical Engineer, Civil Engineer, Electrical Engineer, Quality Control, Production Manager</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">1,267</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Sales')">
+                        <div class="category-info">
+                            <div class="category-title">Sales & Marketing</div>
+                            <div class="category-description">Sales Executive, Marketing Manager, Digital Marketer, Brand Manager, SEO Specialist</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">1,134</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Finance')">
+                        <div class="category-info">
+                            <div class="category-title">Finance & Accounting</div>
+                            <div class="category-description">Accountant, Financial Analyst, Auditor, Tax Consultant, Investment Banker</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">967</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Administration')">
+                        <div class="category-info">
+                            <div class="category-title">Administration & Office Support</div>
+                            <div class="category-description">Office Administrator, Executive Assistant, Receptionist, Data Entry Clerk</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">745</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Customer Service')">
+                        <div class="category-info">
+                            <div class="category-title">Customer Service & Call Center</div>
+                            <div class="category-description">Customer Support Agent, Call Center Representative, Client Relationship Manager</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">623</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Logistics')">
+                        <div class="category-info">
+                            <div class="category-title">Logistics & Supply Chain</div>
+                            <div class="category-description">Warehouse Manager, Supply Chain Analyst, Delivery Driver, Inventory Manager</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">456</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Hospitality')">
+                        <div class="category-info">
+                            <div class="category-title">Hospitality & Tourism</div>
+                            <div class="category-description">Hotel Manager, Chef, Waiter/Waitress, Tour Guide, Event Planner</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">389</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Construction')">
+                        <div class="category-info">
+                            <div class="category-title">Construction & Skilled Trades</div>
+                            <div class="category-description">Carpenter, Electrician, Plumber, Mason, Construction Supervisor</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">534</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Creative')">
+                        <div class="category-info">
+                            <div class="category-title">Creative & Design</div>
+                            <div class="category-description">Graphic Designer, Video Editor, Photographer, UI/UX Designer</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">312</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('HR')">
+                        <div class="category-info">
+                            <div class="category-title">Human Resources (HR)</div>
+                            <div class="category-description">HR Manager, Recruiter, Payroll Officer, Training Specialist</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">278</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Agriculture')">
+                        <div class="category-info">
+                            <div class="category-title">Agriculture & Environment</div>
+                            <div class="category-description">Farmer, Agronomist, Environmental Scientist, Landscape Designer</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">167</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="searchCategory('Transportation')">
+                        <div class="category-info">
+                            <div class="category-title">Transportation & Drivers</div>
+                            <div class="category-description">Bus Driver, Truck Driver, Taxi Driver, Delivery Rider</div>
+                        </div>
+                        <div class="job-count">
+                            <span class="job-number">445</span>
+                            <div class="job-label">Job Posts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <button class="pagination-btn" onclick="prevPage()">❮</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn" onclick="nextPage()">❯</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title" style="text-align: center; margin-bottom: 60px;">
+                Why Choose <span class="highlight">Jobico?</span>
+            </h2>
+
+            <div class="features-grid">
+                <div class="feature-card" id="job-matching-card">
+                    <span class="feature-icon"><i class="fa-solid fa-crosshairs"></i></i></span>
+                    <h3 class="feature-title">Smart Job Matching</h3>
+                    <p class="feature-description">
+                        Our AI-powered algorithm matches your skills and preferences with the perfect job opportunities, saving you time and effort.
+                    </p>
+                </div>
+
+                <div class="feature-card" id="instant-application-card">
+                    <span class="feature-icon"><i class="fa-solid fa-rocket"></i></span>
+                    <h3 class="feature-title">Instant Applications</h3>
+                    <p class="feature-description">
+                        Apply to multiple jobs with one click using your Jobico profile. Track all your applications in one convenient dashboard.
+                    </p>
+                </div>
+
+                <div class="feature-card" id="top-companies-card">
+                    <span class="feature-icon"><i class="fa-solid fa-building"></i></span>
+                    <h3 class="feature-title">Top Companies</h3>
+                    <p class="feature-description">
+                        Access exclusive opportunities from Sri Lanka's leading companies and international organizations based in the country.
+                    </p>
+                </div>
+
+                <div class="feature-card" id="career-growth-card">
+                    <span class="feature-icon"><i class="fa-solid fa-arrow-up-right-dots"></i></i></span>
+                    <h3 class="feature-title">Career Growth</h3>
+                    <p class="feature-description">
+                        Get insights into salary trends, skill requirements, and career progression paths in your chosen field.
+                    </p>
+                </div>
+
+                <div class="feature-card" id="job-alerts-card">
+                    <span class="feature-icon"><i class="fa-solid fa-bell"></i></span>
+                    <h3 class="feature-title">Job Alerts</h3>
+                    <p class="feature-description">
+                        Never miss an opportunity with customized job alerts delivered straight to your email and mobile device.
+                    </p>
+                </div>
+
+                <div class="feature-card" id="expert-growth-card">
+                    <span class="feature-icon"><i class="fa-solid fa-handshake" style="color: #ffffff;"></i></span>
+                    <h3 class="feature-title">Expert Support</h3>
+                    <p class="feature-description">
+                        Get professional guidance from our career experts, including CV reviews and interview preparation tips.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <!-- Company Info -->
+            <div class="footer-section">
+                <div class="footer-logo">JOBICO</div>
+                <p class="footer-description">
+                    Sri Lanka's premier job portal connecting talented professionals with leading employers.
+                    Build your career with confidence and find opportunities that match your aspirations.
+                </p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">f</a>
+                    <a href="#" class="social-icon">t</a>
+                    <a href="#" class="social-icon">in</a>
+                    <a href="#" class="social-icon">@</a>
+                </div>
+            </div>
+
+            <!-- Job Seekers -->
+            <div class="footer-section">
+                <h3>For Job Seekers</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Browse Jobs</a></li>
+                    <li><a href="#">Create Profile</a></li>
+                    <li><a href="#">Upload CV</a></li>
+                    <li><a href="#">Job Alerts</a></li>
+                    <li><a href="#">Career Advice</a></li>
+                    <li><a href="#">Salary Guide</a></li>
+                </ul>
+            </div>
+
+            <!-- Employers -->
+            <div class="footer-section">
+                <h3>For Employers</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Post a Job</a></li>
+                    <li><a href="#">Search CVs</a></li>
+                    <li><a href="#">Employer Branding</a></li>
+                    <li><a href="#">Recruitment Services</a></li>
+                    <li><a href="#">HR Solutions</a></li>
+                    <li><a href="#">Pricing Plans</a></li>
+                </ul>
+            </div>
+
+            <!-- Get In Touch -->
+            <div class="footer-section">
+                <h3>Stay Connected</h3>
+                <p class="footer-description">
+                    Subscribe to our newsletter for the latest job opportunities and career insights.
+                </p>
+                <div class="newsletter">
+                    <div class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Enter your email">
+                        <button class="newsletter-btn">Subscribe</button>
+                    </div>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <span>hello@jobico.lk</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📞</span>
+                        <span>+94 11 234 5678</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>Colombo 03, Sri Lanka</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="copyright">
+        © 2024 Jobico - Sri Lanka's Trusted Job Portal. All Rights Reserved.
+    </div>
+</footer>
+
+<script>
+    let currentPage = 1;
+    const itemsPerPage = 6;
+    const categoryCards = document.querySelectorAll('.category-card');
+    const totalPages = Math.ceil(categoryCards.length / itemsPerPage);
+
+    function showPage(page) {
+        currentPage = page;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+
+        // Show/hide cards for current page
+        categoryCards.forEach((card, index) => {
+            card.style.display = (index >= startIndex && index < endIndex) ? 'flex' : 'none';
+        });
+
+        // Update pagination buttons
+        const paginationButtons = document.querySelectorAll('.pagination-btn');
+        paginationButtons.forEach((btn, index) => {
+            if (index === 0) { // Previous button
+                btn.disabled = (currentPage === 1);
+                btn.classList.toggle('disabled', currentPage === 1);
+            } else if (index === paginationButtons.length - 1) { // Next button
+                btn.disabled = (currentPage === totalPages);
+                btn.classList.toggle('disabled', currentPage === totalPages);
+            } else if (index <= totalPages) { // Numbered buttons
+                btn.textContent = index;
+                btn.classList.toggle('active', index === page);
+            }
+        });
+    }
+
+    function nextPage() {
+        if (currentPage < totalPages) {
+            showPage(currentPage + 1);
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            showPage(currentPage - 1);
+        }
+    }
+
+    // Add click handlers for pagination buttons
+    document.querySelectorAll('.pagination-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (this.textContent === '❮') {
+                prevPage();
+            } else if (this.textContent === '❯') {
+                nextPage();
+            } else {
+                const pageNumber = parseInt(this.textContent);
+                if (!isNaN(pageNumber)) {
+                    showPage(pageNumber);
+                }
+            }
+        });
+    });
+
+    // Initialize first page
+    showPage(1);
+
+    // Job tabs functionality
+    function showJobs(type) {
+        document.querySelectorAll('.job-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        event.target.classList.add('active');
+
+        console.log('Showing jobs for:', type);
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 100) {
+            header.style.background = 'rgba(255, 255, 255, 0.95)';
+            header.style.backdropFilter = 'blur(20px)';
+            header.querySelector('.logo').style.color = '#333';
+            header.querySelectorAll('.nav-links a').forEach(link => {
+                link.style.color = '#333';
+            });
+        } else {
+            header.style.background = 'rgba(255, 255, 255, 0.05)';
+            header.style.backdropFilter = 'blur(10px)';
+            header.querySelector('.logo').style.color = 'white';
+            header.querySelectorAll('.nav-links a').forEach(link => {
+                link.style.color = 'rgba(255, 255, 255, 0.9)';
+            });
+        }
+    });
+
+    // Search form submission
+    document.querySelector('.search-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const jobTitle = this.querySelector('.search-input').value;
+        const location = this.querySelector('.location-dropdown').value;
+
+        if (jobTitle.trim() === '') {
+            alert('Please enter a job title or keyword');
+            return;
+        }
+
+        console.log('Searching for:', jobTitle, 'in', location);
+        alert(`Searching for "${jobTitle}" jobs in ${location}`);
+    });
+
+    // Newsletter subscription
+    document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = this.querySelector('.newsletter-input').value;
+
+        if (!email || !email.includes('@')) {
+            alert('Please enter a valid email address');
+            return;
+        }
+
+        alert('Thank you for subscribing to our newsletter!');
+        this.querySelector('.newsletter-input').value = '';
+    });
+
+    // Apply button functionality
+    document.querySelectorAll('.apply-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const jobTitle = this.closest('.job-card').querySelector('.job-title').textContent;
+            alert(`Application started for: ${jobTitle}\nYou would be redirected to the application form.`);
+        });
+    });
+
+    // Category search function
+    function searchCategory(category) {
+        alert(`Searching for jobs in ${category} category`);
+        // In a real implementation, this would filter jobs by category
+    }
+</script>
 </body>
 </html>
