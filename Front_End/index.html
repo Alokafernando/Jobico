@@ -21,7 +21,7 @@
             <li><a href="#" class="dropdown">Resources</a></li>
         </ul>
         <div class="nav-buttons">
-            <a onclick="window.location.href='html/signin.html'" class="btn btn-outline">Sign In</a>
+            <a onclick="window.location.href='html/SignIn.html'" class="btn btn-outline">Sign In</a>
             <a href="#" class="btn btn-primary">Post a Job</a>
         </div>
     </nav>
@@ -573,156 +573,142 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    let currentPage = 1;
-    const itemsPerPage = 6;
-    const categoryCards = document.querySelectorAll('.category-card');
-    const totalPages = Math.ceil(categoryCards.length / itemsPerPage);
+    $(document).ready(function () {
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        const $categoryCards = $(".category-card");
+        const totalPages = Math.ceil($categoryCards.length / itemsPerPage);
 
-    function showPage(page) {
-        currentPage = page;
-        const startIndex = (page - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
+        function showPage(page) {
+            currentPage = page;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
 
-        // Show/hide cards for current page
-        categoryCards.forEach((card, index) => {
-            card.style.display = (index >= startIndex && index < endIndex) ? 'flex' : 'none';
-        });
+            // Show/hide cards
+            $categoryCards.each(function (index) {
+                $(this).css("display", (index >= startIndex && index < endIndex) ? "flex" : "none");
+            });
 
-        // Update pagination buttons
-        const paginationButtons = document.querySelectorAll('.pagination-btn');
-        paginationButtons.forEach((btn, index) => {
-            if (index === 0) { // Previous button
-                btn.disabled = (currentPage === 1);
-                btn.classList.toggle('disabled', currentPage === 1);
-            } else if (index === paginationButtons.length - 1) { // Next button
-                btn.disabled = (currentPage === totalPages);
-                btn.classList.toggle('disabled', currentPage === totalPages);
-            } else if (index <= totalPages) { // Numbered buttons
-                btn.textContent = index;
-                btn.classList.toggle('active', index === page);
-            }
-        });
-    }
-
-    function nextPage() {
-        if (currentPage < totalPages) {
-            showPage(currentPage + 1);
+            // Update pagination buttons
+            const $paginationButtons = $(".pagination-btn");
+            $paginationButtons.each(function (index) {
+                if (index === 0) { // Prev
+                    $(this).prop("disabled", currentPage === 1)
+                        .toggleClass("disabled", currentPage === 1);
+                } else if (index === $paginationButtons.length - 1) { // Next
+                    $(this).prop("disabled", currentPage === totalPages)
+                        .toggleClass("disabled", currentPage === totalPages);
+                } else if (index <= totalPages) { // Numbered
+                    $(this).text(index)
+                        .toggleClass("active", index === page);
+                }
+            });
         }
-    }
 
-    function prevPage() {
-        if (currentPage > 1) {
-            showPage(currentPage - 1);
+        function nextPage() {
+            if (currentPage < totalPages) showPage(currentPage + 1);
         }
-    }
 
-    // Add click handlers for pagination buttons
-    document.querySelectorAll('.pagination-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.textContent === '❮') {
+        function prevPage() {
+            if (currentPage > 1) showPage(currentPage - 1);
+        }
+
+        // Pagination click
+        $(".pagination-btn").on("click", function () {
+            const text = $(this).text();
+            if (text === "❮") {
                 prevPage();
-            } else if (this.textContent === '❯') {
+            } else if (text === "❯") {
                 nextPage();
             } else {
-                const pageNumber = parseInt(this.textContent);
-                if (!isNaN(pageNumber)) {
-                    showPage(pageNumber);
-                }
+                const pageNumber = parseInt(text);
+                if (!isNaN(pageNumber)) showPage(pageNumber);
             }
         });
-    });
 
-    // Initialize first page
-    showPage(1);
+        // Init first page
+        showPage(1);
 
-    // Job tabs functionality
-    function showJobs(type) {
-        document.querySelectorAll('.job-tab').forEach(tab => {
-            tab.classList.remove('active');
+        // Job tabs
+        $(".job-tab").on("click", function (event) {
+            $(".job-tab").removeClass("active");
+            $(this).addClass("active");
+            console.log("Showing jobs for:", $(this).data("type"));
         });
 
-        event.target.classList.add('active');
-
-        console.log('Showing jobs for:', type);
-    }
-
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+        // Smooth scrolling
+        $('a[href^="#"]').on("click", function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const target = $($(this).attr("href"));
+            if (target.length) {
+                $("html, body").animate({
+                    scrollTop: target.offset().top
+                }, 600);
             }
         });
-    });
 
-    // Header scroll effect
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if (window.scrollY > 100) {
-            header.style.background = 'rgba(255, 255, 255, 0.95)';
-            header.style.backdropFilter = 'blur(20px)';
-            header.querySelector('.logo').style.color = '#333';
-            header.querySelectorAll('.nav-links a').forEach(link => {
-                link.style.color = '#333';
-            });
-        } else {
-            header.style.background = 'rgba(255, 255, 255, 0.05)';
-            header.style.backdropFilter = 'blur(10px)';
-            header.querySelector('.logo').style.color = 'white';
-            header.querySelectorAll('.nav-links a').forEach(link => {
-                link.style.color = 'rgba(255, 255, 255, 0.9)';
-            });
-        }
-    });
+        // Header scroll effect
+        $(window).on("scroll", function () {
+            const $header = $("header");
+            if ($(this).scrollTop() > 100) {
+                $header.css({
+                    "background": "rgba(255, 255, 255, 0.95)",
+                    "backdrop-filter": "blur(20px)"
+                });
+                $header.find(".logo").css("color", "#333");
+                $header.find(".nav-links a").css("color", "#333");
+            } else {
+                $header.css({
+                    "background": "rgba(255, 255, 255, 0.05)",
+                    "backdrop-filter": "blur(10px)"
+                });
+                $header.find(".logo").css("color", "white");
+                $header.find(".nav-links a").css("color", "rgba(255, 255, 255, 0.9)");
+            }
+        });
 
-    // Search form submission
-    document.querySelector('.search-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const jobTitle = this.querySelector('.search-input').value;
-        const location = this.querySelector('.location-dropdown').value;
+        // Search form
+        $(".search-form").on("submit", function (e) {
+            e.preventDefault();
+            const jobTitle = $(this).find(".search-input").val();
+            const location = $(this).find(".location-dropdown").val();
 
-        if (jobTitle.trim() === '') {
-            alert('Please enter a job title or keyword');
-            return;
-        }
+            if ($.trim(jobTitle) === "") {
+                alert("Please enter a job title or keyword");
+                return;
+            }
 
-        console.log('Searching for:', jobTitle, 'in', location);
-        alert(`Searching for "${jobTitle}" jobs in ${location}`);
-    });
+            console.log("Searching for:", jobTitle, "in", location);
+            alert(`Searching for "${jobTitle}" jobs in ${location}`);
+        });
 
-    // Newsletter subscription
-    document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = this.querySelector('.newsletter-input').value;
+        // Newsletter subscription
+        $(".newsletter-form").on("submit", function (e) {
+            e.preventDefault();
+            const email = $(this).find(".newsletter-input").val();
 
-        if (!email || !email.includes('@')) {
-            alert('Please enter a valid email address');
-            return;
-        }
+            if (!email || !email.includes("@")) {
+                alert("Please enter a valid email address");
+                return;
+            }
 
-        alert('Thank you for subscribing to our newsletter!');
-        this.querySelector('.newsletter-input').value = '';
-    });
+            alert("Thank you for subscribing to our newsletter!");
+            $(this).find(".newsletter-input").val("");
+        });
 
-    // Apply button functionality
-    document.querySelectorAll('.apply-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const jobTitle = this.closest('.job-card').querySelector('.job-title').textContent;
+        // Apply button
+        $(".apply-btn").on("click", function () {
+            const jobTitle = $(this).closest(".job-card").find(".job-title").text();
             alert(`Application started for: ${jobTitle}\nYou would be redirected to the application form.`);
         });
-    });
 
-    // Category search function
-    function searchCategory(category) {
-        alert(`Searching for jobs in ${category} category`);
-        // In a real implementation, this would filter jobs by category
-    }
+        // Category search
+        window.searchCategory = function (category) {
+            alert(`Searching for jobs in ${category} category`);
+        };
+    });
 </script>
 </body>
 </html>
