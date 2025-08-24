@@ -330,92 +330,88 @@
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-  // Toggle between Job Seeker and Employer forms
-  const seekerBtn = document.getElementById('seekerBtn');
-  const employeeBtn = document.getElementById('employeeBtn');
-  const seekerForm = document.getElementById('seekerForm');
-  const employeeForm = document.getElementById('employeeForm');
+  $(document).ready(function () {
+    // Toggle between Job Seeker and Employer forms
+    $('#seekerBtn').on('click', function () {
+      $(this).addClass('active');
+      $('#employeeBtn').removeClass('active');
+      $('#seekerForm').addClass('active');
+      $('#employeeForm').removeClass('active');
+    });
 
-  seekerBtn.addEventListener('click', () => {
-    seekerBtn.classList.add('active');
-    employeeBtn.classList.remove('active');
-    seekerForm.classList.add('active');
-    employeeForm.classList.remove('active');
-  });
+    $('#employeeBtn').on('click', function () {
+      $(this).addClass('active');
+      $('#seekerBtn').removeClass('active');
+      $('#employeeForm').addClass('active');
+      $('#seekerForm').removeClass('active');
+    });
 
-  employeeBtn.addEventListener('click', () => {
-    employeeBtn.classList.add('active');
-    seekerBtn.classList.remove('active');
-    employeeForm.classList.add('active');
-    seekerForm.classList.remove('active');
-  });
+    // Password toggle functionality
+    window.togglePassword = function (inputId, toggleIconId) {
+      const $passwordField = $('#' + inputId);
+      const $toggleIcon = $('#' + toggleIconId);
 
-  // Password toggle functionality
-  function togglePassword(inputId, toggleIconId) {
-    const passwordField = document.getElementById(inputId);
-    const toggleIcon = document.getElementById(toggleIconId);
+      if ($passwordField.attr('type') === 'password') {
+        $passwordField.attr('type', 'text');
+        $toggleIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+      } else {
+        $passwordField.attr('type', 'password');
+        $toggleIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+      }
+    };
 
-    if (passwordField.type === 'password') {
-      passwordField.type = 'text';
-      toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
-    } else {
-      passwordField.type = 'password';
-      toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
-    }
-  }
+    // Form submission handlers
+    $('#seekerSignupForm').on('submit', function (e) {
+      e.preventDefault();
+      handleSignup('seeker');
+    });
 
-  // Form submission handlers
-  document.getElementById('seekerSignupForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    handleSignup('seeker');
-  });
+    $('#employeeSignupForm').on('submit', function (e) {
+      e.preventDefault();
+      handleSignup('employee');
+    });
 
-  document.getElementById('employeeSignupForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    handleSignup('employee');
-  });
+    function handleSignup(userType) {
+      let password, confirmPassword;
 
-  function handleSignup(userType) {
-    // Validate passwords match
-    let password, confirmPassword;
+      if (userType === 'seeker') {
+        password = $('#seekerPassword').val();
+        confirmPassword = $('#seekerConfirmPassword').val();
+      } else {
+        password = $('#employeePassword').val();
+        confirmPassword = ''; // Employee form doesn't have confirm password
+      }
 
-    if (userType === 'seeker') {
-      password = document.getElementById('seekerPassword').value;
-      confirmPassword = document.getElementById('seekerConfirmPassword').value;
-    } else {
-      password = document.getElementById('employeePassword').value;
-      confirmPassword = ''; // Employee form doesn't have confirm password
-    }
+      if (userType === 'seeker' && password !== confirmPassword) {
+        alert('Passwords do not match! Please try again.');
+        return;
+      }
 
-    if (userType === 'seeker' && password !== confirmPassword) {
-      alert('Passwords do not match! Please try again.');
-      return;
-    }
+      const $btn = $(`#${userType}Form .signup-btn`);
+      $btn.addClass('btn-loading').text('');
 
-    const btn = document.querySelector(`#${userType}Form .signup-btn`);
-    btn.classList.add('btn-loading');
-    btn.textContent = '';
-
-    // Simulate signup process
-    setTimeout(() => {
-      btn.classList.remove('btn-loading');
-      btn.textContent = userType === 'seeker' ? 'Create Job Seeker Account' : 'Create Employer Account';
-      alert('Account created successfully! Redirecting to your dashboard...');
-
-      // Redirect after successful signup
+      // Simulate signup process
       setTimeout(() => {
-        window.location.href = userType === 'seeker' ? 'seeker-dashboard.html' : 'employer-dashboard.html';
-      }, 2000);
-    }, 2000);
-  }
+        $btn.removeClass('btn-loading');
+        $btn.text(userType === 'seeker' ? 'Create Job Seeker Account' : 'Create Employer Account');
+        alert('Account created successfully! Redirecting to your dashboard...');
 
-  // Close button functionality
-  function closeWindow() {
-    if (confirm('Are you sure you want to leave? Your progress will be lost.')) {
-      window.location.href = '../index.html';
+        setTimeout(() => {
+          window.location.href = userType === 'seeker' ? 'seeker-dashboard.html' : 'employer-dashboard.html';
+        }, 2000);
+      }, 2000);
     }
-  }
+
+    // Close button functionality
+    window.closeWindow = function () {
+      if (confirm('Are you sure you want to leave? Your progress will be lost.')) {
+        window.location.href = '../index.html';
+      }
+    };
+  });
 </script>
+
 </body>
 </html>

@@ -124,36 +124,34 @@
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
   // Form submission handler
-  document.getElementById('loginForm').addEventListener('submit', function(e) {
+  $('#loginForm').on('submit', function(e) {
     e.preventDefault();
 
-    const btn = document.querySelector('.login-btn');
-    btn.classList.add('btn-loading');
-    btn.textContent = '';
+    const btn = $('.login-btn');
+    btn.addClass('btn-loading').text('');
 
     // Simulate login process
     setTimeout(() => {
-      btn.classList.remove('btn-loading');
-      btn.textContent = 'Sign In to Your Future';
+      btn.removeClass('btn-loading').text('Sign In to Your Future');
       showMessage('Welcome back! Redirecting to your dashboard... 🎉');
     }, 2000);
   });
 
   // Password toggle functionality
   function togglePassword() {
-    const passwordField = document.getElementById('password');
-    const toggleBtn = document.querySelector('.password-toggle');
+    const passwordField = $('#password');
+    const toggleBtn = $('.password-toggle');
 
-    if (passwordField.type === 'password') {
-      passwordField.type = 'text';
-      toggleBtn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+    if (passwordField.attr('type') === 'password') {
+      passwordField.attr('type', 'text');
+      toggleBtn.html('<i class="fa-solid fa-eye-slash"></i>');
     } else {
-      passwordField.type = 'password';
-      toggleBtn.innerHTML = '<i class="fa-solid fa-eye"></i>';
+      passwordField.attr('type', 'password');
+      toggleBtn.html('<i class="fa-solid fa-eye"></i>');
     }
-
   }
 
   // Social login handler
@@ -163,55 +161,48 @@
 
   // Close button functionality
   function closeWindow() {
-    window.location.href='../index.html'
+    window.location.href = '../index.html';
   }
 
   // Notification system
   function showMessage(message) {
     // Remove existing notification
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-      existingNotification.remove();
-    }
+    $('.notification').remove();
 
     // Create new notification
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    document.body.appendChild(notification);
+    const notification = $('<div class="notification"></div>').text(message);
+    $('body').append(notification);
 
     // Auto-remove after 3 seconds
     setTimeout(() => {
-      if (notification.parentNode) {
-        notification.remove();
-      }
+      notification.remove();
     }, 3000);
   }
 
   // Enhanced form validation
-  const inputs = document.querySelectorAll('input[required]');
-  inputs.forEach(input => {
-    input.addEventListener('blur', function() {
-      if (this.value.trim() === '') {
-        this.style.borderColor = '#ff6b35';
-        this.style.boxShadow = '0 0 0 4px rgba(56, 103, 214, 0.1)';
-      } else if (this.type === 'email' && !this.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-        this.style.borderColor = '#ff6b35';
-        this.style.boxShadow = '0 0 0 4px rgba(56, 103, 214, 0.1)';
-      } else {
-        this.style.borderColor = '#e9ecef';
-        this.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.05)';
-      }
-    });
+  $('input[required]').on('blur', function() {
+    const input = $(this);
+    const val = input.val().trim();
+
+    if (val === '' || (input.attr('type') === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))) {
+      input.css({
+        borderColor: '#ff6b35',
+        boxShadow: '0 0 0 4px rgba(56, 103, 214, 0.1)'
+      });
+    } else {
+      input.css({
+        borderColor: '#e9ecef',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)'
+      });
+    }
   });
 
   // Add some interactive features
-  document.querySelectorAll('.feature-item').forEach(item => {
-    item.addEventListener('click', function() {
-      const featureName = this.querySelector('h4').textContent;
-      showMessage(`Learn more about ${featureName} 📚`);
-    });
+  $('.feature-item').on('click', function() {
+    const featureName = $(this).find('h4').text();
+    showMessage(`Learn more about ${featureName} 📚`);
   });
 </script>
+
 </body>
 </html>
