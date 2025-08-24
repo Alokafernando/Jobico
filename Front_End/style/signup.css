@@ -4,6 +4,18 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary: #ff6b35;
+    --secondary: #ffd700;
+    --dark: #1a1a2e;
+    --light: #f8f9fa;
+    --gray: #6c757d;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --info: #17a2b8;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(255,107,53,0.3)),
@@ -14,7 +26,7 @@ body {
     backdrop-filter: blur(2px);
 }
 
-/* Background overlay for better readability */
+/* Background overlay */
 body::before {
     content: '';
     position: fixed;
@@ -148,7 +160,7 @@ body::before {
     padding: 40px;
 }
 
-/* Single White Container for Both Sides */
+/* Unified Container */
 .unified-container {
     width: 100%;
     max-width: 1200px;
@@ -156,10 +168,9 @@ body::before {
     backdrop-filter: blur(40px);
     border-radius: 35px;
     padding: 55px 45px;
-    box-shadow:
-            0 30px 60px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(255, 255, 255, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
     position: relative;
     overflow: hidden;
     animation: slideInUp 1s ease-out;
@@ -192,24 +203,26 @@ body::before {
     }
 }
 
+@keyframes shimmer {
+    0% { background-position: -300% 0; }
+    100% { background-position: 300% 0; }
+}
+
 /* Left Side - Features Section */
 .features-section {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 80px 40px;
+    padding: 40px;
     position: relative;
-    top: 100px;
-    background:
-            linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.7) 50%, rgba(255, 107, 53, 0.3) 100%),
-            url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80') center/cover;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.7) 50%, rgba(255, 107, 53, 0.3) 100%),
+    url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80') center/cover;
     border-radius: 25px;
     margin: -20px;
     margin-right: 40px;
-    box-shadow:
-            0 20px 40px rgba(0, 0, 0, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .brand-header {
@@ -246,7 +259,7 @@ body::before {
 }
 
 .brand-title {
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: 900;
     background: linear-gradient(135deg, #ffd700 0%, #fff 50%, #ffd700 100%);
     -webkit-background-clip: text;
@@ -254,7 +267,7 @@ body::before {
     background-clip: text;
     margin-bottom: 20px;
     text-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
-    animation: textGlow 3s ease-in-out infinite alternate;
+    animation: textGlow 3s ease-in infinite alternate;
 }
 
 @keyframes textGlow {
@@ -323,9 +336,8 @@ body::before {
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    box-shadow:
-            0 15px 35px rgba(255, 215, 0, 0.4),
-            inset 0 2px 10px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(255, 215, 0, 0.4),
+    inset 0 2px 10px rgba(255, 255, 255, 0.3);
     flex-shrink: 0;
     animation: iconSpin 10s linear infinite;
     position: relative;
@@ -387,15 +399,6 @@ body::before {
     text-align: left;
 }
 
-.signup-container::before {
-    display: none;
-}
-
-@keyframes shimmer {
-    0% { background-position: -300% 0; }
-    100% { background-position: 300% 0; }
-}
-
 .logo-section {
     text-align: center;
     margin-bottom: 45px;
@@ -420,7 +423,7 @@ body::before {
     font-weight: 900;
     background: linear-gradient(135deg, #ff6b35, #ffd700);
     -webkit-background-clip: text;
-    -webkit-text-fill-olor: transparent;
+    -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 10px;
 }
@@ -482,6 +485,8 @@ body::before {
 .form-group:nth-child(4) { animation-delay: 0.6s; }
 .form-group:nth-child(5) { animation-delay: 0.7s; }
 .form-group:nth-child(6) { animation-delay: 0.8s; }
+.form-group:nth-child(7) { animation-delay: 0.9s; }
+.form-group:nth-child(8) { animation-delay: 1.0s; }
 
 @keyframes fadeInUp {
     from {
@@ -506,7 +511,7 @@ body::before {
     position: relative;
 }
 
-.form-group input {
+.form-group input, .form-group select, .form-group textarea {
     width: 100%;
     padding: 20px 28px;
     border: 2px solid #e9ecef;
@@ -518,13 +523,12 @@ body::before {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.form-group input:focus {
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     outline: none;
     border-color: #ff6b35;
     background: white;
-    box-shadow:
-            0 0 0 4px rgba(255, 107, 53, 0.1),
-            0 10px 30px rgba(255, 107, 53, 0.2);
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1),
+    0 10px 30px rgba(255, 107, 53, 0.2);
     transform: translateY(-2px);
 }
 
@@ -538,7 +542,9 @@ body::before {
     transition: color 0.3s ease;
 }
 
-.form-group input:focus + .input-icon {
+.form-group input:focus + .input-icon,
+.form-group select:focus + .input-icon,
+.form-group textarea:focus + .input-icon {
     color: #ff6b35;
 }
 
@@ -660,95 +666,7 @@ body::before {
     width: 100%;
 }
 
-/* Loading animation */
-.btn-loading {
-    position: relative;
-    color: transparent !important;
-}
-
-.btn-loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 24px;
-    height: 24px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top: 3px solid white;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Notifications */
-.notification {
-    position: fixed;
-    top: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, #ff6b35, #ffd700);
-    color: white;
-    padding: 25px 35px;
-    border-radius: 18px;
-    box-shadow: 0 20px 40px rgba(255, 107, 53, 0.4);
-    z-index: 1000;
-    font-weight: 600;
-    animation: slideInRight 0.5s ease-out;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
-    max-width: 380px;
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(300px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
 /* Responsive Design */
-@media (max-width: 1400px) {
-    .unified-container {
-        max-width: 1000px;
-        gap: 60px;
-        padding: 50px 40px;
-    }
-
-    .features-section {
-        margin: -15px;
-        margin-right: 30px;
-    }
-}
-
-@media (max-width: 1200px) {
-    .unified-container {
-        max-width: 900px;
-        gap: 50px;
-        padding: 45px 35px;
-    }
-
-    .brand-title {
-        font-size: 2.2rem;
-    }
-
-    .logo-text {
-        font-size: 2.2rem;
-    }
-
-    .features-section {
-        margin: -10px;
-        margin-right: 25px;
-    }
-}
-
 @media (max-width: 1024px) {
     .unified-container {
         grid-template-columns: 1fr;
@@ -858,7 +776,7 @@ body::before {
         font-size: 2rem;
     }
 
-    .form-group input {
+    .form-group input, .form-group select, .form-group textarea {
         padding: 18px 24px;
         font-size: 1rem;
     }
@@ -866,41 +784,6 @@ body::before {
     .signup-btn {
         padding: 20px;
         font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 640px) {
-    .main-container {
-        padding: 15px;
-    }
-
-    .unified-container {
-        max-width: 100%;
-        padding: 30px 20px;
-        gap: 30px;
-        margin: 0;
-    }
-
-    .features-section {
-        margin: -10px;
-        margin-bottom: 15px;
-        padding: 25px;
-    }
-
-    .brand-title {
-        font-size: 1.6rem;
-    }
-
-    .logo-text {
-        font-size: 1.6rem;
-    }
-
-    .feature-text h4 {
-        font-size: 1.2rem;
-    }
-
-    .feature-text p {
-        font-size: 0.9rem;
     }
 }
 
@@ -960,7 +843,7 @@ body::before {
         font-size: 0.85rem;
     }
 
-    .form-group input {
+    .form-group input, .form-group select, .form-group textarea {
         padding: 16px 20px;
         font-size: 0.95rem;
     }
@@ -972,101 +855,5 @@ body::before {
     .signup-btn {
         padding: 18px;
         font-size: 1rem;
-    }
-
-    .notification {
-        right: 10px;
-        left: 10px;
-        max-width: none;
-        padding: 20px 25px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 360px) {
-    .unified-container {
-        padding: 20px 12px;
-        gap: 20px;
-        border-radius: 20px;
-    }
-
-    .features-section {
-        margin: -2px;
-        margin-bottom: 10px;
-        padding: 15px;
-        border-radius: 15px;
-    }
-
-    .brand-title {
-        font-size: 1.2rem;
-    }
-
-    .logo-text {
-        font-size: 1.2rem;
-    }
-
-    .brand-subtitle, .logo-tagline {
-        font-size: 0.9rem;
-    }
-
-    .feature-item {
-        padding: 15px;
-    }
-
-    .feature-text h4 {
-        font-size: 1rem;
-    }
-
-    .feature-text p {
-        font-size: 0.8rem;
-    }
-
-    .form-group input {
-        padding: 14px 18px;
-        font-size: 0.9rem;
-    }
-
-    .signup-btn {
-        padding: 16px;
-        font-size: 0.95rem;
-    }
-}
-
-/* Large screens optimization */
-@media (min-width: 1600px) {
-    .unified-container {
-        max-width: 1400px;
-        gap: 100px;
-        padding: 60px 50px;
-    }
-
-    .features-section {
-        margin: -20px;
-        margin-right: 50px;
-        padding: 50px;
-    }
-
-    .brand-title {
-        font-size: 2.8rem;
-    }
-
-    .logo-text {
-        font-size: 2.8rem;
-    }
-
-    .feature-item {
-        padding: 35px;
-    }
-
-    .feature-icon {
-        width: 90px;
-        height: 90px;
-        font-size: 2.2rem;
-    }
-
-    .brand-logo {
-        width: 100px;
-        height: 100px;
-        font-size: 2.8rem;
     }
 }
