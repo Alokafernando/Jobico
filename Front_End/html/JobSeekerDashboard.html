@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jobico - Job Seeker Dashboard</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../style/JobSeekerDashboard.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">💼</div>
+        <div class="sidebar-logo-text">Jobico</div>
+      </div>
+
+      <div class="user-profile">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="user-avatar" id="sidebar-avatar">
+        <div class="user-info">
+          <h3>Michael Chen</h3>
+          <p>UX Designer</p>
+        </div>
+      </div>
+
+      <div class="profile-completion">
+        <p>Profile Strength: 75%</p>
+        <div class="completion-bar">
+          <div class="completion-progress"></div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="menu-item">
+        <a class="menu-link active" data-page="dashboard">
+          <i class="fas fa-home"></i>
+          <span class="menu-text">Dashboard</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a class="menu-link" data-page="find-jobs">
+          <i class="fas fa-search"></i>
+          <span class="menu-text">Find Jobs</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a class="menu-link" data-page="applications">
+          <i class="fas fa-file-alt"></i>
+          <span class="menu-text">Applications</span>
+          <span class="badge">5</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a class="menu-link" data-page="saved-jobs">
+          <i class="fas fa-bookmark"></i>
+          <span class="menu-text">Saved Jobs</span>
+          <span class="badge">3</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a class="menu-link" data-page="profile">
+          <i class="fas fa-user"></i>
+          <span class="menu-text">Profile</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a class="menu-link" data-page="settings">
+          <i class="fas fa-cog"></i>
+          <span class="menu-text">Settings</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a class="menu-link" href="#" id="logout-link">
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="menu-text">Logout</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search for jobs, companies, or keywords...">
+      </div>
+
+      <div class="header-actions">
+        <button class="messages-btn">
+          <i class="fas fa-envelope"></i>
+        </button>
+        <button class="notification-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-img" data-page="profile" id="header-avatar">
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+      <!-- Dashboard Home Section -->
+      <div id="dashboard" class="page-section active">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <h1>Welcome back, Michael!</h1>
+            <p>Your profile matches 12 new jobs. Keep your profile updated to get more relevant recommendations.</p>
+          </div>
+          <div class="welcome-actions">
+            <button class="btn btn-primary" data-page="profile">Update Profile</button>
+            <button class="btn btn-outline" data-page="find-jobs">Browse Jobs</button>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon applications">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="stat-info">
+              <h3>24</h3>
+              <p>Applications Sent</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon interviews">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-info">
+              <h3>5</h3>
+              <p>Interviews</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon views">
+              <i class="fa-solid fa-eye"></i>
+            </div>
+            <div class="stat-info">
+              <h3>148</h3>
+              <p>Profile Views</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon messages">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="stat-info">
+              <h3>8</h3>
+              <p>Unread Messages</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommended Jobs Section -->
+        <div class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Recommended For You</h2>
+            <a href="#" class="view-all">View All</a>
+          </div>
+
+          <div class="jobs-grid">
+            <div class="job-card featured">
+              <span class="featured-badge">Featured</span>
+              <div class="job-header">
+                <div class="company-logo">TC</div>
+                <div class="job-info">
+                  <h3>Senior UX Designer</h3>
+                  <p>TechCorp International</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>San Francisco, CA</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Full-time</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$95,000 - $120,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+
+            <div class="job-card">
+              <div class="job-header">
+                <div class="company-logo">ID</div>
+                <div class="job-info">
+                  <h3>Product Designer</h3>
+                  <p>InnovateDesign</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>Remote</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Contract</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$85,000 - $105,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+
+            <div class="job-card">
+              <div class="job-header">
+                <div class="company-logo">DS</div>
+                <div class="job-info">
+                  <h3>UI/UX Developer</h3>
+                  <p>DesignStudio</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>New York, NY</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Full-time</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$90,000 - $115,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Application Status Section -->
+        <div class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Recent Applications</h2>
+            <a href="#" class="view-all" data-page="applications">View All</a>
+          </div>
+
+          <table class="applications-table">
+            <thead>
+            <tr>
+              <th>Position</th>
+              <th>Company</th>
+              <th>Date Applied</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <div class="app-job-title">Senior Product Designer</div>
+                <div class="app-company">TechSolutions Inc.</div>
+              </td>
+              <td>TechSolutions Inc.</td>
+              <td>Jun 15, 2023</td>
+              <td><span class="status-badge status-interview">Interview</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="app-job-title">UX Researcher</div>
+                <div class="app-company">DataInsight Co.</div>
+              </td>
+              <td>DataInsight Co.</td>
+              <td>Jun 12, 2023</td>
+              <td><span class="status-badge status-reviewing">Reviewing</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="app-job-title">UI Designer</div>
+                <div class="app-company">CreativeMinds</div>
+              </td>
+              <td>CreativeMinds</td>
+              <td>Jun 8, 2023</td>
+              <td><span class="status-badge status-submitted">Submitted</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="app-job-title">Product Design Lead</div>
+                <div class="app-company">InnovateTech</div>
+              </td>
+              <td>InnovateTech</td>
+              <td>Jun 2, 2023</td>
+              <td><span class="status-badge status-rejected">Rejected</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Find Jobs Section -->
+      <div id="find-jobs" class="page-section">
+        <h1 class="section-title">Find Jobs</h1>
+
+        <div class="filters-sidebar">
+          <h2>Filters</h2>
+          <div class="filter-group">
+            <h3>Job Type</h3>
+            <div class="filter-options">
+              <div class="filter-option">
+                <input type="checkbox" id="full-time" checked>
+                <label for="full-time">Full-time</label>
+              </div>
+              <div class="filter-option">
+                <input type="checkbox" id="part-time">
+                <label for="part-time">Part-time</label>
+              </div>
+              <div class="filter-option">
+                <input type="checkbox" id="contract">
+                <label for="contract">Contract</label>
+              </div>
+              <div class="filter-option">
+                <input type="checkbox" id="remote">
+                <label for="remote">Remote</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3>Experience Level</h3>
+            <div class="filter-options">
+              <div class="filter-option">
+                <input type="checkbox" id="entry-level">
+                <label for="entry-level">Entry Level</label>
+              </div>
+              <div class="filter-option">
+                <input type="checkbox" id="mid-level" checked>
+                <label for="mid-level">Mid Level</label>
+              </div>
+              <div class="filter-option">
+                <input type="checkbox" id="senior-level" checked>
+                <label for="senior-level">Senior Level</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3>Salary Range</h3>
+            <div class="filter-options">
+              <div class="filter-option">
+                <input type="radio" id="salary-1" name="salary" checked>
+                <label for="salary-1">$50k - $80k</label>
+              </div>
+              <div class="filter-option">
+                <input type="radio" id="salary-2" name="salary">
+                <label for="salary-2">$80k - $100k</label>
+              </div>
+              <div class="filter-option">
+                <input type="radio" id="salary-3" name="salary">
+                <label for="salary-3">$100k+</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Available Jobs</h2>
+            <span class="view-all">1256 jobs found</span>
+          </div>
+
+          <div class="jobs-grid">
+            <div class="job-card featured">
+              <span class="featured-badge">Featured</span>
+              <div class="job-header">
+                <div class="company-logo">TC</div>
+                <div class="job-info">
+                  <h3>Senior UX Designer</h3>
+                  <p>TechCorp International</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>San Francisco, CA</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Full-time</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$95,000 - $120,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+
+            <div class="job-card">
+              <div class="job-header">
+                <div class="company-logo">FB</div>
+                <div class="job-info">
+                  <h3>Product Designer</h3>
+                  <p>FutureBrands</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>Remote</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Full-time</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$85,000 - $105,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+
+            <div class="job-card">
+              <div class="job-header">
+                <div class="company-logo">DS</div>
+                <div class="job-info">
+                  <h3>UI/UX Developer</h3>
+                  <p>DesignStudio</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>New York, NY</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Full-time</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$90,000 - $115,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Applications Section -->
+      <div id="applications" class="page-section">
+        <h1 class="section-title">My Applications</h1>
+
+        <div class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Application History</h2>
+            <span class="view-all">24 total applications</span>
+          </div>
+
+          <table class="applications-table">
+            <thead>
+            <tr>
+              <th>Position</th>
+              <th>Company</th>
+              <th>Date Applied</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <div class="app-job-title">Senior Product Designer</div>
+                <div class="app-company">TechSolutions Inc.</div>
+              </td>
+              <td>TechSolutions Inc.</td>
+              <td>Jun 15, 2023</td>
+              <td><span class="status-badge status-interview">Interview</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="app-job-title">UX Researcher</div>
+                <div class="app-company">DataInsight Co.</div>
+              </td>
+              <td>DataInsight Co.</td>
+              <td>Jun 12, 2023</td>
+              <td><span class="status-badge status-reviewing">Reviewing</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="app-job-title">UI Designer</div>
+                <div class="app-company">CreativeMinds</div>
+              </td>
+              <td>CreativeMinds</td>
+              <td>Jun 8, 2023</td>
+              <td><span class="status-badge status-submitted">Submitted</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="app-job-title">Product Design Lead</div>
+                <div class="app-company">InnovateTech</div>
+              </td>
+              <td>InnovateTech</td>
+              <td>Jun 2, 2023</td>
+              <td><span class="status-badge status-rejected">Rejected</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="app-job-title">UX/UI Designer</div>
+                <div class="app-company">WebTech Solutions</div>
+              </td>
+              <td>WebTech Solutions</td>
+              <td>May 28, 2023</td>
+              <td><span class="status-badge status-interview">Interview</span></td>
+              <td>
+                <button class="action-btn btn-view">View</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Saved Jobs Section -->
+      <div id="saved-jobs" class="page-section">
+        <h1 class="section-title">Saved Jobs</h1>
+
+        <div class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Your Saved Opportunities</h2>
+            <span class="view-all">3 saved jobs</span>
+          </div>
+
+          <div class="jobs-grid">
+            <div class="job-card">
+              <div class="job-header">
+                <div class="company-logo">TC</div>
+                <div class="job-info">
+                  <h3>Senior UX Designer</h3>
+                  <p>TechCorp International</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>San Francisco, CA</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Full-time</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$95,000 - $120,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+
+            <div class="job-card">
+              <div class="job-header">
+                <div class="company-logo">ID</div>
+                <div class="job-info">
+                  <h3>Product Designer</h3>
+                  <p>InnovateDesign</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>Remote</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Contract</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$85,000 - $105,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+
+            <div class="job-card">
+              <div class="job-header">
+                <div class="company-logo">DS</div>
+                <div class="job-info">
+                  <h3>UI/UX Developer</h3>
+                  <p>DesignStudio</p>
+                </div>
+              </div>
+              <div class="job-details">
+                <div class="detail-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>New York, NY</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-clock"></i>
+                  <span>Full-time</span>
+                </div>
+              </div>
+              <div class="job-footer">
+                <div class="job-salary">$90,000 - $115,000</div>
+                <button class="apply-btn">Apply Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Section -->
+      <div id="profile" class="page-section">
+        <h1 class="section-title">My Profile</h1>
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="profile-avatar">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="avatar-img" id="profile-avatar">
+            <div class="avatar-upload" id="open-profile-picture-modal">
+              <i class="fas fa-camera"></i>
+            </div>
+          </div>
+          <div class="profile-info">
+            <h2 class="profile-name">Michael Chen</h2>
+            <p class="profile-title">Senior UX Designer at TechSolutions Inc.</p>
+
+            <div class="profile-stats">
+              <div class="stat-item">
+                <div class="stat-value">87%</div>
+                <div class="stat-label">Profile Strength</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">24</div>
+                <div class="stat-label">Applications</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Interviews</div>
+              </div>
+            </div>
+
+            <div class="profile-actions">
+              <button class="btn btn-primary" id="edit-profile-btn">Edit Profile</button>
+              <button class="btn btn-outline">Download Resume</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">About Me</h2>
+            <button class="edit-btn" data-edit="about">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+          <div class="about-content">
+            <p>Experienced UX Designer with over 5 years of expertise in creating intuitive and engaging user experiences for web and mobile applications. Passionate about user-centered design and solving complex problems with simple, elegant solutions.</p>
+            <p>Skilled in user research, wireframing, prototyping, and usability testing. Strong collaborator with cross-functional teams including developers, product managers, and stakeholders.</p>
+          </div>
+        </div>
+
+        <!-- Details Section -->
+        <div class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Personal Details</h2>
+            <button class="edit-btn" data-edit="details">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+          <div class="details-grid">
+            <div class="detail-item">
+              <div class="detail-label">Email</div>
+              <div class="detail-value">michael.chen@example.com</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Phone</div>
+              <div class="detail-value">+1 (555) 123-4567</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Location</div>
+              <div class="detail-value">San Francisco, CA</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Job Type</div>
+              <div class="detail-value">Full-time, Remote</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Experience</div>
+              <div class="detail-value">5+ years</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">Education</div>
+              <div class="detail-value">Master's in Design</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Skills & Expertise</h2>
+            <button class="edit-btn" data-edit="skills">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+          <div class="skills-list">
+            <span class="skill-tag">User Research</span>
+            <span class="skill-tag">Wireframing</span>
+            <span class="skill-tag">Prototyping</span>
+            <span class="skill-tag">UI Design</span>
+            <span class="skill-tag">UX Design</span>
+            <span class="skill-tag">Figma</span>
+            <span class="skill-tag">Sketch</span>
+            <span class="skill-tag">Adobe XD</span>
+            <span class="skill-tag">Usability Testing</span>
+            <span class="skill-tag">Design Systems</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div id="settings" class="page-section">
+        <h1 class="section-title">Settings</h1>
+
+        <div class="settings-grid">
+          <div class="settings-card">
+            <h3><i class="fas fa-bell"></i> Notifications</h3>
+            <div class="settings-option">
+              <label for="email-notifications">Email Notifications</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="email-notifications" checked>
+                <span class="slider"></span>
+              </div>
+            </div>
+            <div class="settings-option">
+              <label for="job-alerts">Job Alerts</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="job-alerts" checked>
+                <span class="slider"></span>
+              </div>
+            </div>
+            <div class="settings-option">
+              <label for="message-notifications">Message Notifications</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="message-notifications" checked>
+                <span class="slider"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3><i class="fas fa-shield-alt"></i> Privacy & Security</h3>
+            <div class="settings-option">
+              <label for="profile-visibility">Profile Visibility</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="profile-visibility" checked>
+                <span class="slider"></span>
+              </div>
+            </div>
+            <div class="settings-option">
+              <label for="two-factor">Two-Factor Authentication</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="two-factor">
+                <span class="slider"></span>
+              </div>
+            </div>
+            <div class="settings-option">
+              <label for="data-sharing">Data Sharing</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="data-sharing">
+                <span class="slider"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3><i class="fas fa-paint-brush"></i> Appearance</h3>
+            <div class="settings-option">
+              <label for="dark-mode">Dark Mode</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="dark-mode">
+                <span class="slider"></span>
+              </div>
+            </div>
+            <div class="settings-option">
+              <label for="compact-view">Compact View</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="compact-view">
+                <span class="slider"></span>
+              </div>
+            </div>
+            <div class="settings-option">
+              <label >Language: English</label> <!--for="language-preference"-->
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3><i class="fas fa-database"></i> Data Management</h3>
+            <div class="settings-option">
+              <label for="auto-save">Auto-save Applications</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="auto-save" checked>
+                <span class="slider"></span>
+              </div>
+            </div>
+            <div class="settings-option">
+              <label for="cloud-sync">Cloud Sync</label>
+              <div class="toggle-switch">
+                <input type="checkbox" id="cloud-sync" checked>
+                <span class="slider"></span>
+              </div>
+            </div>
+            <div class="settings-option">
+              <button class="btn btn-primary">Export My Data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modals -->
+<div class="edit-modal" id="edit-about-modal">
+  <div class="edit-modal-content">
+    <div class="edit-modal-header">
+      <h2>Edit About Section</h2>
+      <button class="edit-modal-close">&times;</button>
+    </div>
+    <div class="edit-modal-body">
+      <div class="form-group">
+        <label for="about-text">About Me</label>
+        <textarea id="about-text" class="form-control">Experienced UX Designer with over 5 years of expertise in creating intuitive and engaging user experiences for web and mobile applications. Passionate about user-centered design and solving complex problems with simple, elegant solutions.
+
+Skilled in user research, wireframing, prototyping, and usability testing. Strong collaborator with cross-functional teams including developers, product managers, and stakeholders.</textarea>
+      </div>
+    </div>
+    <div class="edit-modal-footer">
+      <button class="modal-btn modal-btn-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-save">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="edit-modal" id="edit-details-modal">
+  <div class="edit-modal-content">
+    <div class="edit-modal-header">
+      <h2>Edit Personal Details</h2>
+      <button class="edit-modal-close">&times;</button>
+    </div>
+    <div class="edit-modal-body">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-control" value="michael.chen@example.com">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" class="form-control" value="+1 (555) 123-4567">
+      </div>
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" id="location" class="form-control" value="San Francisco, CA">
+      </div>
+      <div class="form-group">
+        <label for="job-type">Job Type</label>
+        <input type="text" id="job-type" class="form-control" value="Full-time, Remote">
+      </div>
+      <div class="form-group">
+        <label for="experience">Experience</label>
+        <input type="text" id="experience" class="form-control" value="5+ years">
+      </div>
+      <div class="form-group">
+        <label for="education">Education</label>
+        <input type="text" id="education" class="form-control" value="Master's in Design">
+      </div>
+    </div>
+    <div class="edit-modal-footer">
+      <button class="modal-btn modal-btn-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-save">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="edit-modal" id="edit-skills-modal">
+  <div class="edit-modal-content">
+    <div class="edit-modal-header">
+      <h2>Edit Skills & Expertise</h2>
+      <button class="edit-modal-close">&times;</button>
+    </div>
+    <div class="edit-modal-body">
+      <div class="form-group">
+        <label for="skills-input">Your Skills (separate with commas)</label>
+        <textarea id="skills-input" class="form-control">User Research, Wireframing, Prototyping, UI Design, UX Design, Figma, Sketch, Adobe XD, Usability Testing, Design Systems</textarea>
+      </div>
+    </div>
+    <div class="edit-modal-footer">
+      <button class="modal-btn modal-btn-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-save">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Picture Modal -->
+<div class="edit-modal profile-picture-modal" id="edit-profile-picture-modal">
+  <div class="edit-modal-content">
+    <div class="edit-modal-header">
+      <h2>Change Profile Picture</h2>
+      <button class="edit-modal-close">&times;</button>
+    </div>
+    <div class="edit-modal-body">
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Preview" class="avatar-preview" id="avatar-preview">
+
+      <div class="upload-options">
+        <div class="upload-option">
+          <label>Upload a photo</label>
+          <label for="file-upload" class="upload-btn">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Choose from your computer</p>
+            <input type="file" id="file-upload" class="file-input" accept="image/*">
+          </label>
+        </div>
+
+        <div class="upload-option">
+          <label>Take a photo</label>
+          <div class="camera-btn">
+            <i class="fas fa-camera"></i>
+            <p>Use your camera</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="edit-modal-footer">
+      <button class="modal-btn modal-btn-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-save" id="save-profile-picture"><i class="fas fa-save"></i> Save Picture</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Confirmation Modal -->
+<div class="custom-modal" id="confirmation-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Confirm Action</h2>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+      <p>Are you sure you want to leave? Your progress will be lost.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-cancel" id="modal-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-confirm" id="modal-confirm">Yes, Leave</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Correct selector for page sections
+    const $pageSections = $(".page-section");
+    const $menuLinks = $(".menu-link");
+    const $profileImg = $(".profile-img");
+    const $logoutLink = $("#logout-link");
+
+    // Function to show a specific page
+    function showPage(pageId) {
+      // Hide all page sections
+      $pageSections.removeClass("active");
+
+      // Fix for the malformed saved-jobs section
+      if (pageId === "saved-jobs") {
+        $("#saved-jobs").addClass("active");
+      } else {
+        // Show the requested page
+        $("#" + pageId).addClass("active");
+      }
+
+      // Update active menu
+      $menuLinks.removeClass("active")
+              .filter(`[data-page='${pageId}']`)
+              .addClass("active");
+
+      // Update browser history
+      history.pushState({ page: pageId }, "", `#${pageId}`);
+
+      // Scroll to top
+      $(window).scrollTop(0);
+    }
+
+    // Menu link click
+    $menuLinks.on("click", function (e) {
+      e.preventDefault();
+      const pageId = $(this).data("page");
+      if (pageId) showPage(pageId);
+    });
+
+    // Profile image click
+    $profileImg.on("click", function () {
+      showPage("profile");
+    });
+
+    // Buttons with data-page
+    $("button[data-page]").on("click", function () {
+      showPage($(this).data("page"));
+    });
+
+    // Browser back/forward
+    $(window).on("popstate", function (e) {
+      if (e.originalEvent.state && e.originalEvent.state.page) {
+        showPage(e.originalEvent.state.page);
+      } else {
+        showPage("dashboard");
+      }
+    });
+
+    // Initial load
+    if (window.location.hash) {
+      showPage(window.location.hash.substring(1));
+    } else {
+      showPage("dashboard");
+    }
+
+    // Apply buttons
+    $(".apply-btn").on("click", function () {
+      const jobTitle = $(this).closest(".job-card").find("h3").text();
+      $(this).text("Applied").addClass("applied");
+    });
+
+    // Confirmation modal for logout
+    const $confirmationModal = $("#confirmation-modal");
+
+    window.closeWindow = function () {
+      $confirmationModal.css("display", "flex");
+    };
+
+    $("#modal-cancel").on("click", function () {
+      $confirmationModal.hide();
+    });
+
+    $("#modal-confirm").on("click", function () {
+      window.location.href = "../index.html";
+    });
+
+    $confirmationModal.on("click", function (e) {
+      if (e.target === this) $(this).hide();
+    });
+
+    // Logout
+    $logoutLink.on("click", function (e) {
+      e.preventDefault();
+      window.closeWindow();
+    });
+
+    // Edit Modals
+    const $editModals = $(".edit-modal");
+
+    $(".edit-btn").on("click", function () {
+      const editType = $(this).data("edit");
+      $("#edit-" + editType + "-modal").css("display", "flex");
+    });
+
+    function closeModals() {
+      $editModals.hide();
+    }
+
+    $(".edit-modal-close, .modal-btn-cancel").on("click", closeModals);
+
+    $(".modal-btn-save").on("click", function () {
+      const $modal = $(this).closest(".edit-modal");
+      const editType = $modal.attr("id").replace("edit-", "").replace("-modal", "");
+
+      if (editType === "about") {
+        const aboutText = $("#about-text").val();
+        $(".about-content").html(`<p>${aboutText.replace(/\n/g, "</p><p>")}</p>`);
+      } else if (editType === "skills") {
+        const skillsArray = $("#skills-input").val().split(",").map(s => s.trim());
+        const $skillsList = $(".skills-list").empty();
+        skillsArray.forEach(skill => $skillsList.append(`<span class="skill-tag">${skill}</span>`));
+      }
+
+      closeModals();
+    });
+
+    $editModals.on("click", function (e) {
+      if (e.target === this) closeModals();
+    });
+
+    // Profile picture modal
+    const $profilePictureModal = $("#edit-profile-picture-modal");
+
+    $("#open-profile-picture-modal").on("click", function () {
+      $profilePictureModal.css("display", "flex");
+    });
+
+    $profilePictureModal.find(".edit-modal-close, .modal-btn-cancel").on("click", function () {
+      $profilePictureModal.hide();
+    });
+
+    $("#file-upload").on("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          $("#avatar-preview").attr("src", event.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    $("#save-profile-picture").on("click", function () {
+      const newAvatarSrc = $("#avatar-preview").attr("src");
+      $("#profile-avatar, #header-avatar, #sidebar-avatar").attr("src", newAvatarSrc);
+      $profilePictureModal.hide();
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!-- Profile Picture Modal -->
+<div class="edit-modal profile-picture-modal" id="edit-profile-picture-modal">
+    <div class="edit-modal-content">
+        <div class="edit-modal-header">
+            <h2>Change Profile Picture</h2>
+            <button class="edit-modal-close">&times;</button>
+        </div>
+        <div class="edit-modal-body">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Preview" class="avatar-preview" id="avatar-preview">
+
+            <div class="upload-options">
+                <div class="upload-option">
+                    <label>Upload a photo</label>
+                    <label for="file-upload" class="upload-btn">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Choose from your computer</p>
+                        <input type="file" id="file-upload" class="file-input" accept="image/*">
+                    </label>
+                </div>
+
+                <div class="upload-option">
+                    <label>Take a photo</label>
+                    <div class="camera-btn">
+                        <i class="fas fa-camera"></i>
+                        <p>Use your camera</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="edit-modal-footer">
+            <button class="modal-btn modal-btn-cancel">Cancel</button>
+            <button class="modal-btn modal-btn-save" id="save-profile-picture"><i class="fas fa-save"></i> Save Picture</button>
+        </div>
+    </div>
+</div>
