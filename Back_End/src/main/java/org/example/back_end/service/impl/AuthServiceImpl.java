@@ -22,26 +22,39 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwlUtil;
 
+
     @Override
     public AuthResponseDTO authenticate(AuthDTO authDTO) {
 
+        // Check Job Seeker
         JobSeeker jobSeeker = jobSeekerRepository.findByEmail(authDTO.getEmail()).orElse(null);
         if (jobSeeker != null) {
             if (!passwordEncoder.matches(authDTO.getPassword(), jobSeeker.getPassword())) {
                 throw new BadCredentialsException("Invalid credentials for JobSeeker");
             }
             String token = jwlUtil.generateToken(jobSeeker.getEmail());
-            return new AuthResponseDTO(token);
+            return new AuthResponseDTO(jobSeeker.getEmail(), token, "ROLE_JOB_SEEKER");
         }
 
+        // Check Employee
         Employee employee = employeeRepository.findByEmail(authDTO.getEmail()).orElse(null);
         if (employee != null) {
             if (!passwordEncoder.matches(authDTO.getPassword(), employee.getPassword())) {
                 throw new BadCredentialsException("Invalid credentials for Employee");
             }
             String token = jwlUtil.generateToken(employee.getEmail());
-            return new AuthResponseDTO(token);
+            return new AuthResponseDTO(employee.getEmail(), token, "ROLE_EMPLOYEE");
         }
+
+        if (authDTO.getEmail().equals("admin@gmail.com")) {
+            String encodedAdminPassword = "$2a$12$.4Wrlu3qNpQ2uLbCDcKB6Ogm7PvNdEid20a2e96pPjUpqRFltTQ5y"; //"admin123"
+            if (!passwordEncoder.matches(authDTO.getPassword(), encodedAdminPassword)) {
+                throw new BadCredentialsException("Invalid credentials for Admin");
+            }
+            String token = jwlUtil.generateToken("admin@gmail.com");
+            return new AuthResponseDTO("admin@gmail.com", token, "ROLE_ADMIN");
+        }
+
 
         throw new BadCredentialsException("User not found");
     }
@@ -99,7 +112,5 @@ public class AuthServiceImpl implements AuthService {
         employeeRepository.save(employee);
         return "Employee registered successfully";
     }
-
-
 
 }

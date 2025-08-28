@@ -45,16 +45,12 @@ public class ApplicationConfig {
 
             if (email.equals("admin@gmail.com")) {
                 String encodedPassword = "$2a$10$9vHHx0W0sLrTNh7vQqR1O.4wU4QOmZpY5cYZM7HryOQxjUl7sVix6";
-
                 return new org.springframework.security.core.userdetails.User(
                         "admin@gmail.com",
                         encodedPassword,
-
                         List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
                 );
             }
-
-
 
             throw new UsernameNotFoundException("User not found");
         };

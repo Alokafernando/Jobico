@@ -126,21 +126,56 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-  // Form submission handler
   $('#loginForm').on('submit', function(e) {
     e.preventDefault();
 
     const btn = $('.login-btn');
     btn.addClass('btn-loading').text('');
 
-    // Simulate login process
-    setTimeout(() => {
-      btn.removeClass('btn-loading').text('Sign In to Your Future');
-      showMessage('Welcome back! Redirecting to your dashboard... 🎉');
-    }, 2000);
+    // Get login form values
+    const loginData = {
+      email: $('#email').val().trim(),
+      password: $('#password').val().trim()
+    };
+
+    // Call API
+    fetch("http://localhost:8080/auth/login", {
+      method: "POST",
+      body: JSON.stringify(loginData),
+      headers: { "Content-Type": "application/json" }
+    })
+            .then(res => {
+              if (!res.ok) throw new Error("Invalid credentials");
+              return res.json();
+            })
+            .then(data => {
+              btn.removeClass('btn-loading').text('Sign In to Your Future');
+
+              // Save token and role
+              localStorage.setItem("token", data.accessToken);
+              localStorage.setItem("role", data.role);
+
+              showMessage('Welcome back! Redirecting to your dashboard... 🎉');
+
+              // Redirect based on role
+              if (data.role === "ROLE_ADMIN") {
+                // window.location.href = "/admin/dashboard.html";
+                console.log('admin dashboard')
+              } else if (data.role === "ROLE_EMPLOYEE") {
+                // window.location.href = "/employee/dashboard.html";
+                console.log('employee dashboard')
+              } else if (data.role === "ROLE_JOB_SEEKER") {
+                window.location.href = "JobSeekerDashboard.html";
+              } else {
+                alert("Unknown role!");
+              }
+            })
+            .catch(err => {
+              btn.removeClass('btn-loading').text('Sign In to Your Future');
+              showMessage(err.message || "Login failed ❌");
+            });
   });
 
-  // Password toggle functionality
   function togglePassword() {
     const passwordField = $('#password');
     const toggleBtn = $('.password-toggle');
@@ -154,55 +189,14 @@
     }
   }
 
-  // Social login handler
-  function socialLogin(provider) {
-    showMessage(`Connecting with ${provider}... 🔗`);
-  }
-
-  // Close button functionality
-  function closeWindow() {
-    window.location.href = '../index.html';
-  }
-
-  // Notification system
   function showMessage(message) {
-    // Remove existing notification
     $('.notification').remove();
-
-    // Create new notification
     const notification = $('<div class="notification"></div>').text(message);
     $('body').append(notification);
-
-    // Auto-remove after 3 seconds
-    setTimeout(() => {
-      notification.remove();
-    }, 3000);
+    setTimeout(() => notification.remove(), 3000);
   }
-
-  // Enhanced form validation
-  $('input[required]').on('blur', function() {
-    const input = $(this);
-    const val = input.val().trim();
-
-    if (val === '' || (input.attr('type') === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))) {
-      input.css({
-        borderColor: '#ff6b35',
-        boxShadow: '0 0 0 4px rgba(56, 103, 214, 0.1)'
-      });
-    } else {
-      input.css({
-        borderColor: '#e9ecef',
-        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)'
-      });
-    }
-  });
-
-  // Add some interactive features
-  $('.feature-item').on('click', function() {
-    const featureName = $(this).find('h4').text();
-    showMessage(`Learn more about ${featureName} 📚`);
-  });
 </script>
+
 
 </body>
 </html>
