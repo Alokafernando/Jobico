@@ -88,8 +88,13 @@ $(document).ready(function() {
             return;
         }
 
-        if (!validateName(seekerData.firstName) || !validateName(seekerData.lastName)) {
-            Swal.fire('Error', 'First and Last names should contain only letters.', 'error');
+        if (!validateName(seekerData.firstName)) {
+            Swal.fire('Error', 'First name should contain only letters.', 'error');
+            return;
+        }
+
+        if (!validateName(seekerData.lastName)) {
+            Swal.fire('Error', 'Last name should contain only letters.', 'error');
             return;
         }
 
@@ -154,7 +159,7 @@ $(document).ready(function() {
             industry: $('#companyIndustry').val().trim(),
             contactFirstName: $('#contactFirstName').val().trim(),
             contactLastName: $('#contactLastName').val().trim(),
-            position: $('#contactPosition').val().trim(),
+            contactPosition: $('#contactPosition').val().trim(),
             email: $('#contactEmail').val().trim(),
             phone: $('#contactPhone').val().trim(),
             location: $('#companyLocation').val().trim(),
@@ -165,6 +170,26 @@ $(document).ready(function() {
         // Basic validations
         if (!employeeData.companyName || !employeeData.email || !employeeData.password) {
             Swal.fire('Error', 'Please fill all mandatory fields.', 'error');
+            return;
+        }
+
+         if (!validateName(employeeData.companyName)){
+             Swal.fire('Error', 'Company name should contain only letters.', 'error');
+             return;
+         }
+
+        if (!validateName(employeeData.contactPosition)){
+            Swal.fire('Error', 'Position should contain only letters.', 'error');
+            return;
+        }
+
+        if (!validateName(employeeData.contactFirstName)){
+            Swal.fire('Error', 'First name should contain only letters.', 'error');
+            return;
+        }
+
+        if (!validateName(employeeData.contactLastName)){
+            Swal.fire('Error', 'Last name should contain only letters.', 'error');
             return;
         }
 

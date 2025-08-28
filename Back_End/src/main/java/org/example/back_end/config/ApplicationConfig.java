@@ -49,6 +49,7 @@ public class ApplicationConfig {
                 return new org.springframework.security.core.userdetails.User(
                         "admin@gmail.com",
                         encodedPassword,
+
                         List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
                 );
             }

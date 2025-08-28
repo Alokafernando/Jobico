@@ -81,6 +81,15 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Employee employee = Employee.builder()
+                .companyDescription(employeeRegisterDTO.getDescription())
+                .companyLocation(employeeRegisterDTO.getLocation())
+                .companyName(employeeRegisterDTO.getCompanyName())
+                .contactFirstName(employeeRegisterDTO.getContactFirstName())
+                .contactLastName(employeeRegisterDTO.getContactLastName())
+                .contactPosition(employeeRegisterDTO.getContactPosition())
+                .industry(employeeRegisterDTO.getIndustry())
+                .phoneNumber(employeeRegisterDTO.getPhone())
+                .username(employeeRegisterDTO.getEmail())
                 .email(employeeRegisterDTO.getEmail())
                 .username(employeeRegisterDTO.getEmail())
                 .password(passwordEncoder.encode(employeeRegisterDTO.getPassword()))

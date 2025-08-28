@@ -23,10 +23,17 @@ public class Employee {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String firstName;
-    private String lastName;
-    private String department;
-    private String position;
+    private String companyName;
+    private String industry;
+    private String contactFirstName;
+    private String contactLastName;
+
+    @Column(name = "contact_position")
+    private String contactPosition;
+
+    private String phoneNumber;
+    private String companyLocation;
+    private String companyDescription;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.EMPLOYEE;
