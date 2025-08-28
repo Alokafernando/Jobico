@@ -207,13 +207,13 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="companyWebsite">Company Website</label>
-              <div class="input-container">
-                <input type="url" id="companyWebsite" name="website" placeholder="https://yourcompany.com">
-                <span class="input-icon"><i class="fa-solid fa-globe"></i></span>
-              </div>
-            </div>
+<!--            <div class="form-group">-->
+<!--              <label for="companyWebsite">Company Website</label>-->
+<!--              <div class="input-container">-->
+<!--                <input type="url" id="companyWebsite" name="website" placeholder="https://yourcompany.com">-->
+<!--                <span class="input-icon"><i class="fa-solid fa-globe"></i></span>-->
+<!--              </div>-->
+<!--            </div>-->
 
             <div class="form-group">
               <label for="companyIndustry">Industry</label>
@@ -233,21 +233,21 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="companySize">Company Size</label>
-              <div class="input-container">
-                <select id="companySize" name="size" required>
-                  <option value="">Select company size</option>
-                  <option value="1-10">1-10 employees</option>
-                  <option value="11-50">11-50 employees</option>
-                  <option value="51-200">51-200 employees</option>
-                  <option value="201-500">201-500 employees</option>
-                  <option value="501-1000">501-1000 employees</option>
-                  <option value="1000+">1000+ employees</option>
-                </select>
-                <span class="input-icon"><i class="fa-solid fa-users"></i></span>
-              </div>
-            </div>
+<!--            <div class="form-group">-->
+<!--              <label for="companySize">Company Size</label>-->
+<!--              <div class="input-container">-->
+<!--                <select id="companySize" name="size" required>-->
+<!--                  <option value="">Select company size</option>-->
+<!--                  <option value="1-10">1-10 employees</option>-->
+<!--                  <option value="11-50">11-50 employees</option>-->
+<!--                  <option value="51-200">51-200 employees</option>-->
+<!--                  <option value="201-500">201-500 employees</option>-->
+<!--                  <option value="501-1000">501-1000 employees</option>-->
+<!--                  <option value="1000+">1000+ employees</option>-->
+<!--                </select>-->
+<!--                <span class="input-icon"><i class="fa-solid fa-users"></i></span>-->
+<!--              </div>-->
+<!--            </div>-->
 
             <div class="form-group">
               <label for="contactFirstName">Contact Person First Name</label>
@@ -331,87 +331,8 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-  $(document).ready(function () {
-    // Toggle between Job Seeker and Employer forms
-    $('#seekerBtn').on('click', function () {
-      $(this).addClass('active');
-      $('#employeeBtn').removeClass('active');
-      $('#seekerForm').addClass('active');
-      $('#employeeForm').removeClass('active');
-    });
-
-    $('#employeeBtn').on('click', function () {
-      $(this).addClass('active');
-      $('#seekerBtn').removeClass('active');
-      $('#employeeForm').addClass('active');
-      $('#seekerForm').removeClass('active');
-    });
-
-    // Password toggle functionality
-    window.togglePassword = function (inputId, toggleIconId) {
-      const $passwordField = $('#' + inputId);
-      const $toggleIcon = $('#' + toggleIconId);
-
-      if ($passwordField.attr('type') === 'password') {
-        $passwordField.attr('type', 'text');
-        $toggleIcon.removeClass('fa-eye').addClass('fa-eye-slash');
-      } else {
-        $passwordField.attr('type', 'password');
-        $toggleIcon.removeClass('fa-eye-slash').addClass('fa-eye');
-      }
-    };
-
-    // Form submission handlers
-    $('#seekerSignupForm').on('submit', function (e) {
-      e.preventDefault();
-      handleSignup('seeker');
-    });
-
-    $('#employeeSignupForm').on('submit', function (e) {
-      e.preventDefault();
-      handleSignup('employee');
-    });
-
-    function handleSignup(userType) {
-      let password, confirmPassword;
-
-      if (userType === 'seeker') {
-        password = $('#seekerPassword').val();
-        confirmPassword = $('#seekerConfirmPassword').val();
-      } else {
-        password = $('#employeePassword').val();
-        confirmPassword = ''; // Employee form doesn't have confirm password
-      }
-
-      if (userType === 'seeker' && password !== confirmPassword) {
-        alert('Passwords do not match! Please try again.');
-        return;
-      }
-
-      const $btn = $(`#${userType}Form .signup-btn`);
-      $btn.addClass('btn-loading').text('');
-
-      // Simulate signup process
-      setTimeout(() => {
-        $btn.removeClass('btn-loading');
-        $btn.text(userType === 'seeker' ? 'Create Job Seeker Account' : 'Create Employer Account');
-        alert('Account created successfully! Redirecting to your dashboard...');
-
-        setTimeout(() => {
-          window.location.href = userType === 'seeker' ? 'seeker-dashboard.html' : 'employer-dashboard.html';
-        }, 2000);
-      }, 2000);
-    }
-
-    // Close button functionality
-    window.closeWindow = function () {
-      if (confirm('Are you sure you want to leave? Your progress will be lost.')) {
-        window.location.href = '../index.html';
-      }
-    };
-  });
-</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../js/SignUp.js"></script>
 
 </body>
 </html>
