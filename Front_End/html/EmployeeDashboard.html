@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Jobico - Employee Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b35;
+            --secondary: #ffd700;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--dark);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .sidebar-logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--secondary), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 5px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-left-color: var(--primary);
+        }
+
+        .menu-link i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-text {
+            flex: 1;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        .top-header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-btn, .profile-btn {
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+
+        .notification-btn:hover, .profile-btn:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title i {
+            color: var(--primary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .stat-icon.applicants {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-icon.jobs {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--secondary);
+        }
+
+        .stat-icon.views {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        .stat-icon.messages {
+            background: rgba(23, 162, 184, 0.1);
+            color: var(--info);
+        }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        /* Jobs Table */
+        .jobs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .jobs-table th, .jobs-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .jobs-table th {
+            font-weight: 600;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .jobs-table tbody tr {
+            transition: background 0.3s;
+        }
+
+        .jobs-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .job-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .job-company {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 3px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+
+        .status-closed {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-view {
+            background: rgba(23, 162, 184, 0.1);
+            color: var(--info);
+        }
+
+        .btn-view:hover {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-edit {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+
+        .btn-edit:hover {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-primary {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-back {
+            background: rgba(108, 117, 125, 0.1);
+            color: var(--gray);
+            margin-right: 10px;
+        }
+
+        .btn-back:hover {
+            background: var(--gray);
+            color: white;
+        }
+
+        /* Recent Applicants */
+        .applicants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .applicant-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .applicant-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .applicant-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .applicant-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .applicant-info h4 {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .applicant-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .applicant-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .applicant-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Page Content Styles */
+        .page-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .page-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .filter-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .message-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .message-sidebar {
+            width: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .message-list {
+            list-style: none;
+        }
+
+        .message-item {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .message-item:hover, .message-item.active {
+            background: white;
+            border-radius: 8px;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .message-sender {
+            font-weight: 600;
+        }
+
+        .message-time {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .message-preview {
+            color: var(--gray);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .message-detail {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .compose-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Detail View Styles */
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .detail-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .detail-subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .detail-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            color: var(--dark);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .applicant-list {
+            list-style: none;
+        }
+
+        .applicant-list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .applicant-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .applicant-list-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+
+        .applicant-list-info {
+            flex: 1;
+        }
+
+        .applicant-list-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .applicant-list-details {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .applicant-list-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Profile specific styles */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .profile-info p {
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .profile-stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .profile-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--info);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-left-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Progress bars */
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Skill tags */
+        .skill-tag {
+            display: inline-block;
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0 5px 5px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .menu-text, .sidebar-logo-text {
+                display: none;
+            }
+
+            .sidebar-header {
+                padding: 20px 15px;
+            }
+
+            .menu-link {
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .menu-link i {
+                margin-right: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .message-container {
+                flex-direction: column;
+            }
+
+            .message-sidebar {
+                width: 100%;
+            }
+
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-header {
+                padding: 15px;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .applicants-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-stats {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+
+            .top-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .header-actions {
+                align-self: flex-end;
+            }
+
+            .detail-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">💼</div>
+                <div class="sidebar-logo-text">Jobico</div>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a data-page="dashboard" class="menu-link active">
+                    <i class="fas fa-home"></i>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a data-page="job-posts" class="menu-link">
+                    <i class="fas fa-briefcase"></i>
+                    <span class="menu-text">Job Posts</span>
+                    <span class="badge">5</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a data-page="applicants" class="menu-link">
+                    <i class="fas fa-users"></i>
+                    <span class="menu-text">Applicants</span>
+                    <span class="badge">12</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a data-page="profile" class="menu-link">
+                    <i class="fas fa-user"></i>
+                    <span class="menu-text">Profile</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a data-page="messages" class="menu-link">
+                    <i class="fas fa-envelope"></i>
+                    <span class="menu-text">Messages</span>
+                    <span class="badge">3</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a data-page="settings" class="menu-link">
+                    <i class="fas fa-cog"></i>
+                    <span class="menu-text">Settings</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a data-page="help" class="menu-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="menu-text">Help & Support</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search...">
+            </div>
+
+            <div class="header-actions">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-img">
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page-content active">
+                <h1 class="page-title">
+                    <i class="fas fa-home"></i>
+                    Employee Dashboard
+                </h1>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon applicants">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>124</h3>
+                            <p>Total Applicants</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon jobs">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>8</h3>
+                            <p>Active Job Posts</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon views">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>2,548</h3>
+                            <p>Profile Views</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon messages">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>24</h3>
+                            <p>Unread Messages</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Jobs Section -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Active Job Posts</h2>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+
+                    <table class="jobs-table">
+                        <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Applications</th>
+                            <th>Status</th>
+                            <th>Posted Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="job-title">Senior Frontend Developer</div>
+                                <div class="job-company">Tech Solutions Inc.</div>
+                            </td>
+                            <td>42</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>May 15, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-job-id="1">View</button>
+                                <button class="action-btn btn-edit" data-job-id="1">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title">UX/UI Designer</div>
+                                <div class="job-company">Creative Minds Agency</div>
+                            </td>
+                            <td>28</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Jun 2, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-job-id="2">View</button>
+                                <button class="action-btn btn-edit" data-job-id="2">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title">Product Manager</div>
+                                <div class="job-company">Innovate Tech</div>
+                            </td>
+                            <td>35</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>Jun 10, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-job-id="3">View</button>
+                                <button class="action-btn btn-edit" data-job-id="3">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title">Data Analyst</div>
+                                <div class="job-company">Data Insights Co.</div>
+                            </td>
+                            <td>19</td>
+                            <td><span class="status-badge status-closed">Closed</span></td>
+                            <td>Apr 22, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-job-id="4">View</button>
+                                <button class="action-btn btn-edit" data-job-id="4">Edit</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Recent Applicants Section -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Applicants</h2>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+
+                    <div class="applicants-grid">
+                        <div class="applicant-card">
+                            <div class="applicant-header">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Applicant" class="applicant-img">
+                                <div class="applicant-info">
+                                    <h4>Sarah Johnson</h4>
+                                    <p>Frontend Developer</p>
+                                </div>
+                            </div>
+                            <div class="applicant-details">
+                                <div class="detail-item">
+                                    <div class="detail-value">4.8</div>
+                                    <div class="detail-label">Rating</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">12</div>
+                                    <div class="detail-label">Applied</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">85%</div>
+                                    <div class="detail-label">Match</div>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                            <div class="applicant-actions">
+                                <button class="action-btn btn-view" data-applicant-id="1">View Profile</button>
+                                <button class="action-btn btn-edit">Message</button>
+                            </div>
+                        </div>
+
+                        <div class="applicant-card">
+                            <div class="applicant-header">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Applicant" class="applicant-img">
+                                <div class="applicant-info">
+                                    <h4>Michael Chen</h4>
+                                    <p>UX Designer</p>
+                                </div>
+                            </div>
+                            <div class="applicant-details">
+                                <div class="detail-item">
+                                    <div class="detail-value">4.5</div>
+                                    <div class="detail-label">Rating</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">8</div>
+                                    <div class="detail-label">Applied</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">92%</div>
+                                    <div class="detail-label">Match</div>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%;"></div>
+                            </div>
+                            <div class="applicant-actions">
+                                <button class="action-btn btn-view" data-applicant-id="2">View Profile</button>
+                                <button class="action-btn btn-edit">Message</button>
+                            </div>
+                        </div>
+
+                        <div class="applicant-card">
+                            <div class="applicant-header">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Applicant" class="applicant-img">
+                                <div class="applicant-info">
+                                    <h4>Jessica Williams</h4>
+                                    <p>Product Manager</p>
+                                </div>
+                            </div>
+                            <div class="applicant-details">
+                                <div class="detail-item">
+                                    <div class="detail-value">4.9</div>
+                                    <div class="detail-label">Rating</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">15</div>
+                                    <div class="detail-label">Applied</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">78%</div>
+                                    <div class="detail-label">Match</div>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 78%;"></div>
+                            </div>
+                            <div class="applicant-actions">
+                                <button class="action-btn btn-view" data-applicant-id="3">View Profile</button>
+                                <button class="action-btn btn-edit">Message</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Posts Page -->
+            <div id="job-posts-page" class="page-content">
+                <h1 class="page-title">
+                    <i class="fas fa-briefcase"></i>
+                    Job Posts
+                </h1>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">All Job Posts</h2>
+                        <button class="action-btn btn-primary" id="createJobBtn">Create New Job</button>
+                    </div>
+
+                    <!-- Create New Job Form (Initially Hidden) -->
+                    <div id="create-job-form" style="display: none;">
+                        <h3 style="margin-bottom: 20px;">Create New Job Post</h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-input" placeholder="e.g. Senior Frontend Developer">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Department</label>
+                                <select class="form-select">
+                                    <option>Engineering</option>
+                                    <option>Design</option>
+                                    <option>Marketing</option>
+                                    <option>Operations</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Job Type</label>
+                                <select class="form-select">
+                                    <option>Full-time</option>
+                                    <option>Part-time</option>
+                                    <option>Contract</option>
+                                    <option>Internship</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-input" placeholder="e.g. Remote, New York, etc.">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Job Description</label>
+                            <textarea class="form-textarea" placeholder="Describe the role, responsibilities, and requirements..."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Application Deadline</label>
+                                <input type="date" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Salary Range</label>
+                                <input type="text" class="form-input" placeholder="e.g. $80,000 - $100,000">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button class="action-btn btn-primary" id="publishJobBtn">Publish Job</button>
+                            <button class="action-btn btn-edit">Save as Draft</button>
+                            <button class="action-btn btn-view" id="cancelCreateJob">Cancel</button>
+                        </div>
+                    </div>
+
+                    <table class="jobs-table">
+                        <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Applications</th>
+                            <th>Status</th>
+                            <th>Posted Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="job-title">Senior Frontend Developer</div>
+                                <div class="job-company">Tech Solutions Inc.</div>
+                            </td>
+                            <td>42</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>May 15, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-job-id="1">View</button>
+                                <button class="action-btn btn-edit" data-job-id="1">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title">UX/UI Designer</div>
+                                <div class="job-company">Creative Minds Agency</div>
+                            </td>
+                            <td>28</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Jun 2, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-job-id="2">View</button>
+                                <button class="action-btn btn-edit" data-job-id="2">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title">Product Manager</div>
+                                <div class="job-company">Innovate Tech</div>
+                            </td>
+                            <td>35</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>Jun 10, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-job-id="3">View</button>
+                                <button class="action-btn btn-edit" data-job-id="3">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title">Data Analyst</div>
+                                <div class="job-company">Data Insights Co.</div>
+                            </td>
+                            <td>19</td>
+                            <td><span class="status-badge status-closed">Closed</span></td>
+                            <td>Apr 22, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-job-id="4">View</button>
+                                <button class="action-btn btn-edit" data-job-id="4">Edit</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- View Job Page -->
+            <div id="view-job-page" class="page-content">
+                <div class="section-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-briefcase"></i>
+                        Job Details
+                    </h1>
+                    <button class="action-btn btn-back" id="backToJobs">Back to Jobs</button>
+                </div>
+
+                <div class="content-section">
+                    <div class="detail-header">
+                        <div>
+                            <h2 class="detail-title">Senior Frontend Developer</h2>
+                            <p class="detail-subtitle">Tech Solutions Inc. • Posted on May 15, 2023</p>
+                        </div>
+                        <span class="detail-status status-active">Active</span>
+                    </div>
+
+                    <div class="detail-content">
+                        <div class="detail-card">
+                            <h3 class="detail-card-title">Job Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Department</div>
+                                    <div class="info-value">Engineering</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Job Type</div>
+                                    <div class="info-value">Full-time</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Location</div>
+                                    <div class="info-value">Remote</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Experience Level</div>
+                                    <div class="info-value">Senior (5+ years)</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Salary Range</div>
+                                    <div class="info-value">$90,000 - $120,000</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Application Deadline</div>
+                                    <div class="info-value">July 15, 2023</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <h3 class="detail-card-title">Applications Overview</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Total Applications</div>
+                                    <div class="info-value">42</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">New Applications</div>
+                                    <div class="info-value">12</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">In Review</div>
+                                    <div class="info-value">18</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Interview Stage</div>
+                                    <div class="info-value">8</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Rejected</div>
+                                    <div class="info-value">3</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Hired</div>
+                                    <div class="info-value">1</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <h3 class="detail-card-title">Job Description</h3>
+                        <p>We are looking for a skilled Senior Frontend Developer to join our growing engineering team. The ideal candidate will be responsible for building the client-side of our web applications and translating UI/UX design wireframes into code.</p>
+
+                        <h4 style="margin: 20px 0 10px 0;">Responsibilities:</h4>
+                        <ul style="padding-left: 20px; margin-bottom: 20px;">
+                            <li>Develop new user-facing features using React.js</li>
+                            <li>Build reusable components and front-end libraries for future use</li>
+                            <li>Translate designs and wireframes into high-quality code</li>
+                            <li>Optimize components for maximum performance across a vast array of web-capable devices and browsers</li>
+                            <li>Collaborate with back-end developers and web designers to improve usability</li>
+                        </ul>
+
+                        <h4 style="margin: 20px 0 10px 0;">Requirements:</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>5+ years of experience with JavaScript, CSS, and HTML</li>
+                            <li>3+ years of experience with React.js and its ecosystem</li>
+                            <li>Experience with state management libraries (Redux, MobX)</li>
+                            <li>Familiarity with RESTful APIs and modern authorization mechanisms</li>
+                            <li>Experience with common front-end development tools</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="section-header">
+                            <h3 class="detail-card-title">Recent Applicants</h3>
+                            <a href="#" class="view-all">View All Applicants</a>
+                        </div>
+
+                        <ul class="applicant-list">
+                            <li class="applicant-list-item">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Applicant" class="applicant-list-img">
+                                <div class="applicant-list-info">
+                                    <div class="applicant-list-name">Sarah Johnson</div>
+                                    <div class="applicant-list-details">Applied on Jun 12, 2023 • 4.8/5 Rating</div>
+                                </div>
+                                <div class="applicant-list-actions">
+                                    <button class="action-btn btn-view">View</button>
+                                    <button class="action-btn btn-edit">Contact</button>
+                                </div>
+                            </li>
+                            <li class="applicant-list-item">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Applicant" class="applicant-list-img">
+                                <div class="applicant-list-info">
+                                    <div class="applicant-list-name">Michael Chen</div>
+                                    <div class="applicant-list-details">Applied on Jun 10, 2023 • 4.5/5 Rating</div>
+                                </div>
+                                <div class="applicant-list-actions">
+                                    <button class="action-btn btn-view">View</button>
+                                    <button class="action-btn btn-edit">Contact</button>
+                                </div>
+                            </li>
+                            <li class="applicant-list-item">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Applicant" class="applicant-list-img">
+                                <div class="applicant-list-info">
+                                    <div class="applicant-list-name">Jessica Williams</div>
+                                    <div class="applicant-list-details">Applied on Jun 8, 2023 • 4.9/5 Rating</div>
+                                </div>
+                                <div class="applicant-list-actions">
+                                    <button class="action-btn btn-view">View</button>
+                                    <button class="action-btn btn-edit">Contact</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Job Page -->
+            <div id="edit-job-page" class="page-content">
+                <div class="section-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-edit"></i>
+                        Edit Job Post
+                    </h1>
+                    <button class="action-btn btn-back" id="backToJobsFromEdit">Back to Jobs</button>
+                </div>
+
+                <div class="content-section">
+                    <h3 style="margin-bottom: 20px;">Edit Job: Senior Frontend Developer</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" class="form-input" value="Senior Frontend Developer">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Department</label>
+                            <select class="form-select">
+                                <option selected>Engineering</option>
+                                <option>Design</option>
+                                <option>Marketing</option>
+                                <option>Operations</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Job Type</label>
+                            <select class="form-select">
+                                <option selected>Full-time</option>
+                                <option>Part-time</option>
+                                <option>Contract</option>
+                                <option>Internship</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-input" value="Remote">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Job Description</label>
+                        <textarea class="form-textarea">We are looking for a skilled Senior Frontend Developer to join our growing engineering team. The ideal candidate will be responsible for building the client-side of our web applications and translating UI/UX design wireframes into code.</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Application Deadline</label>
+                            <input type="date" class="form-input" value="2023-07-15">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Salary Range</label>
+                            <input type="text" class="form-input" value="$90,000 - $120,000">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option selected>Active</option>
+                                <option>Pending</option>
+                                <option>Closed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Experience Level</label>
+                            <select class="form-select">
+                                <option selected>Senior (5+ years)</option>
+                                <option>Mid-Level (3-5 years)</option>
+                                <option>Entry Level (0-2 years)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn btn-primary" id="updateJobBtn">Update Job</button>
+                        <button class="action-btn btn-view">Save as Draft</button>
+                        <button class="action-btn btn-edit">Preview</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Applicant Page -->
+            <div id="view-applicant-page" class="page-content">
+                <div class="section-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-user"></i>
+                        Applicant Profile
+                    </h1>
+                    <button class="action-btn btn-back" id="backToApplicants">Back to Applicants</button>
+                </div>
+
+                <div class="content-section">
+                    <div class="detail-header">
+                        <div style="display: flex; align-items: center;">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Applicant" style="width: 80px; height: 80px; border-radius: 50%; margin-right: 20px;">
+                            <div>
+                                <h2 class="detail-title">Sarah Johnson</h2>
+                                <p class="detail-subtitle">Frontend Developer • Applied for Senior Frontend Developer</p>
+                            </div>
+                        </div>
+                        <span class="detail-status status-active">New Application</span>
+                    </div>
+
+                    <div class="detail-content">
+                        <div class="detail-card">
+                            <h3 class="detail-card-title">Contact Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">sarah.johnson@example.com</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Phone</div>
+                                    <div class="info-value">(555) 123-4567</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Location</div>
+                                    <div class="info-value">San Francisco, CA</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Application Date</div>
+                                    <div class="info-value">June 12, 2023</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Status</div>
+                                    <div class="info-value">New</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Match Score</div>
+                                    <div class="info-value">85%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <h3 class="detail-card-title">Professional Summary</h3>
+                            <p>Experienced Frontend Developer with 5+ years of expertise in building responsive and accessible web applications. Skilled in React, JavaScript, and modern CSS frameworks. Passionate about creating intuitive user experiences and optimizing performance.</p>
+
+                            <h4 style="margin: 20px 0 10px 0;">Skills:</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <span class="skill-tag">React.js</span>
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">TypeScript</span>
+                                <span class="skill-tag">HTML/CSS</span>
+                                <span class="skill-tag">Redux</span>
+                                <span class="skill-tag">Webpack</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <h3 class="detail-card-title">Work Experience</h3>
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 5px;">Senior Frontend Developer - Tech Innovations Inc.</h4>
+                            <p style="color: var(--gray); margin-bottom: 8px;">January 2020 - Present</p>
+                            <ul style="padding-left: 20px;">
+                                <li>Led development of company's main customer-facing web application using React</li>
+                                <li>Improved page load performance by 40% through code splitting and lazy loading</li>
+                                <li>Mentored junior developers and established frontend best practices</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 5px;">Frontend Developer - Web Solutions LLC</h4>
+                            <p style="color: var(--gray); margin-bottom: 8px;">June 2017 - December 2019</p>
+                            <ul style="padding-left: 20px;">
+                                <li>Developed responsive web applications for various clients</li>
+                                <li>Collaborated with designers to implement pixel-perfect UI components</li>
+                                <li>Implemented accessibility features to ensure WCAG compliance</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <h3 class="detail-card-title">Education</h3>
+                        <div style="margin-bottom: 15px;">
+                            <h4 style="margin-bottom: 5px;">B.S. in Computer Science - Stanford University</h4>
+                            <p style="color: var(--gray);">2013 - 2017</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="section-header">
+                            <h3 class="detail-card-title">Application Materials</h3>
+                        </div>
+                        <div style="display: flex; gap: 15px;">
+                            <button class="action-btn btn-view">
+                                <i class="fas fa-file-pdf" style="margin-right: 5px;"></i> View Resume
+                            </button>
+                            <button class="action-btn btn-view">
+                                <i class="fas fa-file-alt" style="margin-right: 5px;"></i> View Cover Letter
+                            </button>
+                            <button class="action-btn btn-view">
+                                <i class="fas fa-briefcase" style="margin-right: 5px;"></i> Portfolio
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="section-header">
+                            <h3 class="detail-card-title">Application Status</h3>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Update Status</label>
+                                <select class="form-select">
+                                    <option selected>New</option>
+                                    <option>In Review</option>
+                                    <option>Interview Scheduled</option>
+                                    <option>Offer Extended</option>
+                                    <option>Hired</option>
+                                    <option>Rejected</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Rating</label>
+                                <select class="form-select">
+                                    <option>1 Star</option>
+                                    <option>2 Stars</option>
+                                    <option>3 Stars</option>
+                                    <option>4 Stars</option>
+                                    <option selected>5 Stars</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-textarea" placeholder="Add internal notes about this applicant..."></textarea>
+                        </div>
+                        <button class="action-btn btn-primary" id="saveApplicantChanges">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applicants Page -->
+            <div id="applicants-page" class="page-content">
+                <h1 class="page-title">
+                    <i class="fas fa-users"></i>
+                    Applicants
+                </h1>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">All Applicants</h2>
+                        <a href="#" class="view-all" id="toggleFilterBtn">Filter Options</a>
+                    </div>
+
+                    <!-- Filter Options (Initially Hidden) -->
+                    <div id="filter-options" class="filter-container" style="display: none;">
+                        <h3 class="filter-title">Filter Applicants</h3>
+                        <div class="filter-options">
+                            <div class="form-group">
+                                <label class="form-label">Job Position</label>
+                                <select class="form-select">
+                                    <option>All Positions</option>
+                                    <option>Frontend Developer</option>
+                                    <option>UX Designer</option>
+                                    <option>Product Manager</option>
+                                    <option>Data Analyst</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-select">
+                                    <option>All Statuses</option>
+                                    <option>New</option>
+                                    <option>Reviewed</option>
+                                    <option>Interview</option>
+                                    <option>Rejected</option>
+                                    <option>Hired</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Experience Level</label>
+                                <select class="form-select">
+                                    <option>Any Experience</option>
+                                    <option>Entry Level (0-2 years)</option>
+                                    <option>Mid Level (3-5 years)</option>
+                                    <option>Senior Level (5+ years)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Date Applied</label>
+                                <select class="form-select">
+                                    <option>Any Time</option>
+                                    <option>Last 24 hours</option>
+                                    <option>Last 7 days</option>
+                                    <option>Last 30 days</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="action-btn btn-primary">Apply Filters</button>
+                            <button class="action-btn btn-view">Reset</button>
+                        </div>
+                    </div>
+
+                    <table class="jobs-table">
+                        <thead>
+                        <tr>
+                            <th>Applicant Name</th>
+                            <th>Applied For</th>
+                            <th>Status</th>
+                            <th>Date Applied</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="job-title">Sarah Johnson</div>
+                                <div class="job-company">sarah@example.com</div>
+                            </td>
+                            <td>Frontend Developer</td>
+                            <td><span class="status-badge status-active">New</span></td>
+                            <td>Jun 12, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-applicant-id="1">View</button>
+                                <button class="action-btn btn-edit">Contact</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title">Michael Chen</div>
+                                <div class="job-company">michael@example.com</div>
+                            </td>
+                            <td>UX Designer</td>
+                            <td><span class="status-badge status-pending">Review</span></td>
+                            <td>Jun 10, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-applicant-id="2">View</button>
+                                <button class="action-btn btn-edit">Contact</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="job-title">Jessica Williams</div>
+                                <div class="job-company">jessica@example.com</div>
+                            </td>
+                            <td>Product Manager</td>
+                            <td><span class="status-badge status-active">Interview</span></td>
+                            <td>Jun 8, 2023</td>
+                            <td>
+                                <button class="action-btn btn-view" data-applicant-id="3">View</button>
+                                <button class="action-btn btn-edit">Contact</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page-content">
+                <h1 class="page-title">
+                    <i class="fas fa-user"></i>
+                    My Profile
+                </h1>
+
+                <div class="content-section">
+                    <div class="profile-header">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-avatar">
+                        <div class="profile-info">
+                            <h2>John Doe</h2>
+                            <p>HR Manager at Jobico</p>
+                            <span class="profile-badge">Premium Account</span>
+
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">42</div>
+                                    <div class="profile-stat-label">Jobs Posted</div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">124</div>
+                                    <div class="profile-stat-label">Applicants</div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div class="profile-stat-value">92%</div>
+                                    <div class="profile-stat-label">Profile Complete</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-content">
+                        <div class="detail-card">
+                            <h3 class="detail-card-title">Personal Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Full Name</div>
+                                    <div class="info-value">John Doe</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email Address</div>
+                                    <div class="info-value">john.doe@example.com</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Phone Number</div>
+                                    <div class="info-value">(555) 123-4567</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Location</div>
+                                    <div class="info-value">New York, NY</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Department</div>
+                                    <div class="info-value">Human Resources</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Position</div>
+                                    <div class="info-value">HR Manager</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <h3 class="detail-card-title">Professional Bio</h3>
+                            <p>Experienced HR professional with over 8 years in talent acquisition and employee management. Specialized in tech industry recruitment with a focus on building diverse and inclusive teams.</p>
+
+                            <h4 style="margin: 20px 0 10px 0;">Areas of Expertise:</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <span class="skill-tag">Talent Acquisition</span>
+                                <span class="skill-tag">Employee Onboarding</span>
+                                <span class="skill-tag">Performance Management</span>
+                                <span class="skill-tag">HR Compliance</span>
+                                <span class="skill-tag">Diversity & Inclusion</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <h3 class="detail-card-title">Account Activity</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Member Since</div>
+                                <div class="info-value">January 15, 2020</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Last Login</div>
+                                <div class="info-value">Today, 09:42 AM</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Jobs Posted</div>
+                                <div class="info-value">42</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Active Jobs</div>
+                                <div class="info-value">8</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-card">
+                        <div class="section-header">
+                            <h3 class="detail-card-title">Profile Completeness</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%;"></div>
+                        </div>
+                        <p style="margin-top: 10px; color: var(--gray);">Your profile is 92% complete. Add more information to make your profile stand out.</p>
+
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="action-btn btn-primary">Edit Profile</button>
+                            <button class="action-btn btn-view">Change Password</button>
+                            <button class="action-btn btn-edit">Download Resume</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Page -->
+            <div id="messages-page" class="page-content">
+                <h1 class="page-title">
+                    <i class="fas fa-envelope"></i>
+                    Messages
+                </h1>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Your Conversations</h2>
+                        <a href="#" class="view-all" id="newMessageBtn">New Message</a>
+                    </div>
+
+                    <!-- New Message Form (Initially Hidden) -->
+                    <div id="new-message-form" style="display: none; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">Compose New Message</h3>
+                        <div class="form-group">
+                            <label class="form-label">To</label>
+                            <select class="form-select">
+                                <option>Select recipient...</option>
+                                <option>Sarah Johnson (Frontend Developer Applicant)</option>
+                                <option>Michael Chen (UX Designer Applicant)</option>
+                                <option>Jessica Williams (Product Manager Applicant)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subject</label>
+                            <input type="text" class="form-input" placeholder="Enter message subject">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-textarea" placeholder="Type your message here..."></textarea>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="action-btn btn-primary" id="sendMessageBtn">Send Message</button>
+                            <button class="action-btn btn-view" id="cancelMessage">Cancel</button>
+                        </div>
+                    </div>
+
+                    <div class="message-container">
+                        <div class="message-sidebar">
+                            <button class="compose-btn" id="sidebarNewMessageBtn">
+                                <i class="fas fa-plus"></i> New Message
+                            </button>
+
+                            <ul class="message-list">
+                                <li class="message-item active">
+                                    <div class="message-header">
+                                        <span class="message-sender">Sarah Johnson</span>
+                                        <span class="message-time">10:30 AM</span>
+                                    </div>
+                                    <div class="message-preview">Thanks for the interview opportunity!</div>
+                                </li>
+                                <li class="message-item">
+                                    <div class="message-header">
+                                        <span class="message-sender">Michael Chen</span>
+                                        <span class="message-time">Yesterday</span>
+                                    </div>
+                                    <div class="message-preview">Following up on my application</div>
+                                </li>
+                                <li class="message-item">
+                                    <div class="message-header">
+                                        <span class="message-sender">Jessica Williams</span>
+                                        <span class="message-time">Jun 12</span>
+                                    </div>
+                                    <div class="message-preview">Question about the product manager role</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="message-detail">
+                            <div class="message-header" style="margin-bottom: 20px;">
+                                <h3>Sarah Johnson</h3>
+                                <span class="message-time">Today, 10:30 AM</span>
+                            </div>
+
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <p>Hello,</p>
+                                <p>Thank you for the opportunity to interview for the Frontend Developer position yesterday. I enjoyed our conversation and learning more about the role.</p>
+                                <p>I'm very excited about the possibility of joining your team and contributing to the projects we discussed.</p>
+                                <p>Best regards,<br>Sarah Johnson</p>
+                            </div>
+
+                            <div class="form-group">
+                                <textarea class="form-textarea" placeholder="Type your reply..."></textarea>
+                            </div>
+                            <button class="action-btn btn-primary" id="sendReplyBtn">Send Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="page-content">
+                <h1 class="page-title">
+                    <i class="fas fa-cog"></i>
+                    Account Settings
+                </h1>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Account Preferences</h2>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-input" value="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" value="john.doe@example.com">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" class="form-input" value="HR Manager">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-input" value="Human Resources">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Notification Preferences</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox" checked> Email Notifications
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox" checked> Application Alerts
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox"> Marketing Emails
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Language Preference</label>
+                        <select class="form-select">
+                            <option selected>English</option>
+                            <option>Spanish</option>
+                            <option>French</option>
+                            <option>German</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Time Zone</label>
+                        <select class="form-select">
+                            <option>(GMT-05:00) Eastern Time</option>
+                            <option>(GMT-06:00) Central Time</option>
+                            <option>(GMT-07:00) Mountain Time</option>
+                            <option selected>(GMT-08:00) Pacific Time</option>
+                        </select>
+                    </div>
+
+                    <button class="action-btn btn-primary">Save Settings</button>
+                </div>
+            </div>
+
+            <!-- Help Page -->
+            <div id="help-page" class="page-content">
+                <h1 class="page-title">
+                    <i class="fas fa-question-circle"></i>
+                    Help & Support
+                </h1>
+
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Frequently Asked Questions</h2>
+                    </div>
+
+                    <div class="detail-card" style="margin-bottom: 20px;">
+                        <h3 class="detail-card-title">How do I create a new job posting?</h3>
+                        <p>To create a new job posting, navigate to the "Job Posts" section and click the "Create New Job" button. Fill in the required information and click "Publish Job" to make it live.</p>
+                    </div>
+
+                    <div class="detail-card" style="margin-bottom: 20px;">
+                        <h3 class="detail-card-title">How can I contact an applicant?</h3>
+                        <p>You can contact applicants directly from their profile page or through the Messages section. Click on the "Message" button on an applicant's card to start a conversation.</p>
+                    </div>
+
+                    <div class="detail-card" style="margin-bottom: 20px;">
+                        <h3 class="detail-card-title">How do I update my profile information?</h3>
+                        <p>Navigate to the "Profile" section to view and edit your personal and professional information. You can also change your account settings from the "Settings" page.</p>
+                    </div>
+
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Contact Support</h2>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subject</label>
+                            <input type="text" class="form-input" placeholder="What do you need help with?">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-textarea" placeholder="Describe your issue in detail..."></textarea>
+                        </div>
+                        <button class="action-btn btn-primary">Send Message to Support</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Toast Notification Container -->
+<div id="toastContainer"></div>
+
+<script>
+    // Enhanced JavaScript with new functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all menu links and page contents
+        const menuLinks = document.querySelectorAll('.menu-link');
+        const pageContents = document.querySelectorAll('.page-content');
+
+        // Function to show a specific page
+        function showPage(pageId) {
+            // Hide all pages
+            pageContents.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show the selected page
+            const activePage = document.getElementById(`${pageId}-page`);
+            if (activePage) {
+                activePage.classList.add('active');
+            }
+
+            // Update URL hash
+            window.location.hash = pageId;
+
+            // Update active menu item
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Add click event listeners to menu links
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageId = this.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        // Check URL hash on page load
+        const initialPage = window.location.hash.substring(1) || 'dashboard';
+        showPage(initialPage);
+
+        // Notification button alert
+        const notificationBtn = document.querySelector('.notification-btn');
+        notificationBtn.addEventListener('click', function() {
+            showToast('You have 3 new notifications!', 'info');
+        });
+
+        // Profile image click
+        const profileImg = document.querySelector('.profile-img');
+        profileImg.addEventListener('click', function() {
+            showPage('profile');
+        });
+
+        // Create New Job functionality
+        const createJobBtn = document.getElementById('createJobBtn');
+        const createJobForm = document.getElementById('create-job-form');
+        const cancelCreateJob = document.getElementById('cancelCreateJob');
+        const publishJobBtn = document.getElementById('publishJobBtn');
+
+        if (createJobBtn && createJobForm) {
+            createJobBtn.addEventListener('click', function() {
+                createJobForm.style.display = createJobForm.style.display === 'none' ? 'block' : 'none';
+            });
+
+            cancelCreateJob.addEventListener('click', function() {
+                createJobForm.style.display = 'none';
+            });
+
+            if (publishJobBtn) {
+                publishJobBtn.addEventListener('click', function() {
+                    createJobForm.style.display = 'none';
+                    showToast('Job published successfully!', 'success');
+                });
+            }
+        }
+
+        // Filter Options functionality
+        const toggleFilterBtn = document.getElementById('toggleFilterBtn');
+        const filterOptions = document.getElementById('filter-options');
+
+        if (toggleFilterBtn && filterOptions) {
+            toggleFilterBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                filterOptions.style.display = filterOptions.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+
+        // New Message functionality
+        const newMessageBtn = document.getElementById('newMessageBtn');
+        const sidebarNewMessageBtn = document.getElementById('sidebarNewMessageBtn');
+        const newMessageForm = document.getElementById('new-message-form');
+        const cancelMessage = document.getElementById('cancelMessage');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const sendReplyBtn = document.getElementById('sendReplyBtn');
+
+        if (newMessageBtn && newMessageForm) {
+            newMessageBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                newMessageForm.style.display = newMessageForm.style.display === 'none' ? 'block' : 'none';
+            });
+
+            if (sidebarNewMessageBtn) {
+                sidebarNewMessageBtn.addEventListener('click', function() {
+                    newMessageForm.style.display = newMessageForm.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+
+            if (cancelMessage) {
+                cancelMessage.addEventListener('click', function() {
+                    newMessageForm.style.display = 'none';
+                });
+            }
+
+            if (sendMessageBtn) {
+                sendMessageBtn.addEventListener('click', function() {
+                    newMessageForm.style.display = 'none';
+                    showToast('Message sent successfully!', 'success');
+                });
+            }
+
+            if (sendReplyBtn) {
+                sendReplyBtn.addEventListener('click', function() {
+                    showToast('Reply sent successfully!', 'success');
+                });
+            }
+        }
+
+        // View Job buttons
+        const viewJobButtons = document.querySelectorAll('.btn-view[data-job-id]');
+        viewJobButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                showPage('view-job');
+            });
+        });
+
+        // Edit Job buttons
+        const editJobButtons = document.querySelectorAll('.btn-edit[data-job-id]');
+        editJobButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                showPage('edit-job');
+            });
+        });
+
+        // Update job button
+        const updateJobBtn = document.getElementById('updateJobBtn');
+        if (updateJobBtn) {
+            updateJobBtn.addEventListener('click', function() {
+                showToast('Job updated successfully!', 'success');
+                setTimeout(() => {
+                    showPage('job-posts');
+                }, 1500);
+            });
+        }
+
+        // View Applicant buttons
+        const viewApplicantButtons = document.querySelectorAll('.btn-view[data-applicant-id]');
+        viewApplicantButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                showPage('view-applicant');
+            });
+        });
+
+        // Save applicant changes button
+        const saveApplicantChanges = document.getElementById('saveApplicantChanges');
+        if (saveApplicantChanges) {
+            saveApplicantChanges.addEventListener('click', function() {
+                showToast('Applicant details updated successfully!', 'success');
+            });
+        }
+
+        // Back buttons
+        const backToJobs = document.getElementById('backToJobs');
+        if (backToJobs) {
+            backToJobs.addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('job-posts');
+            });
+        }
+
+        const backToJobsFromEdit = document.getElementById('backToJobsFromEdit');
+        if (backToJobsFromEdit) {
+            backToJobsFromEdit.addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('job-posts');
+            });
+        }
+
+        const backToApplicants = document.getElementById('backToApplicants');
+        if (backToApplicants) {
+            backToApplicants.addEventListener('click', function(e) {
+                e.preventDefault();
+                showPage('applicants');
+            });
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span style="margin-left: 10px;">${message}</span>
+            `;
+
+            document.getElementById('toastContainer').appendChild(toast);
+
+            // Trigger reflow
+            void toast.offsetWidth;
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+    });
+</script>
+</body>
+</html>
