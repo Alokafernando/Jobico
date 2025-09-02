@@ -28,7 +28,7 @@ public class ApplicationConfig {
             if (jobSeekerRepository.findByEmail(email).isPresent()) {
                 JobSeeker user = jobSeekerRepository.findByEmail(email).get();
                 return new org.springframework.security.core.userdetails.User(
-                        user.getUsername(),
+                        user.getEmail(),
                         user.getPassword(),
                         List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
                 );
@@ -37,7 +37,7 @@ public class ApplicationConfig {
             if (employeeRepository.findByEmail(email).isPresent()) {
                 Employee user = employeeRepository.findByEmail(email).get();
                 return new org.springframework.security.core.userdetails.User(
-                        user.getUsername(),
+                        user.getEmail(),
                         user.getPassword(),
                         List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
                 );

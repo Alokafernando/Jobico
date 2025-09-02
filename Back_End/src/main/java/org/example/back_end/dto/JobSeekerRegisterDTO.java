@@ -31,6 +31,8 @@ public class JobSeekerRegisterDTO {
     @NotBlank(message = "Address is mandatory")
     private String address;
 
+    private String username;
+
     private String profession_title;
     private String education;
     private String experience;

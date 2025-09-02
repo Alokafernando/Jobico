@@ -9,9 +9,12 @@ import org.example.back_end.repository.EmployeeRepository;
 import org.example.back_end.repository.JobSeekerRepository;
 import org.example.back_end.service.AuthService;
 import org.example.back_end.util.JwtUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +23,8 @@ public class AuthServiceImpl implements AuthService {
     private final JobSeekerRepository jobSeekerRepository;
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwlUtil;
-
+    private final ModelMapper modelMapper;
+    private final JwtUtil jwtUtil;
 
     @Override
     public AuthResponseDTO authenticate(AuthDTO authDTO) {
@@ -32,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
             if (!passwordEncoder.matches(authDTO.getPassword(), jobSeeker.getPassword())) {
                 throw new BadCredentialsException("Invalid credentials for JobSeeker");
             }
-            String token = jwlUtil.generateToken(jobSeeker.getEmail());
+            String token = jwtUtil.generateToken(jobSeeker.getEmail());
             return new AuthResponseDTO(jobSeeker.getEmail(), token, "ROLE_JOB_SEEKER");
         }
 
@@ -42,75 +45,77 @@ public class AuthServiceImpl implements AuthService {
             if (!passwordEncoder.matches(authDTO.getPassword(), employee.getPassword())) {
                 throw new BadCredentialsException("Invalid credentials for Employee");
             }
-            String token = jwlUtil.generateToken(employee.getEmail());
+            String token = jwtUtil.generateToken(employee.getEmail());
             return new AuthResponseDTO(employee.getEmail(), token, "ROLE_EMPLOYEE");
         }
 
+        // Check Admin
         if (authDTO.getEmail().equals("admin@gmail.com")) {
-            String encodedAdminPassword = "$2a$12$.4Wrlu3qNpQ2uLbCDcKB6Ogm7PvNdEid20a2e96pPjUpqRFltTQ5y"; //"admin123"
+            String encodedAdminPassword = "$2a$12$.4Wrlu3qNpQ2uLbCDcKB6Ogm7PvNdEid20a2e96pPjUpqRFltTQ5y"; // admin123
             if (!passwordEncoder.matches(authDTO.getPassword(), encodedAdminPassword)) {
                 throw new BadCredentialsException("Invalid credentials for Admin");
             }
-            String token = jwlUtil.generateToken("admin@gmail.com");
+            String token = jwtUtil.generateToken("admin@gmail.com");
             return new AuthResponseDTO("admin@gmail.com", token, "ROLE_ADMIN");
         }
-
 
         throw new BadCredentialsException("User not found");
     }
 
     @Override
-    public String registerJobSeeker(JobSeekerRegisterDTO jobSeekerRegisterDTO) {
-        if (jobSeekerRepository.findByEmail(jobSeekerRegisterDTO.getEmail()).isPresent()) {
+    public String registerJobSeeker(JobSeekerRegisterDTO dto) {
+        // Check for existing email
+        if (jobSeekerRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use");
         }
 
         JobSeeker jobSeeker = JobSeeker.builder()
-                .firstName(jobSeekerRegisterDTO.getFirstName())
-                .lastName(jobSeekerRegisterDTO.getLastName())
-                .email(jobSeekerRegisterDTO.getEmail())
-                .username(jobSeekerRegisterDTO.getEmail())
-                .password(passwordEncoder.encode(jobSeekerRegisterDTO.getPassword()))
-                .phoneNumber(jobSeekerRegisterDTO.getPhone_number())
-                .address(jobSeekerRegisterDTO.getAddress())
-                .education(jobSeekerRegisterDTO.getEducation())
-                .experience(jobSeekerRegisterDTO.getExperience())
-                .professionTitle(jobSeekerRegisterDTO.getProfession_title())
-                .skills(jobSeekerRegisterDTO.getSkills())
-                .resumeUrl(jobSeekerRegisterDTO.getResumeUrl())
-                .role(Role.JOB_SEEKER)
+                .username(dto.getFirstName())
+                .firstName(dto.getFirstName())
+                .lastName(dto.getLastName())
+                .email(dto.getEmail())
+                .phoneNumber(dto.getPhone_number())
+                .address(dto.getAddress())
+                .professionTitle(dto.getProfession_title())
+                .education(dto.getEducation())
+                .experience(dto.getExperience())
+                .skills(dto.getSkills() != null ? dto.getSkills() : new ArrayList<>())
+                .resumeUrl(dto.getResumeUrl())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .isActive(true)
+                .role(Role.JOB_SEEKER)
                 .build();
-
 
         jobSeekerRepository.save(jobSeeker);
         return "Job Seeker registered successfully";
     }
 
     @Override
-    public String registerEmployee(EmployeeRegisterDTO employeeRegisterDTO) {
-        if (employeeRepository.findByEmail(employeeRegisterDTO.getEmail()).isPresent()) {
+    public String registerEmployee(EmployeeRegisterDTO dto) {
+        // Check for existing email
+        if (employeeRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use");
         }
 
+        // Map DTO -> Entity
         Employee employee = Employee.builder()
-                .companyDescription(employeeRegisterDTO.getDescription())
-                .companyLocation(employeeRegisterDTO.getLocation())
-                .companyName(employeeRegisterDTO.getCompanyName())
-                .contactFirstName(employeeRegisterDTO.getContactFirstName())
-                .contactLastName(employeeRegisterDTO.getContactLastName())
-                .contactPosition(employeeRegisterDTO.getContactPosition())
-                .industry(employeeRegisterDTO.getIndustry())
-                .phoneNumber(employeeRegisterDTO.getPhone())
-                .username(employeeRegisterDTO.getEmail())
-                .email(employeeRegisterDTO.getEmail())
-                .username(employeeRegisterDTO.getEmail())
-                .password(passwordEncoder.encode(employeeRegisterDTO.getPassword()))
+                .username(dto.getUsername())
+                .contactFirstName(dto.getContactFirstName())
+                .contactLastName(dto.getContactLastName())
+                .email(dto.getEmail())
+                .phoneNumber(dto.getPhone())
+                .companyName(dto.getCompanyName())
+                .industry(dto.getIndustry())
+                .contactFirstName(dto.getContactFirstName())
+                .contactLastName(dto.getContactLastName())
+                .contactPosition(dto.getContactPosition())
+                .companyLocation(dto.getLocation())
+                .companyDescription(dto.getDescription())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .role(Role.EMPLOYEE)
                 .build();
 
         employeeRepository.save(employee);
         return "Employee registered successfully";
     }
-
 }

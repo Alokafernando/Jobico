@@ -25,10 +25,10 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable()) // CSRF disabled for APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/api/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/employee/**").hasRole("EMPLOYEE")
-                        .requestMatchers("/jobseeker/**").hasRole("JOB_SEEKER")
+                        .requestMatchers("/jobseekers/**").hasRole("JOB_SEEKER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
