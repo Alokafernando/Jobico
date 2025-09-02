@@ -36,7 +36,12 @@ public class AuthServiceImpl implements AuthService {
                 throw new BadCredentialsException("Invalid credentials for JobSeeker");
             }
             String token = jwtUtil.generateToken(jobSeeker.getEmail());
-            return new AuthResponseDTO(jobSeeker.getEmail(), token, "ROLE_JOB_SEEKER");
+            return new AuthResponseDTO(
+                    jobSeeker.getEmail(),
+                    token,
+                    "ROLE_JOB_SEEKER",
+                    jobSeeker.getFirstName()
+            );
         }
 
         // Check Employee
@@ -46,7 +51,12 @@ public class AuthServiceImpl implements AuthService {
                 throw new BadCredentialsException("Invalid credentials for Employee");
             }
             String token = jwtUtil.generateToken(employee.getEmail());
-            return new AuthResponseDTO(employee.getEmail(), token, "ROLE_EMPLOYEE");
+            return new AuthResponseDTO(
+                    employee.getEmail(),
+                    token,
+                    "ROLE_EMPLOYEE",
+                    employee.getContactFirstName()
+            );
         }
 
         // Check Admin
@@ -56,7 +66,12 @@ public class AuthServiceImpl implements AuthService {
                 throw new BadCredentialsException("Invalid credentials for Admin");
             }
             String token = jwtUtil.generateToken("admin@gmail.com");
-            return new AuthResponseDTO("admin@gmail.com", token, "ROLE_ADMIN");
+            return new AuthResponseDTO(
+                    "admin@gmail.com",
+                    token,
+                    "ROLE_ADMIN",
+                    "Admin" // or "Michael", whatever you want
+            );
         }
 
         throw new BadCredentialsException("User not found");

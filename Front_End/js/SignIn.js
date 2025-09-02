@@ -10,44 +10,42 @@ $('#loginForm').on('submit', function(e) {
         password: $('#password').val().trim()
     };
 
-    // Call API
-    fetch("http://localhost:8080/auth/login", {
+    // Call API using jQuery AJAX
+    $.ajax({
+        url: "http://localhost:8080/auth/login",
         method: "POST",
-        body: JSON.stringify(loginData),
-        headers: { "Content-Type": "application/json" }
-    })
-        .then(res => {
-            if (!res.ok) throw new Error("Invalid credentials");
-            return res.json();
-        })
-        .then(data => {
+        contentType: "application/json",
+        data: JSON.stringify(loginData),
+        success: function(data) {
             btn.removeClass('btn-loading').text('Sign In to Your Future');
 
-            // Save token and role
+            // Save token, role, and firstName
             localStorage.setItem("token", data.accessToken);
             localStorage.setItem("role", data.role);
+            localStorage.setItem("firstName", data.firstName);
 
-            showMessage('Welcome back! Redirecting to your dashboard... 🎉');
+            showMessage(`Welcome back, ${data.firstName}! Redirecting to your dashboard... 🎉`);
 
             // Redirect based on role
             if (data.role === "ROLE_ADMIN") {
+                console.log('admin dashboard');
                 // window.location.href = "/admin/dashboard.html";
-                console.log('admin dashboard')
             } else if (data.role === "ROLE_EMPLOYEE") {
                 window.location.href = "EmployeeDashboard.html";
-                console.log('employee dashboard')
             } else if (data.role === "ROLE_JOB_SEEKER") {
                 window.location.href = "JobSeekerDashboard.html";
             } else {
                 alert("Unknown role!");
             }
-        })
-        .catch(err => {
+        },
+        error: function(xhr) {
             btn.removeClass('btn-loading').text('Sign In to Your Future');
-            showMessage(err.message || "Login failed ❌");
-        });
+            showMessage(xhr.responseJSON?.message || "Login failed ❌");
+        }
+    });
 });
 
+// Toggle password visibility
 function togglePassword() {
     const passwordField = $('#password');
     const toggleBtn = $('.password-toggle');
@@ -61,6 +59,7 @@ function togglePassword() {
     }
 }
 
+// Display temporary notification
 function showMessage(message) {
     $('.notification').remove();
     const notification = $('<div class="notification"></div>').text(message);

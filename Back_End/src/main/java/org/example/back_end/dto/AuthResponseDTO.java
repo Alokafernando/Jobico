@@ -9,4 +9,5 @@ public class AuthResponseDTO {
     private String email;
     private String accessToken;
     private String role;
+    private String firstName;
 }
