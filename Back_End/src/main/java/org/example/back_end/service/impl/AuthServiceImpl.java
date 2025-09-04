@@ -85,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         JobSeeker jobSeeker = JobSeeker.builder()
-                .username(dto.getFirstName())
+//                .username(dto.getFirstName())
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())

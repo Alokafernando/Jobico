@@ -19,12 +19,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/jobseekers")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:63342")
 public class JobSeekerController {
 
     @Autowired
@@ -49,17 +53,49 @@ public class JobSeekerController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        if (updates.containsKey("jobType")) {
-            seeker.setJobType((String) updates.get("jobType"));
-        }
-        if (updates.containsKey("about")) {
-            seeker.setAbout((String) updates.get("about"));
-        }
+        try {
+            if (updates.containsKey("firstName")) seeker.setFirstName((String) updates.get("firstName"));
+            if (updates.containsKey("username")) {
+                seeker.setFirstName((String) updates.get("username"));
+            }
 
-        jobSeekerService.save(seeker);
 
-        return ResponseEntity.ok(seeker);
+            if (updates.containsKey("lastName")) seeker.setLastName((String) updates.get("lastName"));
+            if (updates.containsKey("email")) seeker.setEmail((String) updates.get("email"));
+            if (updates.containsKey("phoneNumber")) seeker.setPhoneNumber((String) updates.get("phoneNumber"));
+            if (updates.containsKey("address")) seeker.setAddress((String) updates.get("address"));
+            if (updates.containsKey("professionTitle")) seeker.setProfessionTitle((String) updates.get("professionTitle"));
+            if (updates.containsKey("jobType")) seeker.setJobType((String) updates.get("jobType"));
+            if (updates.containsKey("experience")) seeker.setExperience((String) updates.get("experience"));
+            if (updates.containsKey("education")) seeker.setEducation((String) updates.get("education"));
+            if (updates.containsKey("about")) seeker.setAbout((String) updates.get("about"));
+
+            // Safe skills handling
+            if (updates.containsKey("skills")) {
+                Object skillsObj = updates.get("skills");
+                if (skillsObj instanceof java.util.List<?>) {
+                    List<String> skillList = ((List<?>) skillsObj).stream()
+                            .filter(Objects::nonNull)
+                            .map(Object::toString)
+                            .collect(Collectors.toList());
+                    seeker.setSkills(skillList);
+                } else if (skillsObj instanceof String) {
+                    List<String> skillList = Arrays.stream(((String) skillsObj).split(","))
+                            .map(String::trim)
+                            .collect(Collectors.toList());
+                    seeker.setSkills(skillList);
+                }
+            }
+
+            jobSeekerService.save(seeker);
+            return ResponseEntity.ok(seeker);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
 
 
 }

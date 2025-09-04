@@ -1,9 +1,7 @@
-// ==============================
-// JobSeekerDashboard.js
-// Handles job seeker dashboard navigation, profile loading, editing, updating, and logout
-// ==============================
-
 $(document).ready(function () {
+    // -----------------------------
+    // Cached jQuery selectors
+    // -----------------------------
     const $pageSections = $(".page-section");
     const $menuLinks = $(".menu-link");
     const $profileImg = $(".profile-img");
@@ -59,18 +57,15 @@ $(document).ready(function () {
     $("button[data-page]").on("click", function () { showPage($(this).data("page")); });
 
     $(window).on("popstate", function (e) {
-        if (e.originalEvent.state && e.originalEvent.state.page) {
-            showPage(e.originalEvent.state.page);
-        } else {
-            showPage("dashboard");
-        }
+        if (e.originalEvent.state && e.originalEvent.state.page) showPage(e.originalEvent.state.page);
+        else showPage("dashboard");
     });
 
     if (window.location.hash) showPage(window.location.hash.substring(1));
     else showPage("dashboard");
 
     // -----------------------------
-    // Set User Details in UI
+    // Load User Details from server
     // -----------------------------
     function setUserDetails(user) {
         const firstName = user.firstName || "";
@@ -85,6 +80,7 @@ $(document).ready(function () {
         const skills = user.skills || [];
         const about = user.about || "";
 
+        // Update dashboard display
         $welcomeUser.text(firstName ? `Welcome back, ${firstName}!` : "Welcome back!");
         $profileName.text(`${firstName} ${lastName}`);
         $professionTitle.text(profession);
@@ -113,18 +109,15 @@ $(document).ready(function () {
         $editSkills.val(skills.join(", "));
         $editAbout.val(about);
 
-        // Save in localStorage
         localStorage.setItem("userEmail", email);
     }
 
-    // -----------------------------
-    // Load User Details
-    // -----------------------------
     function loadUserDetails() {
         if (!token) {
             window.location.href = "../index.html";
             return;
         }
+
         const email = localStorage.getItem("userEmail");
         if (!email) return console.error("No userEmail found in localStorage");
 
@@ -143,53 +136,88 @@ $(document).ready(function () {
     loadUserDetails();
 
     // -----------------------------
-    // Edit Profile Save
+    // Safe helper to get value
     // -----------------------------
-    $(document).on("click", ".modal-btn-save", function () {
+    function getVal(selector) {
+        const el = $(selector);
+        if (!el.length) return null;
+        const val = el.val();
+        return val != null ? val.trim() : null;
+    }
+
+    // -----------------------------
+    // Save Changes for all modals
+    // -----------------------------
+    $(".modal-btn-save").on("click", function () {
         const $modal = $(this).closest(".edit-modal");
-        const editType = $modal.attr("id").replace("edit-", "").replace("-modal", "");
+        const editType = $modal.attr("id")?.replace("edit-", "").replace("-modal", "");
+        if (!editType) return;
 
         const updates = {};
-        if (editType === "personal") {
-            const fullName = $editProfileName.val().split(" ");
-            updates.firstName = fullName[0];
-            updates.lastName = fullName.slice(1).join(" ");
-            updates.email = $editEmail.val();
-            updates.phoneNumber = $editPhone.val();
-            updates.address = $editLocation.val();
+
+        if (editType === "profile") {
+            const fullName = (getVal("#edit-profile-name") || "").split(" ");
+            updates.firstName = fullName[0] || "";
+            updates.lastName = fullName.slice(1).join(" ") || "";
+            const profession = getVal("#edit-profession-title");
+            if (profession) updates.professionTitle = profession;
         }
-        if (editType === "profession") updates.professionTitle = $editProfessionTitle.val();
-        if (editType === "jobType") updates.jobType = $editJobType.val();
-        if (editType === "experience") updates.experience = $editExperience.val();
-        if (editType === "education") updates.education = $editEducation.val();
-        if (editType === "skills") updates.skills = $editSkills.val().split(",").map(s => s.trim());
-        if (editType === "about") updates.about = $editAbout.val();
+
+        if (editType === "details") {
+            const emailVal = getVal("#email"); if (emailVal) updates.email = emailVal;
+            const phone = getVal("#phone"); if (phone) updates.phoneNumber = phone;
+            const location = getVal("#location"); if (location) updates.address = location;
+            const jobType = getVal("#jobType"); if (jobType) updates.jobType = jobType;
+            const experience = getVal("#experience"); if (experience) updates.experience = experience;
+            const education = getVal("#seekerEducation"); if (education) updates.education = education;
+        }
+
+        if (editType === "skills") {
+            const skills = getVal("#skills-input");
+            if (skills) updates.skills = skills.split(",").map(s => s.trim());
+        }
+
+        if (editType === "about") {
+            const about = getVal("#about-text");
+            if (about) updates.about = about;
+        }
+
 
         const email = localStorage.getItem("userEmail");
+        if (!email) return alert("No user email found!");
+        if (Object.keys(updates).length === 0) return;
 
-        if (Object.keys(updates).length > 0) {
-            $.ajax({
-                url: `http://localhost:8080/api/jobseekers/email/${encodeURIComponent(email)}`,
-                method: "PUT",
-                headers: { "Authorization": `Bearer ${token}` },
-                contentType: "application/json",
-                data: JSON.stringify(updates),
-                success: function(updatedUser) {
-                    setUserDetails(updatedUser);
-                    closeModals();
-                    alert("Profile updated successfully!");
-                },
-                error: function(xhr) {
-                    console.error("Failed to update profile", xhr);
-                    alert("Failed to update profile.");
-                }
-            });
-        }
+        $.ajax({
+            url: `http://localhost:8080/api/jobseekers/update/${encodeURIComponent(email)}`,
+            method: "PUT",
+            headers: { "Authorization": `Bearer ${token}` },
+            contentType: "application/json",
+            data: JSON.stringify(updates),
+            success: function(updatedUser) {
+                setUserDetails(updatedUser);
+                closeModals();
+                alert("Profile updated successfully!");
+            },
+            error: function(xhr) {
+                console.error("Failed to update profile", xhr);
+                alert("Failed to update profile.");
+            }
+        });
     });
 
-    function closeModals() { $editModals.hide(); }
-    $(document).on("click", ".edit-modal-close, .modal-btn-cancel", closeModals);
-    $(document).on("click", ".edit-modal", function(e){ if(e.target===this) closeModals(); });
+    // -----------------------------
+    // Open/Close Modals
+    // -----------------------------
+    function closeModals() { $editModals.hide(); $profilePictureModal.hide(); $confirmationModal.hide(); }
+
+    $(".edit-modal-close, .modal-btn-cancel").on("click", closeModals);
+    $editModals.on("click", function (e) { if (e.target === this) closeModals(); });
+
+    $("#edit-profile-btn").on("click", () => $("#edit-profile-modal").css("display", "flex"));
+    $(".edit-btn").on("click", function () {
+        const editType = $(this).data("edit");
+        $("#edit-" + editType + "-modal").css("display", "flex");
+    });
 
     // -----------------------------
     // Logout
@@ -198,7 +226,6 @@ $(document).ready(function () {
         e.preventDefault();
         $confirmationModal.show();
     });
-
     $("#modal-cancel").on("click", () => $confirmationModal.hide());
     $("#modal-confirm").on("click", function(){
         localStorage.clear();
@@ -247,39 +274,4 @@ $(document).ready(function () {
             }
         });
     });
-
-    // -----------------------------
-    // Edit Modals
-    // -----------------------------
-    $("#edit-profile-btn").on("click", () => $("#edit-profile-modal").css("display", "flex"));
-
-    $(".edit-btn").on("click", function () {
-        const editType = $(this).data("edit");
-        $("#edit-" + editType + "-modal").css("display", "flex");
-    });
-
-    function closeModals() { $editModals.hide(); }
-    $(".edit-modal-close, .modal-btn-cancel").on("click", closeModals);
-
-    $(".modal-btn-save").on("click", function () {
-        const $modal = $(this).closest(".edit-modal");
-        const editType = $modal.attr("id").replace("edit-", "").replace("-modal", "");
-
-        if (editType === "about") {
-            const aboutText = $("#about-text").val();
-            $(".about-content").html(`<p>${aboutText.replace(/\n/g, "</p><p>")}</p>`);
-        } else if (editType === "skills") {
-            const skillsArray = $("#skills-input").val().split(",").map(s => s.trim());
-            const $skillsList = $(".skills-list").empty();
-            skillsArray.forEach(skill => $skillsList.append(`<span class="skill-tag">${skill}</span>`));
-        }
-
-        closeModals();
-    });
-
-    $editModals.on("click", function (e) {
-        if (e.target === this) closeModals();
-    });
-
-
 });
