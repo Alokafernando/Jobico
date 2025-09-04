@@ -795,7 +795,7 @@ body {
 .detail-label {
     font-weight: 600;
     color: var(--dark);
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .detail-value {

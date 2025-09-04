@@ -3,6 +3,7 @@ package org.example.back_end.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +31,13 @@ public class JobSeeker {
     private String lastName;
     private String address;
     private String phoneNumber;
+    private String jobType;
     private String professionTitle;
     private String education;
     private String about;
     private String experience;
 
-    @Column(name = "avatar_url")
-    private String avatarUrl;
+    private String profileImage;
 
     private String resumeUrl;
     private boolean isActive;
@@ -46,4 +47,6 @@ public class JobSeeker {
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.JOB_SEEKER;
+
+
 }

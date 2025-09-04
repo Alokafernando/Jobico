@@ -21,6 +21,11 @@ public class JobSeekerServiceImpl implements JobSeekerService {
                 .orElseThrow(() -> new RuntimeException("JobSeeker not found"));
     }
 
+    @Override
+    public JobSeeker save(JobSeeker seeker) {
+        return jobSeekerRepository.save(seeker);
+    }
+
 
 
 

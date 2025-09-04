@@ -18,39 +18,41 @@ $('#loginForm').on('submit', function(e) {
         success: function(data) {
             btn.removeClass('btn-loading').text('Sign In to Your Future');
 
-            // Save token and role
             localStorage.setItem("token", data.accessToken);
             localStorage.setItem("role", data.role);
 
-            // Redirect based on role
             if (data.role === "ROLE_ADMIN") {
                 console.log('admin dashboard');
-                // window.location.href = "/admin/dashboard.html";
             } else if (data.role === "ROLE_EMPLOYEE") {
                 window.location.href = "EmployeeDashboard.html";
             } else if (data.role === "ROLE_JOB_SEEKER") {
-                // Fetch Job Seeker profile details
                 $.ajax({
                     url: `http://localhost:8080/api/jobseekers/email/${email}`,
                     method: "GET",
                     headers: { "Authorization": `Bearer ${data.accessToken}` },
                     success: function(user) {
+                        localStorage.setItem("userEmail", user.email || email);
                         localStorage.setItem("firstName", user.firstName || "");
                         localStorage.setItem("lastName", user.lastName || "");
                         localStorage.setItem("professionTitle", user.professionTitle || "");
+                        localStorage.setItem("phoneNumber", user.phoneNumber || "");
+                        localStorage.setItem("experience", user.experience || "");
+                        localStorage.setItem("education", user.education || "");
+                        localStorage.setItem("skills", JSON.stringify(user.skills || []));
 
                         const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
                         showMessage(`Welcome back, ${fullName}! 🎉`);
 
+                        // ✅ Redirect only after user data is stored
                         window.location.href = "JobSeekerDashboard.html";
                     },
                     error: function(xhr) {
-                        showMessage("Failed to get user details, redirecting...");
-                        window.location.href = "JobSeekerDashboard.html";
+                        // ❌ Do NOT redirect if AJAX fails
+                        showMessage("Failed to get user details. Please try logging in again.");
+                        console.error("Error fetching user details:", xhr);
                     }
                 });
-            } else {
-                alert("Unknown role!");
+
             }
         },
         error: function(xhr) {

@@ -688,30 +688,31 @@
               <i class="fas fa-edit"></i> Edit
             </button>
           </div>
+
           <div class="details-grid">
             <div class="detail-item">
               <div class="detail-label">Email</div>
-              <div class="detail-value">michael.chen@example.com</div>
+              <div class="detail-value" id="profile-email"></div>
             </div>
             <div class="detail-item">
               <div class="detail-label">Phone</div>
-              <div class="detail-value">+1 (555) 123-4567</div>
+              <div class="detail-value" id="profile-phone"></div>
             </div>
             <div class="detail-item">
               <div class="detail-label">Location</div>
-              <div class="detail-value">San Francisco, CA</div>
+              <div class="detail-value" id="profile-address"></div>
             </div>
             <div class="detail-item">
               <div class="detail-label">Job Type</div>
-              <div class="detail-value">Full-time, Remote</div>
+              <div class="detail-value" id="profile-type"></div>
             </div>
             <div class="detail-item">
               <div class="detail-label">Experience</div>
-              <div class="detail-value">5+ years</div>
+              <div class="detail-value" id="profile-experience"></div>
             </div>
             <div class="detail-item">
               <div class="detail-label">Education</div>
-              <div class="detail-value">Master's in Design</div>
+              <div class="detail-value" id="profile-education"></div>
             </div>
           </div>
         </div>
@@ -724,17 +725,17 @@
               <i class="fas fa-edit"></i> Edit
             </button>
           </div>
-          <div class="skills-list">
-            <span class="skill-tag">User Research</span>
-            <span class="skill-tag">Wireframing</span>
-            <span class="skill-tag">Prototyping</span>
-            <span class="skill-tag">UI Design</span>
-            <span class="skill-tag">UX Design</span>
-            <span class="skill-tag">Figma</span>
-            <span class="skill-tag">Sketch</span>
-            <span class="skill-tag">Adobe XD</span>
-            <span class="skill-tag">Usability Testing</span>
-            <span class="skill-tag">Design Systems</span>
+          <div id="profile-skills" class="skills-list">
+<!--            <span class="skill-tag">User Research</span>-->
+<!--            <span class="skill-tag">Wireframing</span>-->
+<!--            <span class="skill-tag">Prototyping</span>-->
+<!--            <span class="skill-tag">UI Design</span>-->
+<!--            <span class="skill-tag">UX Design</span>-->
+<!--            <span class="skill-tag">Figma</span>-->
+<!--            <span class="skill-tag">Sketch</span>-->
+<!--            <span class="skill-tag">Adobe XD</span>-->
+<!--            <span class="skill-tag">Usability Testing</span>-->
+<!--            <span class="skill-tag">Design Systems</span>-->
           </div>
         </div>
       </div>
@@ -894,7 +895,7 @@
     <div class="edit-modal-body">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" class="form-control" value="michael.chen@example.com">
+        <input type="email" id="email" class="form-control">
       </div>
       <div class="form-group">
         <label for="phone">Phone</label>
