@@ -773,6 +773,10 @@ body {
     line-height: 1.8;
 }
 
+.about-content #aboutPlaceholder{
+    color: #aaa;
+}
+
 .about-content p {
     margin-bottom: 15px;
 }

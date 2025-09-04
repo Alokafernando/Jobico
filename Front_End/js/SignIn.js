@@ -4,13 +4,12 @@ $('#loginForm').on('submit', function(e) {
     const btn = $('.login-btn');
     btn.addClass('btn-loading').text('');
 
-    // Get login form values
-    const loginData = {
-        email: $('#email').val().trim(),
-        password: $('#password').val().trim()
-    };
+    const email = $('#email').val().trim();
+    const password = $('#password').val().trim();
 
-    // Call API using jQuery AJAX
+    const loginData = { email, password };
+
+    // Login API call
     $.ajax({
         url: "http://localhost:8080/auth/login",
         method: "POST",
@@ -19,12 +18,9 @@ $('#loginForm').on('submit', function(e) {
         success: function(data) {
             btn.removeClass('btn-loading').text('Sign In to Your Future');
 
-            // Save token, role, and firstName
+            // Save token and role
             localStorage.setItem("token", data.accessToken);
             localStorage.setItem("role", data.role);
-            localStorage.setItem("firstName", data.firstName);
-
-            showMessage(`Welcome back, ${data.firstName}! Redirecting to your dashboard... 🎉`);
 
             // Redirect based on role
             if (data.role === "ROLE_ADMIN") {
@@ -33,7 +29,26 @@ $('#loginForm').on('submit', function(e) {
             } else if (data.role === "ROLE_EMPLOYEE") {
                 window.location.href = "EmployeeDashboard.html";
             } else if (data.role === "ROLE_JOB_SEEKER") {
-                window.location.href = "JobSeekerDashboard.html";
+                // Fetch Job Seeker profile details
+                $.ajax({
+                    url: `http://localhost:8080/api/jobseekers/email/${email}`,
+                    method: "GET",
+                    headers: { "Authorization": `Bearer ${data.accessToken}` },
+                    success: function(user) {
+                        localStorage.setItem("firstName", user.firstName || "");
+                        localStorage.setItem("lastName", user.lastName || "");
+                        localStorage.setItem("professionTitle", user.professionTitle || "");
+
+                        const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+                        showMessage(`Welcome back, ${fullName}! 🎉`);
+
+                        window.location.href = "JobSeekerDashboard.html";
+                    },
+                    error: function(xhr) {
+                        showMessage("Failed to get user details, redirecting...");
+                        window.location.href = "JobSeekerDashboard.html";
+                    }
+                });
             } else {
                 alert("Unknown role!");
             }

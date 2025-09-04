@@ -16,11 +16,12 @@ public class JobSeekerServiceImpl implements JobSeekerService {
     private final ModelMapper modelMapper;
 
     @Override
-    public JobSeeker getJobSeekerById(Long id) {
-        JobSeeker jobSeeker = jobSeekerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Job Seeker not found with ID: " + id));
-
-        // Map entity to DTO
-        return modelMapper.map(jobSeeker, JobSeeker.class);
+    public JobSeeker getJobSeekerByEmail(String email) {
+        return jobSeekerRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("JobSeeker not found"));
     }
+
+
+
+
 }

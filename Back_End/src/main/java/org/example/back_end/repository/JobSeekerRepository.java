@@ -11,8 +11,7 @@ import java.util.Optional;
 public interface JobSeekerRepository extends JpaRepository<JobSeeker, Long> {
     Optional<JobSeeker> findByEmail(String email);
 
-    @Query("SELECT j FROM JobSeeker j WHERE j.id = :id")
-    Optional<JobSeeker> getJobSeekerById(@Param("id") Long id);
+
 
 
 }

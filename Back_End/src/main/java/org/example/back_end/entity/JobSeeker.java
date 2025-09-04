@@ -32,7 +32,12 @@ public class JobSeeker {
     private String phoneNumber;
     private String professionTitle;
     private String education;
+    private String about;
     private String experience;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     private String resumeUrl;
     private boolean isActive;
 

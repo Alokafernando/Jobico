@@ -18,19 +18,13 @@
       </div>
 
       <div class="user-profile">
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="user-avatar" id="sidebar-avatar">
+        <img src="../assets/profiles/default-avatar.jpg" alt="User" class="user-avatar" id="sidebar-avatar">
         <div class="user-info">
-          <h3>Michael Chen</h3>
-          <p>UX Designer</p>
+          <h3 id="profileName"></h3>
+          <p id="professionTitle"></p>
         </div>
       </div>
 
-      <div class="profile-completion">
-        <p>Profile Strength: 75%</p>
-        <div class="completion-bar">
-          <div class="completion-progress"></div>
-        </div>
-      </div>
     </div>
 
     <ul class="sidebar-menu">
@@ -98,7 +92,7 @@
           <i class="fas fa-bell"></i>
           <span class="notification-badge">3</span>
         </button>
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-img" data-page="profile" id="header-avatar">
+        <img src="../assets/profiles/default-avatar.jpg" alt="Profile" class="profile-img" id="header-avatar">
       </div>
     </header>
 
@@ -642,14 +636,14 @@
         <!-- Profile Header -->
         <div class="profile-header">
           <div class="profile-avatar">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="avatar-img" id="profile-avatar">
+            <img src="../assets/profiles/default-avatar.jpg" alt="Profile" class="avatar-img" id="profile-avatar">
             <div class="avatar-upload" id="open-profile-picture-modal">
               <i class="fas fa-camera"></i>
             </div>
           </div>
           <div class="profile-info">
-            <h2 class="profile-name">Michael Chen</h2>
-            <p class="profile-title">Senior UX Designer at TechSolutions Inc.</p>
+            <h2 class="profile-name" id="profile-name">Michael Chen</h2>
+            <p class="profile-title" id="profile-professionTitle"></p>
 
             <div class="profile-stats">
               <div class="stat-item">
@@ -682,8 +676,7 @@
             </button>
           </div>
           <div class="about-content">
-            <p>Experienced UX Designer with over 5 years of expertise in creating intuitive and engaging user experiences for web and mobile applications. Passionate about user-centered design and solving complex problems with simple, elegant solutions.</p>
-            <p>Skilled in user research, wireframing, prototyping, and usability testing. Strong collaborator with cross-functional teams including developers, product managers, and stakeholders.</p>
+            <p id="aboutPlaceholder"> Write something about yourself...</p>
           </div>
         </div>
 
@@ -849,6 +842,30 @@
 </div>
 
 <!-- Edit Modals -->
+<div class="edit-modal" id="edit-profile-modal">
+  <div class="edit-modal-content">
+    <div class="edit-modal-header">
+      <h2>Edit Profile Details</h2>
+      <button class="edit-modal-close">&times;</button>
+    </div>
+    <div class="edit-modal-body">
+      <div class="form-group">
+        <label for="email">Name</label>
+        <input type="text" id="edit-profile-name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="phone">Profession Title</label>
+        <input type="text" id="edit-profession-title" class="form-control">
+      </div>
+
+    </div>
+    <div class="edit-modal-footer">
+      <button class="modal-btn modal-btn-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-save">Save Changes</button>
+    </div>
+  </div>
+</div>
+
 <div class="edit-modal" id="edit-about-modal">
   <div class="edit-modal-content">
     <div class="edit-modal-header">
@@ -858,9 +875,7 @@
     <div class="edit-modal-body">
       <div class="form-group">
         <label for="about-text">About Me</label>
-        <textarea id="about-text" class="form-control">Experienced UX Designer with over 5 years of expertise in creating intuitive and engaging user experiences for web and mobile applications. Passionate about user-centered design and solving complex problems with simple, elegant solutions.
-
-Skilled in user research, wireframing, prototyping, and usability testing. Strong collaborator with cross-functional teams including developers, product managers, and stakeholders.</textarea>
+        <textarea id="about-text" class="form-control" placeholder="Write something about yourself..."></textarea>
       </div>
     </div>
     <div class="edit-modal-footer">
@@ -890,17 +905,47 @@ Skilled in user research, wireframing, prototyping, and usability testing. Stron
         <input type="text" id="location" class="form-control" value="San Francisco, CA">
       </div>
       <div class="form-group">
-        <label for="job-type">Job Type</label>
-        <input type="text" id="job-type" class="form-control" value="Full-time, Remote">
+        <label for="jobType">Job Type</label>
+        <div class="input-container">
+          <select id="jobType" name="jobType" class="form-control" required>
+            <option value="">Select job type</option>
+            <option value="full_time">Full-Time</option>
+            <option value="part_time">Part-Time</option>
+            <option value="internship">Internship</option>
+            <option value="contract">Contract</option>
+            <option value="freelance">Freelance</option>
+            <option value="temporary">Temporary</option>
+          </select>
+        </div>
       </div>
       <div class="form-group">
         <label for="experience">Experience</label>
-        <input type="text" id="experience" class="form-control" value="5+ years">
+        <div class="input-container">
+          <select id="experience" name="experience" class="form-control" required>
+            <option value="">Select experience</option>
+            <option value="fresher">Fresher (0 years)</option>
+            <option value="1-2">1–2 years</option>
+            <option value="3-5">3–5 years</option>
+            <option value="5-10">5–10 years</option>
+            <option value="10+">10+ years</option>
+          </select>
+        </div>
       </div>
       <div class="form-group">
-        <label for="education">Education</label>
-        <input type="text" id="education" class="form-control" value="Master's in Design">
+        <label for="seekerEducation">Highest Education</label>
+        <div class="input-container">
+          <select id="seekerEducation" name="education" class="form-control" required>
+            <option value="">Select education level</option>
+            <option value="high_school">High School</option>
+            <option value="associate">Associate Degree</option>
+            <option value="bachelor">Bachelor's Degree</option>
+            <option value="master">Master's Degree</option>
+            <option value="doctorate">Doctorate</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
       </div>
+
     </div>
     <div class="edit-modal-footer">
       <button class="modal-btn modal-btn-cancel">Cancel</button>
@@ -936,7 +981,7 @@ Skilled in user research, wireframing, prototyping, and usability testing. Stron
       <button class="edit-modal-close">&times;</button>
     </div>
     <div class="edit-modal-body">
-      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Preview" class="avatar-preview" id="avatar-preview">
+      <img src="../assets/profiles/default-avatar.jpg" alt="Profile Preview" class="avatar-preview" id="avatar-preview">
 
       <div class="upload-options">
         <div class="upload-option">
