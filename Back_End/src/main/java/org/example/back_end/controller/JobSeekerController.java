@@ -7,6 +7,7 @@ import org.example.back_end.service.JobSeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +36,7 @@ public class JobSeekerController {
     private AuthService authService;
 
     private final JobSeekerService jobSeekerService;
+    private final PasswordEncoder passwordEncoder;
 
 
     @GetMapping("/email/{email}")
@@ -96,6 +98,44 @@ public class JobSeekerController {
         }
     }
 
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        String currentPassword = payload.get("currentPassword");
+        String newPassword = payload.get("newPassword");
+
+        if (email == null || currentPassword == null || newPassword == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Email, current password, and new password are required"));
+        }
+
+        JobSeeker seeker = jobSeekerService.getJobSeekerByEmail(email);
+        if (seeker == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "User not found"));
+        }
+
+        if (!passwordEncoder.matches(currentPassword, seeker.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Current password is incorrect"));
+        }
+
+        if (newPassword.length() < 6) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "New password must be at least 6 characters long"));
+        }
+
+        try {
+            seeker.setPassword(passwordEncoder.encode(newPassword));
+            jobSeekerService.save(seeker);
+
+            return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to change password"));
+        }
+    }
 
 
 }

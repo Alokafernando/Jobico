@@ -29,8 +29,11 @@ public class JobSeeker {
     private String lastName;
     private String address;
     private String phoneNumber;
-    private String jobType;
+
     private String professionTitle;
+
+    private String jobType;
+
     private String education;
     private String about;
     private String experience;

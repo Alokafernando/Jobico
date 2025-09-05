@@ -80,7 +80,6 @@ $(document).ready(function () {
         const skills = user.skills || [];
         const about = user.about || "";
 
-        // Update dashboard display
         $welcomeUser.text(firstName ? `Welcome back, ${firstName}!` : "Welcome back!");
         $profileName.text(`${firstName} ${lastName}`);
         $professionTitle.text(profession);
@@ -97,7 +96,6 @@ $(document).ready(function () {
         $skills.empty();
         skills.forEach(skill => $skills.append(`<span class="skill-tag">${skill}</span>`));
 
-        // Fill edit forms
         $editProfileName.val(`${firstName} ${lastName}`);
         $editProfessionTitle.val(profession);
         $editEmail.val(email);
@@ -117,7 +115,6 @@ $(document).ready(function () {
             window.location.href = "../index.html";
             return;
         }
-
         const email = localStorage.getItem("userEmail");
         if (!email) return console.error("No userEmail found in localStorage");
 
@@ -136,13 +133,11 @@ $(document).ready(function () {
     loadUserDetails();
 
     // -----------------------------
-    // Safe helper to get value
+    // Helper to get input values
     // -----------------------------
     function getVal(selector) {
         const el = $(selector);
-        if (!el.length) return null;
-        const val = el.val();
-        return val != null ? val.trim() : null;
+        return el.length ? (el.val() || "").trim() : null;
     }
 
     // -----------------------------
@@ -181,7 +176,6 @@ $(document).ready(function () {
             const about = getVal("#about-text");
             if (about) updates.about = about;
         }
-
 
         const email = localStorage.getItem("userEmail");
         if (!email) return alert("No user email found!");
@@ -274,4 +268,73 @@ $(document).ready(function () {
             }
         });
     });
+
+    // -----------------------------
+    // Change Password Modal
+    // -----------------------------
+    $("#change-password-btn").on("click", function(){
+        $("#edit-password-modal").css("display", "flex");
+    });
+
+    $("#edit-password-modal .edit-modal-close, #edit-password-modal .modal-btn-cancel").on("click", function(){
+        $("#edit-password-modal").hide();
+        clearPasswordFields();
+    });
+
+    $("#edit-password-modal").on("click", function(e){
+        if(e.target === this) {
+            $(this).hide();
+            clearPasswordFields();
+        }
+    });
+
+    function clearPasswordFields() {
+        $("#current-password").val('');
+        $("#new-password").val('');
+        $("#confirm-password").val('');
+    }
+
+    $("#save-password-btn").on("click", function(){
+        const currentPassword = $("#current-password").val().trim();
+        const newPassword = $("#new-password").val().trim();
+        const confirmPassword = $("#confirm-password").val().trim();
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert("New password and confirm password do not match.");
+            return;
+        }
+
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+            alert("User email not found. Please login again.");
+            return;
+        }
+
+        $.ajax({
+            url: "http://localhost:8080/api/jobseekers/change-password",
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` },
+            contentType: "application/json",
+            data: JSON.stringify({
+                email: email,
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            }),
+            success: function() {
+                alert("Password changed successfully!");
+                $("#edit-password-modal").hide();
+                clearPasswordFields();
+            },
+            error: function(xhr) {
+                const message = xhr.responseJSON?.message || "Failed to change password";
+                alert(message);
+            }
+        });
+    });
+
 });

@@ -26,14 +26,14 @@ public class JobSeekerRegisterDTO {
 
     @NotBlank(message = "Phone number is mandatory")
     @Pattern(regexp="^[0-9]{10}$", message="Phone number must be 10 digits")
-    private String phone_number;
+    private String phoneNumber;
 
     @NotBlank(message = "Address is mandatory")
     private String address;
 
     private String username;
 
-    private String profession_title;
+    private String professionTitle;
     private String education;
     private String experience;
     private List<String> skills;

@@ -738,6 +738,12 @@
 <!--            <span class="skill-tag">Design Systems</span>-->
           </div>
         </div>
+
+        <button id="change-password-btn" class="edit-btn" style="margin-top:10px;">
+          Change Password
+        </button>
+
+
       </div>
 
       <!-- Settings Section -->
@@ -895,7 +901,7 @@
     <div class="edit-modal-body">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" class="form-control">
+        <input type="email" id="email" class="form-control" disabled>
       </div>
       <div class="form-group">
         <label for="phone">Phone</label>
@@ -973,6 +979,38 @@
     </div>
   </div>
 </div>
+
+<div class="edit-modal" id="edit-password-modal">
+  <div class="edit-modal-content">
+    <div class="edit-modal-header">
+      <h2>Change Password</h2>
+      <button class="edit-modal-close">&times;</button>
+    </div>
+
+    <div class="edit-modal-body">
+      <div class="form-group">
+        <label for="current-password">Current Password</label>
+        <input type="password" id="current-password" class="form-control" placeholder="Enter current password">
+      </div>
+
+      <div class="form-group">
+        <label for="new-password">New Password</label>
+        <input type="password" id="new-password" class="form-control" placeholder="Enter new password">
+      </div>
+
+      <div class="form-group">
+        <label for="confirm-password">Confirm New Password</label>
+        <input type="password" id="confirm-password" class="form-control" placeholder="Confirm new password">
+      </div>
+    </div>
+
+    <div class="edit-modal-footer">
+      <button class="modal-btn modal-btn-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-save" id="save-password-btn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- Profile Picture Modal -->
 <div class="edit-modal profile-picture-modal" id="edit-profile-picture-modal">

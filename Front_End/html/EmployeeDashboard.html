@@ -742,6 +742,7 @@
             font-size: 0.8rem;
             color: var(--gray);
             margin-bottom: 5px;
+            font-weight: 500;
         }
 
         .info-value {
@@ -789,6 +790,18 @@
         .applicant-list-actions {
             display: flex;
             gap: 8px;
+        }
+
+        /* Page Content Styles */
+        .page-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .page-content.active {
+            display: block;
+            opacity: 1;
         }
 
         /* Profile specific styles */
@@ -928,6 +941,232 @@
             margin: 0 5px 5px 0;
         }
 
+        /* Settings specific styles */
+        .settings-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+
+        .settings-tab {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .settings-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .settings-content {
+            display: none;
+        }
+
+        .settings-content.active {
+            display: block;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .security-badge.strong {
+            border-left: 4px solid var(--success);
+        }
+
+        .security-badge.medium {
+            border-left: 4px solid var(--warning);
+        }
+
+        .security-badge.weak {
+            border-left: 4px solid var(--danger);
+        }
+
+        .plan-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .plan-card.featured {
+            border: 2px solid var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.1);
+        }
+
+        .plan-card.featured .plan-price {
+            color: var(--primary);
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .plan-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .plan-price {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .plan-features li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-features li i {
+            color: var(--success);
+        }
+
+        .billing-history {
+            margin-top: 30px;
+        }
+
+        .billing-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .billing-item:last-child {
+            border-bottom: none;
+        }
+
+        .billing-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .billing-amount {
+            font-weight: 600;
+        }
+
+        .billing-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .integration-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .integration-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: #f8f9fa;
+        }
+
+        .integration-info {
+            flex: 1;
+        }
+
+        .integration-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .integration-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .sidebar {
@@ -1010,6 +1249,10 @@
             .profile-stats {
                 flex-wrap: wrap;
                 justify-content: center;
+            }
+
+            .settings-tabs {
+                flex-wrap: wrap;
             }
         }
 
@@ -2215,69 +2458,393 @@
                     Account Settings
                 </h1>
 
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Account Preferences</h2>
-                    </div>
+                <div class="settings-tabs">
+                    <div class="settings-tab active" data-tab="account">Account</div>
+                    <div class="settings-tab" data-tab="security">Security</div>
+                    <div class="settings-tab" data-tab="notifications">Notifications</div>
+                    <div class="settings-tab" data-tab="billing">Billing</div>
+                    <div class="settings-tab" data-tab="integrations">Integrations</div>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-input" value="John Doe">
+                <!-- Account Settings -->
+                <div id="account-settings" class="settings-content active">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Account Preferences</h2>
                         </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input" value="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-input" value="john.doe@example.com">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-input" value="HR Manager">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Department</label>
+                                <input type="text" class="form-input" value="Human Resources">
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-input" value="john.doe@example.com">
+                            <label class="form-label">Language Preference</label>
+                            <select class="form-select">
+                                <option selected>English</option>
+                                <option>Spanish</option>
+                                <option>French</option>
+                                <option>German</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Time Zone</label>
+                            <select class="form-select">
+                                <option>(GMT-05:00) Eastern Time</option>
+                                <option>(GMT-06:00) Central Time</option>
+                                <option>(GMT-07:00) Mountain Time</option>
+                                <option selected>(GMT-08:00) Pacific Time</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Profile Visibility</label>
+                            <select class="form-select">
+                                <option selected>Public</option>
+                                <option>Private</option>
+                                <option>Only to my connections</option>
+                            </select>
+                        </div>
+
+                        <button class="action-btn btn-primary" id="saveAccountSettings">Save Account Settings</button>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div id="security-settings" class="settings-content">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Security Settings</h2>
+                        </div>
+
+                        <div class="security-badge strong">
+                            <i class="fas fa-shield-alt" style="color: var(--success);"></i>
+                            <div>
+                                <div class="info-label">Your password is strong</div>
+                                <div class="info-value">Last changed: 3 months ago</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group password-toggle">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-input" id="currentPassword">
+                            <i class="fas fa-eye password-toggle-icon" id="toggleCurrentPassword"></i>
+                        </div>
+
+                        <div class="form-group password-toggle">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-input" id="newPassword">
+                            <i class="fas fa-eye password-toggle-icon" id="toggleNewPassword"></i>
+                        </div>
+
+                        <div class="form-group password-toggle">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-input" id="confirmPassword">
+                            <i class="fas fa-eye password-toggle-icon" id="toggleConfirmPassword"></i>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Two-Factor Authentication</label>
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <div class="info-value">Protect your account with an extra layer of security</div>
+                                    <div class="info-label">Require a code from your phone to log in</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Active Sessions</label>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <div>
+                                        <div class="info-value">Chrome on Windows</div>
+                                        <div class="info-label">New York, NY • Active now</div>
+                                    </div>
+                                    <button class="action-btn btn-view">Revoke</button>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="info-value">Safari on iPhone</div>
+                                        <div class="info-label">San Francisco, CA • 2 days ago</div>
+                                    </div>
+                                    <button class="action-btn btn-view">Revoke</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="action-btn btn-primary" id="saveSecuritySettings">Update Security Settings</button>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div id="notification-settings" class="settings-content">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Notification Preferences</h2>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Notifications</label>
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="info-value">New Applicant Alerts</div>
+                                        <div class="info-label">Get notified when someone applies to your job</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="info-value">Message Notifications</div>
+                                        <div class="info-label">Get notified when you receive a new message</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="info-value">Job Post Updates</div>
+                                        <div class="info-label">Get notified about your job post status changes</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="info-value">Weekly Reports</div>
+                                        <div class="info-label">Receive weekly performance reports</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="info-value">Promotional Emails</div>
+                                        <div class="info-label">Receive emails about new features and promotions</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Push Notifications</label>
+                            <div style="display: flex; flex-direction: column; gap: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="info-value">Browser Notifications</div>
+                                        <div class="info-label">Show notifications in your browser</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="info-value">Sound Alerts</div>
+                                        <div class="info-label">Play sound for new notifications</div>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="action-btn btn-primary" id="saveNotificationSettings">Save Notification Preferences</button>
+                    </div>
+                </div>
+
+                <!-- Billing Settings -->
+                <div id="billing-settings" class="settings-content">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Billing & Subscription</h2>
+                        </div>
+
+                        <div class="plan-card featured">
+                            <div class="plan-header">
+                                <div class="plan-name">Premium Plan</div>
+                                <div class="plan-price">$49<span style="font-size: 0.9rem; color: var(--gray);">/month</span></div>
+                            </div>
+                            <ul class="plan-features">
+                                <li><i class="fas fa-check"></i> Unlimited Job Posts</li>
+                                <li><i class="fas fa-check"></i> Advanced Applicant Filtering</li>
+                                <li><i class="fas fa-check"></i> Priority Support</li>
+                                <li><i class="fas fa-check"></i> Custom Branding</li>
+                                <li><i class="fas fa-check"></i> Advanced Analytics</li>
+                            </ul>
+                            <button class="action-btn btn-primary" style="width: 100%;">Manage Subscription</button>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Payment Method</label>
+                                <div style="display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                    <i class="fab fa-cc-visa" style="font-size: 1.5rem; color: #1a1a2e;"></i>
+                                    <div>
+                                        <div class="info-value">Visa ending in 4242</div>
+                                        <div class="info-label">Expires 12/2024</div>
+                                    </div>
+                                    <button class="action-btn btn-edit" style="margin-left: auto;">Edit</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Billing Address</label>
+                                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                    <div class="info-value">John Doe</div>
+                                    <div class="info-value">123 Business St</div>
+                                    <div class="info-value">New York, NY 10001</div>
+                                    <div class="info-value">United States</div>
+                                    <button class="action-btn btn-edit" style="margin-top: 10px;">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="billing-history">
+                            <h3 class="detail-card-title">Billing History</h3>
+                            <div class="billing-item">
+                                <div>
+                                    <div class="info-value">Premium Plan</div>
+                                    <div class="billing-date">June 15, 2023</div>
+                                </div>
+                                <div class="billing-amount">$49.00</div>
+                                <span class="status-badge status-active">Paid</span>
+                            </div>
+                            <div class="billing-item">
+                                <div>
+                                    <div class="info-value">Premium Plan</div>
+                                    <div class="billing-date">May 15, 2023</div>
+                                </div>
+                                <div class="billing-amount">$49.00</div>
+                                <span class="status-badge status-active">Paid</span>
+                            </div>
+                            <div class="billing-item">
+                                <div>
+                                    <div class="info-value">Premium Plan</div>
+                                    <div class="billing-date">April 15, 2023</div>
+                                </div>
+                                <div class="billing-amount">$49.00</div>
+                                <span class="status-badge status-active">Paid</span>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Job Title</label>
-                            <input type="text" class="form-input" value="HR Manager">
+                <!-- Integration Settings -->
+                <div id="integration-settings" class="settings-content">
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Integrations</h2>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Department</label>
-                            <input type="text" class="form-input" value="Human Resources">
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Notification Preferences</label>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" checked> Email Notifications
+                        <div class="integration-card">
+                            <div class="integration-icon">
+                                <i class="fab fa-google" style="color: #DB4437;"></i>
+                            </div>
+                            <div class="integration-info">
+                                <div class="integration-name">Google Calendar</div>
+                                <div class="integration-desc">Sync your interview schedule with Google Calendar</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
                             </label>
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" checked> Application Alerts
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-icon">
+                                <i class="fab fa-slack" style="color: #4A154B;"></i>
+                            </div>
+                            <div class="integration-info">
+                                <div class="integration-name">Slack</div>
+                                <div class="integration-desc">Get notifications in your Slack workspace</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
                             </label>
-                            <label style="display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox"> Marketing Emails
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-icon">
+                                <i class="fab fa-linkedin" style="color: #0077B5;"></i>
+                            </div>
+                            <div class="integration-info">
+                                <div class="integration-name">LinkedIn</div>
+                                <div class="integration-desc">Import candidate profiles from LinkedIn</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-icon">
+                                <i class="fab fa-dropbox" style="color: #0061FF;"></i>
+                            </div>
+                            <div class="integration-info">
+                                <div class="integration-name">Dropbox</div>
+                                <div class="integration-desc">Save resumes and documents to Dropbox</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-icon">
+                                <i class="fas fa-envelope" style="color: #EA4335;"></i>
+                            </div>
+                            <div class="integration-info">
+                                <div class="integration-name">Gmail</div>
+                                <div class="integration-desc">Send emails directly from Gmail</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
                             </label>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Language Preference</label>
-                        <select class="form-select">
-                            <option selected>English</option>
-                            <option>Spanish</option>
-                            <option>French</option>
-                            <option>German</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Time Zone</label>
-                        <select class="form-select">
-                            <option>(GMT-05:00) Eastern Time</option>
-                            <option>(GMT-06:00) Central Time</option>
-                            <option>(GMT-07:00) Mountain Time</option>
-                            <option selected>(GMT-08:00) Pacific Time</option>
-                        </select>
-                    </div>
-
-                    <button class="action-btn btn-primary">Save Settings</button>
                 </div>
             </div>
 
@@ -2527,6 +3094,82 @@
             backToApplicants.addEventListener('click', function(e) {
                 e.preventDefault();
                 showPage('applicants');
+            });
+        }
+
+        // Settings tabs functionality
+        const settingsTabs = document.querySelectorAll('.settings-tab');
+        const settingsContents = document.querySelectorAll('.settings-content');
+
+        settingsTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+
+                // Update active tab
+                settingsTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                // Show corresponding content
+                settingsContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`${tabId}-settings`).classList.add('active');
+            });
+        });
+
+        // Password toggle functionality
+        const toggleCurrentPassword = document.getElementById('toggleCurrentPassword');
+        const toggleNewPassword = document.getElementById('toggleNewPassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
+        if (toggleCurrentPassword) {
+            toggleCurrentPassword.addEventListener('click', function() {
+                const passwordInput = document.getElementById('currentPassword');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        if (toggleNewPassword) {
+            toggleNewPassword.addEventListener('click', function() {
+                const passwordInput = document.getElementById('newPassword');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        if (toggleConfirmPassword) {
+            toggleConfirmPassword.addEventListener('click', function() {
+                const passwordInput = document.getElementById('confirmPassword');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Settings save buttons
+        const saveAccountSettings = document.getElementById('saveAccountSettings');
+        const saveSecuritySettings = document.getElementById('saveSecuritySettings');
+        const saveNotificationSettings = document.getElementById('saveNotificationSettings');
+
+        if (saveAccountSettings) {
+            saveAccountSettings.addEventListener('click', function() {
+                showToast('Account settings saved successfully!', 'success');
+            });
+        }
+
+        if (saveSecuritySettings) {
+            saveSecuritySettings.addEventListener('click', function() {
+                showToast('Security settings updated successfully!', 'success');
+            });
+        }
+
+        if (saveNotificationSettings) {
+            saveNotificationSettings.addEventListener('click', function() {
+                showToast('Notification preferences saved!', 'success');
             });
         }
 
