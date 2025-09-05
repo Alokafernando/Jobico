@@ -32,9 +32,6 @@ public class EmployeeRegisterDTO {
     @Pattern(regexp="^[0-9]{10}$", message="Phone number must be 10 digits")
     private String phone;
 
-    private String username;
-
-
     @NotBlank(message = "Company location is mandatory")
     private String location;
 

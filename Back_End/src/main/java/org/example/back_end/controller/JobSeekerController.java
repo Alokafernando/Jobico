@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "http://localhost:63342")
 public class JobSeekerController {
 
-    @Autowired
-    private AuthService authService;
 
     private final JobSeekerService jobSeekerService;
     private final PasswordEncoder passwordEncoder;

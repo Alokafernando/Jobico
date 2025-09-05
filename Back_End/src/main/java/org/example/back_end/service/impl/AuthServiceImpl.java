@@ -114,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Map DTO -> Entity
         Employee employee = Employee.builder()
-                .username(dto.getUsername())
+//                .username(dto.getUsername())
                 .contactFirstName(dto.getContactFirstName())
                 .contactLastName(dto.getContactLastName())
                 .email(dto.getEmail())
