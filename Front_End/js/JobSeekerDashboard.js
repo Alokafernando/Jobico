@@ -125,7 +125,12 @@ $(document).ready(function () {
             success: setUserDetails,
             error: function(xhr) {
                 console.error("Failed to load profile by email", xhr);
-                alert("Unable to load profile. Please refresh or contact support.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Unable to load profile. Please refresh or contact support.',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     }
@@ -178,7 +183,16 @@ $(document).ready(function () {
         }
 
         const email = localStorage.getItem("userEmail");
-        if (!email) return alert("No user email found!");
+        if (!email) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No user email found!',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
         if (Object.keys(updates).length === 0) return;
 
         $.ajax({
@@ -190,11 +204,21 @@ $(document).ready(function () {
             success: function(updatedUser) {
                 setUserDetails(updatedUser);
                 closeModals();
-                alert("Profile updated successfully!");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Profile updated successfully!',
+                    confirmButtonText: 'OK'
+                });
             },
             error: function(xhr) {
                 console.error("Failed to update profile", xhr);
-                alert("Failed to update profile.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to update profile.',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });
@@ -244,7 +268,15 @@ $(document).ready(function () {
 
     $("#save-profile-picture").on("click", function() {
         const file = $("#file-upload")[0].files[0];
-        if(!file) return alert("Select a file");
+        if (!file) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No File Selected',
+                text: 'Please select a file to upload.',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
 
         const email = localStorage.getItem("userEmail");
         const formData = new FormData();
@@ -259,12 +291,22 @@ $(document).ready(function () {
             contentType: false,
             data: formData,
             success: function() {
-                alert("Profile picture updated!");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Profile picture updated!',
+                    confirmButtonText: 'OK'
+                });
                 $profilePictureModal.hide();
             },
             error: function(xhr){
                 console.error("Failed to upload picture", xhr);
-                alert("Failed to upload picture");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to upload picture',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });
@@ -300,18 +342,33 @@ $(document).ready(function () {
         const confirmPassword = $("#confirm-password").val().trim();
 
         if (!currentPassword || !newPassword || !confirmPassword) {
-            alert("Please fill in all fields.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Incomplete Form',
+                text: 'Please fill in all fields.',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            alert("New password and confirm password do not match.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Password Mismatch',
+                text: 'New password and confirm password do not match.',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
         const email = localStorage.getItem("userEmail");
         if (!email) {
-            alert("User email not found. Please login again.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Email Not Found',
+                text: 'User email not found. Please login again.',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
@@ -326,13 +383,23 @@ $(document).ready(function () {
                 newPassword: newPassword
             }),
             success: function() {
-                alert("Password changed successfully!");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Password changed successfully!',
+                    confirmButtonText: 'OK'
+                });
                 $("#edit-password-modal").hide();
                 clearPasswordFields();
             },
             error: function(xhr) {
                 const message = xhr.responseJSON?.message || "Failed to change password";
-                alert(message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: message,
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });

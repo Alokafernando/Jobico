@@ -24,7 +24,31 @@ $('#loginForm').on('submit', function(e) {
             if (data.role === "ROLE_ADMIN") {
                 console.log('admin dashboard');
             } else if (data.role === "ROLE_EMPLOYEE") {
-                window.location.href = "EmployeeDashboard.html";
+                $.ajax({
+                    url: `http://localhost:8080/api/employee/email/${encodeURIComponent(email)}`,
+                    method: "GET",
+                    headers: { "Authorization": `Bearer ${data.accessToken}` },
+                    success: function(employee) {
+                        localStorage.setItem("userEmail", employee.email || email);
+                        localStorage.setItem("companyName", employee.companyName || "");
+                        localStorage.setItem("industry", employee.industry || "");
+                        localStorage.setItem("contactFirstName", employee.contactFirstName || "");
+                        localStorage.setItem("contactLastName", employee.contactLastName || "");
+                        localStorage.setItem("contactPosition", employee.contactPosition || "");
+                        localStorage.setItem("phoneNumber", employee.phoneNumber || "");
+                        localStorage.setItem("companyLocation", employee.companyLocation || "");
+                        localStorage.setItem("companyDescription", employee.companyDescription || "");
+
+                        const fullName = `${employee.contactFirstName || ""} ${employee.contactLastName || ""}`.trim();
+                        showMessage(`Welcome back, ${fullName}! 🎉`);
+
+                        window.location.href = "EmployeeDashboard.html";
+                    },
+                    error: function(xhr) {
+                        console.error("Failed to fetch employee details:", xhr);
+                        showMessage("Failed to get employee details. Please try logging in again.");
+                    }
+                });
             } else if (data.role === "ROLE_JOB_SEEKER") {
                 $.ajax({
                     url: `http://localhost:8080/api/jobseekers/email/${email}`,

@@ -65,6 +65,7 @@ body {
 }
 
 .sidebar-logo-text {
+    cursor: pointer;
     font-size: 1.5rem;
     font-weight: 700;
     background: linear-gradient(135deg, var(--secondary), #fff);

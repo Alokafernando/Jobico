@@ -59,10 +59,11 @@
                     <span class="menu-text">Settings</span>
                 </a>
             </li>
+
             <li class="menu-item">
-                <a data-page="help" class="menu-link">
-                    <i class="fas fa-question-circle"></i>
-                    <span class="menu-text">Help & Support</span>
+                <a class="menu-link" href="#" id="logout-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="menu-text">Logout</span>
                 </a>
             </li>
         </ul>
@@ -968,8 +969,8 @@
                     <div class="profile-header">
                         <img src="../assets/user's%20default%20image.jpg" alt="Profile" class="profile-avatar">
                         <div class="profile-info">
-                            <h2>John Doe</h2>
-                            <p>HR Manager at Jobico</p>
+                            <h2 id="profile-name"></h2>
+                            <p id="profile-position"></p>
 
                             <div class="profile-stats">
                                 <div class="profile-stat">
@@ -990,38 +991,43 @@
 
                     <div class="detail-content">
                         <div class="detail-card">
-                            <h3 class="detail-card-title">Personal Information</h3>
+                            <h3 class="detail-card-title">Company Information</h3>
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <div class="info-label">Full Name</div>
-                                    <div class="info-value">John Doe</div>
+                                    <div class="info-label">Company Name</div>
+                                    <div class="info-value" id="profile-full-name"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Email Address</div>
-                                    <div class="info-value">john.doe@example.com</div>
+                                    <div class="info-value" id="profile-email"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Phone Number</div>
-                                    <div class="info-value">(555) 123-4567</div>
+                                    <div class="info-value" id="profile-number"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Location</div>
-                                    <div class="info-value">New York, NY</div>
+                                    <div class="info-value" id="profile-address"></div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="info-label">Department</div>
-                                    <div class="info-value">Human Resources</div>
+                                    <div class="info-label">Company Industry</div>
+                                    <div class="info-value" id="profile-industry"></div>
                                 </div>
+<!--                                <div class="info-item">-->
+<!--                                    <div class="info-label" id="profile-contact-position">Position</div>-->
+<!--                                    <div class="info-value"></div>-->
+<!--                                </div>-->
                                 <div class="info-item">
-                                    <div class="info-label">Position</div>
-                                    <div class="info-value">HR Manager</div>
+                                    <div class="info-label"></div>
+                                    <div class="info-value"></div>
                                 </div>
+
                             </div>
                         </div>
 
                         <div class="detail-card">
                             <h3 class="detail-card-title">Professional Bio</h3>
-                            <p>Experienced HR professional with over 8 years in talent acquisition and employee management. Specialized in tech industry recruitment with a focus on building diverse and inclusive teams.</p>
+                            <p id="company-description"></p>
 
                             <h4 style="margin: 20px 0 10px 0;">Areas of Expertise:</h4>
                             <div style="display: flex; flex-wrap: wrap; gap: 8px;">
@@ -1055,22 +1061,6 @@
                             </div>
                         </div>
                     </div>
-
-<!--                    <div class="detail-card">-->
-<!--                        <div class="section-header">-->
-<!--                            <h3 class="detail-card-title">Profile Completeness</h3>-->
-<!--                        </div>-->
-<!--                        <div class="progress-bar">-->
-<!--                            <div class="progress-fill" style="width: 92%;"></div>-->
-<!--                        </div>-->
-<!--                        <p style="margin-top: 10px; color: var(&#45;&#45;gray);">Your profile is 92% complete. Add more information to make your profile stand out.</p>-->
-
-<!--                        <div style="display: flex; gap: 10px; margin-top: 20px;">-->
-<!--                            <button class="action-btn btn-primary">Edit Profile</button>-->
-<!--                            <button class="action-btn btn-view">Change Password</button>-->
-<!--                            <button class="action-btn btn-edit">Download Resume</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
             </div>
 
@@ -1250,14 +1240,6 @@
                             <h2 class="section-title">Security Settings</h2>
                         </div>
 
-                        <div class="security-badge strong">
-                            <i class="fas fa-shield-alt" style="color: var(--success);"></i>
-                            <div>
-                                <div class="info-label">Your password is strong</div>
-                                <div class="info-value">Last changed: 3 months ago</div>
-                            </div>
-                        </div>
-
                         <div class="form-group password-toggle">
                             <label class="form-label">Current Password</label>
                             <input type="password" class="form-input" id="currentPassword">
@@ -1275,337 +1257,12 @@
                             <input type="password" class="form-input" id="confirmPassword">
                             <i class="fas fa-eye password-toggle-icon" id="toggleConfirmPassword"></i>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Two-Factor Authentication</label>
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div>
-                                    <div class="info-value">Protect your account with an extra layer of security</div>
-                                    <div class="info-label">Require a code from your phone to log in</div>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Active Sessions</label>
-                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                    <div>
-                                        <div class="info-value">Chrome on Windows</div>
-                                        <div class="info-label">New York, NY • Active now</div>
-                                    </div>
-                                    <button class="action-btn btn-view">Revoke</button>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div class="info-value">Safari on iPhone</div>
-                                        <div class="info-label">San Francisco, CA • 2 days ago</div>
-                                    </div>
-                                    <button class="action-btn btn-view">Revoke</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="action-btn btn-primary" id="saveSecuritySettings">Update Security Settings</button>
                     </div>
-                </div>
 
-                <!-- Notification Settings -->
-                <div id="notification-settings" class="settings-content">
-                    <div class="content-section">
-                        <div class="section-header">
-                            <h2 class="section-title">Notification Preferences</h2>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Email Notifications</label>
-                            <div style="display: flex; flex-direction: column; gap: 15px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div class="info-value">New Applicant Alerts</div>
-                                        <div class="info-label">Get notified when someone applies to your job</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox" checked>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div class="info-value">Message Notifications</div>
-                                        <div class="info-label">Get notified when you receive a new message</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox" checked>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div class="info-value">Job Post Updates</div>
-                                        <div class="info-label">Get notified about your job post status changes</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox" checked>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div class="info-value">Weekly Reports</div>
-                                        <div class="info-label">Receive weekly performance reports</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div class="info-value">Promotional Emails</div>
-                                        <div class="info-label">Receive emails about new features and promotions</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Push Notifications</label>
-                            <div style="display: flex; flex-direction: column; gap: 15px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div class="info-value">Browser Notifications</div>
-                                        <div class="info-label">Show notifications in your browser</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox" checked>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div class="info-value">Sound Alerts</div>
-                                        <div class="info-label">Play sound for new notifications</div>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="action-btn btn-primary" id="saveNotificationSettings">Save Notification Preferences</button>
-                    </div>
-                </div>
-
-                <!-- Billing Settings -->
-                <div id="billing-settings" class="settings-content">
-                    <div class="content-section">
-                        <div class="section-header">
-                            <h2 class="section-title">Billing & Subscription</h2>
-                        </div>
-
-                        <div class="plan-card featured">
-                            <div class="plan-header">
-                                <div class="plan-name">Premium Plan</div>
-                                <div class="plan-price">$49<span style="font-size: 0.9rem; color: var(--gray);">/month</span></div>
-                            </div>
-                            <ul class="plan-features">
-                                <li><i class="fas fa-check"></i> Unlimited Job Posts</li>
-                                <li><i class="fas fa-check"></i> Advanced Applicant Filtering</li>
-                                <li><i class="fas fa-check"></i> Priority Support</li>
-                                <li><i class="fas fa-check"></i> Custom Branding</li>
-                                <li><i class="fas fa-check"></i> Advanced Analytics</li>
-                            </ul>
-                            <button class="action-btn btn-primary" style="width: 100%;">Manage Subscription</button>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Payment Method</label>
-                                <div style="display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                                    <i class="fab fa-cc-visa" style="font-size: 1.5rem; color: #1a1a2e;"></i>
-                                    <div>
-                                        <div class="info-value">Visa ending in 4242</div>
-                                        <div class="info-label">Expires 12/2024</div>
-                                    </div>
-                                    <button class="action-btn btn-edit" style="margin-left: auto;">Edit</button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Billing Address</label>
-                                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                                    <div class="info-value">John Doe</div>
-                                    <div class="info-value">123 Business St</div>
-                                    <div class="info-value">New York, NY 10001</div>
-                                    <div class="info-value">United States</div>
-                                    <button class="action-btn btn-edit" style="margin-top: 10px;">Edit</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="billing-history">
-                            <h3 class="detail-card-title">Billing History</h3>
-                            <div class="billing-item">
-                                <div>
-                                    <div class="info-value">Premium Plan</div>
-                                    <div class="billing-date">June 15, 2023</div>
-                                </div>
-                                <div class="billing-amount">$49.00</div>
-                                <span class="status-badge status-active">Paid</span>
-                            </div>
-                            <div class="billing-item">
-                                <div>
-                                    <div class="info-value">Premium Plan</div>
-                                    <div class="billing-date">May 15, 2023</div>
-                                </div>
-                                <div class="billing-amount">$49.00</div>
-                                <span class="status-badge status-active">Paid</span>
-                            </div>
-                            <div class="billing-item">
-                                <div>
-                                    <div class="info-value">Premium Plan</div>
-                                    <div class="billing-date">April 15, 2023</div>
-                                </div>
-                                <div class="billing-amount">$49.00</div>
-                                <span class="status-badge status-active">Paid</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Integration Settings -->
-                <div id="integration-settings" class="settings-content">
-                    <div class="content-section">
-                        <div class="section-header">
-                            <h2 class="section-title">Integrations</h2>
-                        </div>
-
-                        <div class="integration-card">
-                            <div class="integration-icon">
-                                <i class="fab fa-google" style="color: #DB4437;"></i>
-                            </div>
-                            <div class="integration-info">
-                                <div class="integration-name">Google Calendar</div>
-                                <div class="integration-desc">Sync your interview schedule with Google Calendar</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="integration-card">
-                            <div class="integration-icon">
-                                <i class="fab fa-slack" style="color: #4A154B;"></i>
-                            </div>
-                            <div class="integration-info">
-                                <div class="integration-name">Slack</div>
-                                <div class="integration-desc">Get notifications in your Slack workspace</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="integration-card">
-                            <div class="integration-icon">
-                                <i class="fab fa-linkedin" style="color: #0077B5;"></i>
-                            </div>
-                            <div class="integration-info">
-                                <div class="integration-name">LinkedIn</div>
-                                <div class="integration-desc">Import candidate profiles from LinkedIn</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="integration-card">
-                            <div class="integration-icon">
-                                <i class="fab fa-dropbox" style="color: #0061FF;"></i>
-                            </div>
-                            <div class="integration-info">
-                                <div class="integration-name">Dropbox</div>
-                                <div class="integration-desc">Save resumes and documents to Dropbox</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="integration-card">
-                            <div class="integration-icon">
-                                <i class="fas fa-envelope" style="color: #EA4335;"></i>
-                            </div>
-                            <div class="integration-info">
-                                <div class="integration-name">Gmail</div>
-                                <div class="integration-desc">Send emails directly from Gmail</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
+                    <button class="action-btn btn-primary" id="saveSecuritySettings">Update Security Settings</button>
                 </div>
             </div>
 
-            <!-- Help Page -->
-            <div id="help-page" class="page-content">
-                <h1 class="page-title">
-                    <i class="fas fa-question-circle"></i>
-                    Help & Support
-                </h1>
-
-                <div class="content-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Frequently Asked Questions</h2>
-                    </div>
-
-                    <div class="detail-card" style="margin-bottom: 20px;">
-                        <h3 class="detail-card-title">How do I create a new job posting?</h3>
-                        <p>To create a new job posting, navigate to the "Job Posts" section and click the "Create New Job" button. Fill in the required information and click "Publish Job" to make it live.</p>
-                    </div>
-
-                    <div class="detail-card" style="margin-bottom: 20px;">
-                        <h3 class="detail-card-title">How can I contact an applicant?</h3>
-                        <p>You can contact applicants directly from their profile page or through the Messages section. Click on the "Message" button on an applicant's card to start a conversation.</p>
-                    </div>
-
-                    <div class="detail-card" style="margin-bottom: 20px;">
-                        <h3 class="detail-card-title">How do I update my profile information?</h3>
-                        <p>Navigate to the "Profile" section to view and edit your personal and professional information. You can also change your account settings from the "Settings" page.</p>
-                    </div>
-
-                    <div class="content-section">
-                        <div class="section-header">
-                            <h2 class="section-title">Contact Support</h2>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Subject</label>
-                            <input type="text" class="form-input" placeholder="What do you need help with?">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Message</label>
-                            <textarea class="form-textarea" placeholder="Describe your issue in detail..."></textarea>
-                        </div>
-                        <button class="action-btn btn-primary">Send Message to Support</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 </div>
@@ -1616,7 +1273,6 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/EmployeeDashboard.js"></script>
-
 
 </body>
 </html>

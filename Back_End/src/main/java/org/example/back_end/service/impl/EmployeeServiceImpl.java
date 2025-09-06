@@ -14,12 +14,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
 
-    @Override
-    public Employee getEmployeeByEmail(String email) {
-        Employee employee = employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
-        return modelMapper.map(employee, Employee.class);
-    }
+//    @Override
+//    public Employee getEmployeeByEmail(String email) {
+//        Employee employee = employeeRepository.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("Employee not found"));
+//        return modelMapper.map(employee, Employee.class);
+//    }
+@Override
+public Employee getEmployeeByEmail(String email) {
+    // Directly return the entity; no need to map to Employee again
+    return employeeRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Employee not found with email: " + email));
+}
+
 
     @Override
     public Employee save(Employee employeeDTO) {

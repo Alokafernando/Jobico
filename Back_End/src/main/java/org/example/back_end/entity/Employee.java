@@ -3,6 +3,8 @@ package org.example.back_end.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -35,4 +37,5 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.EMPLOYEE;
+
 }
