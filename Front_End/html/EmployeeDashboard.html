@@ -1166,9 +1166,6 @@
                 <div class="settings-tabs">
                     <div class="settings-tab active" data-tab="account">Account</div>
                     <div class="settings-tab" data-tab="security">Security</div>
-                    <div class="settings-tab" data-tab="notifications">Notifications</div>
-                    <div class="settings-tab" data-tab="billing">Billing</div>
-                    <div class="settings-tab" data-tab="integrations">Integrations</div>
                 </div>
 
                 <!-- Account Settings -->
@@ -1180,54 +1177,50 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-input" value="John Doe">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" class="form-input" id="company-name-setting">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" class="form-input" value="john.doe@example.com">
+                                <input type="email" class="form-input" id="company-email-setting">
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Job Title</label>
-                                <input type="text" class="form-input" value="HR Manager">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-input" id="company-number-setting">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Department</label>
-                                <input type="text" class="form-input" value="Human Resources">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-input" id="company-address-setting">
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Language Preference</label>
-                            <select class="form-select">
-                                <option selected>English</option>
-                                <option>Spanish</option>
-                                <option>French</option>
-                                <option>German</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Industry</label>
+                                <input type="text" class="form-input" id="company-industry-setting">
+                            </div>
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <div class="section-header">
+                            <h2 class="section-title" style="margin: 20px 0 0 0">Contact Person details</h2>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Time Zone</label>
-                            <select class="form-select">
-                                <option>(GMT-05:00) Eastern Time</option>
-                                <option>(GMT-06:00) Central Time</option>
-                                <option>(GMT-07:00) Mountain Time</option>
-                                <option selected>(GMT-08:00) Pacific Time</option>
-                            </select>
+                        <div class="form-row" style="margin-top: 40px">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-input" id="contact-person-name-setting">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Position</label>
+                                <input type="text" class="form-input" id="contact-person-position-setting">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Profile Visibility</label>
-                            <select class="form-select">
-                                <option selected>Public</option>
-                                <option>Private</option>
-                                <option>Only to my connections</option>
-                            </select>
-                        </div>
+
 
                         <button class="action-btn btn-primary" id="saveAccountSettings">Save Account Settings</button>
                     </div>
@@ -1260,6 +1253,24 @@
                     </div>
 
                     <button class="action-btn btn-primary" id="saveSecuritySettings">Update Security Settings</button>
+                </div>
+            </div>
+
+            <div class="custom-modal" id="confirmation-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Confirm Action</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <p>Are you sure you want to leave? Your progress will be lost.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="modal-btn modal-btn-cancel" id="modal-cancel">Cancel</button>
+                        <button class="modal-btn modal-btn-confirm" id="modal-confirm">Yes, Leave</button>
+                    </div>
                 </div>
             </div>
 

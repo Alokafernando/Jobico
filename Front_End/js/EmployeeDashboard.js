@@ -26,15 +26,16 @@ $(document).ready(function () {
     const $companyDescription = $("#company-description");
     // const $companyIndustry= $("#profile-industry");
 
-    // Edit modal inputs
-    const $editProfileName = $("#edit-profile-name");
-    const $editContactPosition = $("#edit-contact-position");
-    const $editEmail = $("#email");
-    const $editPhone = $("#phone");
-    const $editCompanyName = $("#companyName");
-    const $editIndustry = $("#industryInput");
-    const $editCompanyLocation = $("#companyLocation");
+    // setting page inputs
+    // const $editProfileName = $("#company-name-setting");
+    const $editContactPosition = $("#contact-person-position-setting");
+    const $editEmail = $("#company-email-setting");
+    const $editPhone = $("#company-number-setting");
+    const $editCompanyName = $("#company-name-setting");
+    const $editIndustry = $("#company-industry-setting");
+    const $editCompanyLocation = $("#company-address-setting");
     const $editCompanyDescription = $("#companyDescription");
+    const $contactPersonName = $("#contact-person-name-setting");
 
     const token = localStorage.getItem("token");
 
@@ -80,7 +81,7 @@ $(document).ready(function () {
     });
 
     // Back buttons
-    $("#backToJobs, #backToJobsFromEdit, #backToApplicants").on("click", function(e) {
+    $("#backToJobs, #backToJobsFromEdit, #backToApplicants").on("click", function (e) {
         e.preventDefault();
         const targetPage = $(this).attr("id") === "backToApplicants" ? "applicants" : "job-posts";
         showPage(targetPage);
@@ -105,7 +106,6 @@ $(document).ready(function () {
         const firstName = emp.contactFirstName || "";
         const lastName = emp.contactLastName || "";
 
-        $welcomeUser.text(firstName ? `Welcome back, ${firstName}!` : "Welcome back!");
         $profileName.text(`${firstName} ${lastName}`);
         $contactPosition.text(
             (emp.contactPosition || "") + (emp.companyName ? " at " + emp.companyName : "")
@@ -120,14 +120,13 @@ $(document).ready(function () {
         $companyDescription.text(emp.companyDescription || "");
 
         // Prefill modals
-        $editProfileName.val(`${firstName} ${lastName}`);
-        $editContactPosition.val(emp.contactPosition || "");
+        $editCompanyName.val(emp.companyName || "");
         $editEmail.val(emp.email || "");
         $editPhone.val(emp.phoneNumber || "");
-        $editCompanyName.val(emp.companyName || "");
-        $editIndustry.val(emp.industry || "");
         $editCompanyLocation.val(emp.companyLocation || "");
-        $editCompanyDescription.val(emp.companyDescription || "");
+        $editIndustry.val(emp.industry || "")
+        $contactPersonName.val(`${emp.contactFirstName} ${emp.contactLastName}`);
+        $editContactPosition.val(emp.contactPosition || "")
 
         localStorage.setItem("userEmail", emp.email);
     }
@@ -142,12 +141,12 @@ $(document).ready(function () {
         $.ajax({
             url: `http://localhost:8080/api/employee/email/${encodeURIComponent(email)}`,
             method: "GET",
-            headers: { "Authorization": `Bearer ${token}` },
-            success: function(response) {
-                console.log("API Response:", response); // <-- print the full response
-                setEmployeeDetails(response);           // <-- populate the profile
+            headers: {"Authorization": `Bearer ${token}`},
+            success: function (response) {
+                console.log("API Response:", response);
+                setEmployeeDetails(response);
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error("Failed to load profile", xhr);
                 Swal.fire({
                     icon: 'error',
@@ -188,24 +187,24 @@ $(document).ready(function () {
         }
 
         const email = localStorage.getItem("userEmail");
-        if (!email) return Swal.fire({ icon: 'error', title: 'Error', text: 'No user email found!' });
+        if (!email) return Swal.fire({icon: 'error', title: 'Error', text: 'No user email found!'});
 
         if (!Object.keys(updates).length) return;
 
         $.ajax({
             url: `http://localhost:8080/api/employee/update/${encodeURIComponent(email)}`,
             method: "PUT",
-            headers: { "Authorization": `Bearer ${token}` },
+            headers: {"Authorization": `Bearer ${token}`},
             contentType: "application/json",
             data: JSON.stringify(updates),
             success: function (updatedEmp) {
                 setEmployeeDetails(updatedEmp);
                 closeModals();
-                Swal.fire({ icon: 'success', title: 'Success', text: 'Profile updated successfully!' });
+                Swal.fire({icon: 'success', title: 'Success', text: 'Profile updated successfully!'});
             },
             error: function (xhr) {
                 console.error("Failed to update profile", xhr);
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to update profile.' });
+                Swal.fire({icon: 'error', title: 'Error', text: 'Failed to update profile.'});
             }
         });
     });
@@ -213,32 +212,25 @@ $(document).ready(function () {
     // -----------------------------
     // Modals
     // -----------------------------
-    function closeModals() {
-        $editModals.hide();
-        $profilePictureModal.hide();
+    function closeModal() {
         $confirmationModal.hide();
     }
 
-    $(".edit-modal-close, .modal-btn-cancel").on("click", closeModals);
+    $(".edit-modal-close, .modal-btn-cancel").on("click", closeModal);
     $editModals.on("click", function (e) {
-        if (e.target === this) closeModals();
-    });
-
-    $("#edit-profile-btn").on("click", () => $("#edit-profile-modal").css("display", "flex"));
-    $(".edit-btn").on("click", function () {
-        const editType = $(this).data("edit");
-        $("#edit-" + editType + "-modal").css("display", "flex");
+        if (e.target === this) closeModal();
     });
 
     // -----------------------------
     // Logout
     // -----------------------------
+
     $logoutLink.on("click", function (e) {
         e.preventDefault();
         $confirmationModal.show();
     });
 
-    $("#modal-cancel").on("click", () => $confirmationModal.hide());
+    $("#modal-cancel").on("click", closeModal);
 
     $("#modal-confirm").on("click", function () {
         localStorage.clear();
@@ -246,7 +238,7 @@ $(document).ready(function () {
     });
 
     $confirmationModal.on("click", function (e) {
-        if (e.target === this) $(this).hide();
+        if (e.target === this) closeModal();
     });
 
     // -----------------------------
@@ -266,7 +258,7 @@ $(document).ready(function () {
 
     $("#save-profile-picture").on("click", function () {
         const file = $("#file-upload")[0].files[0];
-        if (!file) return Swal.fire({ icon: 'warning', title: 'No File Selected', text: 'Please select a file.' });
+        if (!file) return Swal.fire({icon: 'warning', title: 'No File Selected', text: 'Please select a file.'});
 
         const email = localStorage.getItem("userEmail");
         const formData = new FormData();
@@ -276,17 +268,17 @@ $(document).ready(function () {
         $.ajax({
             url: "http://localhost:8080/api/employee/profile-picture",
             method: "POST",
-            headers: { "Authorization": `Bearer ${token}` },
+            headers: {"Authorization": `Bearer ${token}`},
             processData: false,
             contentType: false,
             data: formData,
             success: function () {
-                Swal.fire({ icon: 'success', title: 'Success', text: 'Profile picture updated!' });
+                Swal.fire({icon: 'success', title: 'Success', text: 'Profile picture updated!'});
                 $profilePictureModal.hide();
             },
             error: function (xhr) {
                 console.error("Failed to upload picture", xhr);
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to upload picture' });
+                Swal.fire({icon: 'error', title: 'Error', text: 'Failed to upload picture'});
             }
         });
     });
@@ -322,30 +314,34 @@ $(document).ready(function () {
         const confirmPassword = $("#confirm-password").val().trim();
 
         if (!currentPassword || !newPassword || !confirmPassword) {
-            return Swal.fire({ icon: 'warning', title: 'Incomplete Form', text: 'Please fill in all fields.' });
+            return Swal.fire({icon: 'warning', title: 'Incomplete Form', text: 'Please fill in all fields.'});
         }
 
         if (newPassword !== confirmPassword) {
-            return Swal.fire({ icon: 'error', title: 'Mismatch', text: 'New password and confirm password do not match.' });
+            return Swal.fire({
+                icon: 'error',
+                title: 'Mismatch',
+                text: 'New password and confirm password do not match.'
+            });
         }
 
         const email = localStorage.getItem("userEmail");
-        if (!email) return Swal.fire({ icon: 'warning', title: 'Email Not Found', text: 'Please login again.' });
+        if (!email) return Swal.fire({icon: 'warning', title: 'Email Not Found', text: 'Please login again.'});
 
         $.ajax({
             url: "http://localhost:8080/api/employee/change-password",
             method: "POST",
-            headers: { "Authorization": `Bearer ${token}` },
+            headers: {"Authorization": `Bearer ${token}`},
             contentType: "application/json",
-            data: JSON.stringify({ email, currentPassword, newPassword }),
+            data: JSON.stringify({email, currentPassword, newPassword}),
             success: function () {
-                Swal.fire({ icon: 'success', title: 'Success', text: 'Password changed successfully!' });
+                Swal.fire({icon: 'success', title: 'Success', text: 'Password changed successfully!'});
                 $("#edit-password-modal").hide();
                 clearPasswordFields();
             },
             error: function (xhr) {
                 const message = xhr.responseJSON?.message || "Failed to change password";
-                Swal.fire({ icon: 'error', title: 'Error', text: message });
+                Swal.fire({icon: 'error', title: 'Error', text: message});
             }
         });
     });
@@ -353,30 +349,30 @@ $(document).ready(function () {
     // -----------------------------
     // Job Post Management
     // -----------------------------
-    $("#createJobBtn").on("click", function() {
+    $("#createJobBtn").on("click", function () {
         $("#create-job-form").toggle();
     });
 
-    $("#cancelCreateJob").on("click", function() {
+    $("#cancelCreateJob").on("click", function () {
         $("#create-job-form").hide();
     });
 
     // View job details
-    $(".btn-view[data-job-id]").on("click", function() {
+    $(".btn-view[data-job-id]").on("click", function () {
         const jobId = $(this).data("job-id");
         showPage("view-job");
         // Here you would typically load the specific job data
     });
 
     // Edit job
-    $(".btn-edit[data-job-id]").on("click", function() {
+    $(".btn-edit[data-job-id]").on("click", function () {
         const jobId = $(this).data("job-id");
         showPage("edit-job");
         // Here you would typically load the specific job data for editing
     });
 
     // View applicant details
-    $(".btn-view[data-applicant-id]").on("click", function() {
+    $(".btn-view[data-applicant-id]").on("click", function () {
         const applicantId = $(this).data("applicant-id");
         showPage("view-applicant");
         // Here you would typically load the specific applicant data
@@ -385,19 +381,19 @@ $(document).ready(function () {
     // -----------------------------
     // Messages
     // -----------------------------
-    $("#newMessageBtn, #sidebarNewMessageBtn").on("click", function(e) {
+    $("#newMessageBtn, #sidebarNewMessageBtn").on("click", function (e) {
         e.preventDefault();
         $("#new-message-form").toggle();
     });
 
-    $("#cancelMessage").on("click", function() {
+    $("#cancelMessage").on("click", function () {
         $("#new-message-form").hide();
     });
 
     // -----------------------------
     // Settings Tabs
     // -----------------------------
-    $(".settings-tab").on("click", function() {
+    $(".settings-tab").on("click", function () {
         const tabId = $(this).data("tab");
 
         // Update active tab
@@ -412,7 +408,7 @@ $(document).ready(function () {
     // -----------------------------
     // Filter Toggle
     // -----------------------------
-    $("#toggleFilterBtn").on("click", function(e) {
+    $("#toggleFilterBtn").on("click", function (e) {
         e.preventDefault();
         $("#filter-options").toggle();
     });
