@@ -161,6 +161,70 @@ $(document).ready(function () {
     });
 
 
+    $("#saveSecuritySettings").on("click", function () {
+        const currentPassword = $("#currentPassword").val().trim();
+        const newPassword = $("#newPassword").val().trim();
+        const confirmPassword = $("#confirmPassword").val().trim();
+        const email = localStorage.getItem("userEmail");
+        const token = localStorage.getItem("token");
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Incomplete Form',
+                text: 'Please fill in all fields.'
+            });
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Password Mismatch',
+                text: 'New password and confirm password do not match.'
+            });
+            return;
+        }
+
+        if (!email) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Email not found',
+                text: 'Please login again.'
+            });
+            return;
+        }
+
+        $.ajax({
+            url: "http://localhost:8080/api/employee/change-password",
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` },
+            contentType: "application/json",
+            data: JSON.stringify({
+                email: email,
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            }),
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message || 'Password changed successfully!'
+                });
+                // Clear fields
+                $("#currentPassword, #newPassword, #confirmPassword").val('');
+            },
+            error: function (xhr) {
+                const message = xhr.responseJSON?.message || 'Failed to change password';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: message
+                });
+            }
+        });
+    });
+
 
 
     // -----------------------------

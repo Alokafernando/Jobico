@@ -5,6 +5,7 @@ import org.example.back_end.entity.Employee;
 import org.example.back_end.repository.EmployeeRepository;
 import org.example.back_end.service.EmployeeService;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
-    private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Employee getEmployeeByEmail(String email) {
@@ -37,6 +38,19 @@ public class EmployeeServiceImpl implements EmployeeService {
                     return employeeRepository.save(existing);
                 })
                 .orElseThrow(() -> new RuntimeException("Employee not found with email: " + email));
+    }
+
+    @Override
+    public Employee changePassword(String email, String currentPassword, String newPassword) {
+        Employee employee = employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Employee not found with email: " + email));
+
+        if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        employee.setPassword(passwordEncoder.encode(newPassword));
+        return employeeRepository.save(employee);
     }
 
 
