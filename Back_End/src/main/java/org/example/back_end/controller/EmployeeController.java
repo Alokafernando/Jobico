@@ -20,5 +20,13 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
+    @PutMapping("/update/{email}")
+    public ResponseEntity<Employee> updateEmployee(
+            @PathVariable String email,
+            @RequestBody Employee updatedEmployee
+    ) {
+        Employee employee = employeeService.updateEmployee(email, updatedEmployee);
+        return ResponseEntity.ok(employee);
+    }
 
 }

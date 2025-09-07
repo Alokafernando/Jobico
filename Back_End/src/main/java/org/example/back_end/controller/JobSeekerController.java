@@ -44,96 +44,38 @@ public class JobSeekerController {
     }
 
     @PutMapping("/update/{email}")
-    public ResponseEntity<JobSeeker> updateJobSeekerProfile(
+    public ResponseEntity<?> updateJobSeekerProfile(
             @PathVariable String email,
             @RequestBody Map<String, Object> updates
     ) {
-        JobSeeker seeker = jobSeekerService.getJobSeekerByEmail(email);
-        if (seeker == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
         try {
-            if (updates.containsKey("firstName")) seeker.setFirstName((String) updates.get("firstName"));
-            if (updates.containsKey("username")) {
-                seeker.setFirstName((String) updates.get("username"));
-            }
-
-
-            if (updates.containsKey("lastName")) seeker.setLastName((String) updates.get("lastName"));
-            if (updates.containsKey("email")) seeker.setEmail((String) updates.get("email"));
-            if (updates.containsKey("phoneNumber")) seeker.setPhoneNumber((String) updates.get("phoneNumber"));
-            if (updates.containsKey("address")) seeker.setAddress((String) updates.get("address"));
-            if (updates.containsKey("professionTitle")) seeker.setProfessionTitle((String) updates.get("professionTitle"));
-            if (updates.containsKey("jobType")) seeker.setJobType((String) updates.get("jobType"));
-            if (updates.containsKey("experience")) seeker.setExperience((String) updates.get("experience"));
-            if (updates.containsKey("education")) seeker.setEducation((String) updates.get("education"));
-            if (updates.containsKey("about")) seeker.setAbout((String) updates.get("about"));
-
-            // Safe skills handling
-            if (updates.containsKey("skills")) {
-                Object skillsObj = updates.get("skills");
-                if (skillsObj instanceof java.util.List<?>) {
-                    List<String> skillList = ((List<?>) skillsObj).stream()
-                            .filter(Objects::nonNull)
-                            .map(Object::toString)
-                            .collect(Collectors.toList());
-                    seeker.setSkills(skillList);
-                } else if (skillsObj instanceof String) {
-                    List<String> skillList = Arrays.stream(((String) skillsObj).split(","))
-                            .map(String::trim)
-                            .collect(Collectors.toList());
-                    seeker.setSkills(skillList);
-                }
-            }
-
-            jobSeekerService.save(seeker);
-            return ResponseEntity.ok(seeker);
-
+            JobSeeker updated = jobSeekerService.updateProfile(email, updates);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to update profile"));
         }
     }
 
     @PostMapping("/change-password")
     public ResponseEntity<Map<String, String>> changePassword(@RequestBody Map<String, String> payload) {
-        String email = payload.get("email");
-        String currentPassword = payload.get("currentPassword");
-        String newPassword = payload.get("newPassword");
-
-        if (email == null || currentPassword == null || newPassword == null) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", "Email, current password, and new password are required"));
-        }
-
-        JobSeeker seeker = jobSeekerService.getJobSeekerByEmail(email);
-        if (seeker == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "User not found"));
-        }
-
-        if (!passwordEncoder.matches(currentPassword, seeker.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Current password is incorrect"));
-        }
-
-        if (newPassword.length() < 6) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", "New password must be at least 6 characters long"));
-        }
-
         try {
-            seeker.setPassword(passwordEncoder.encode(newPassword));
-            jobSeekerService.save(seeker);
-
+            jobSeekerService.changePassword(
+                    payload.get("email"),
+                    payload.get("currentPassword"),
+                    payload.get("newPassword")
+            );
             return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "Failed to change password"));
         }
     }
-
 
 }

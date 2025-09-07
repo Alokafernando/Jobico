@@ -14,25 +14,29 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
 
-//    @Override
-//    public Employee getEmployeeByEmail(String email) {
-//        Employee employee = employeeRepository.findByEmail(email)
-//                .orElseThrow(() -> new RuntimeException("Employee not found"));
-//        return modelMapper.map(employee, Employee.class);
-//    }
-@Override
-public Employee getEmployeeByEmail(String email) {
-    // Directly return the entity; no need to map to Employee again
-    return employeeRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Employee not found with email: " + email));
-}
-
+    @Override
+    public Employee getEmployeeByEmail(String email) {
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Employee not found with email: " + email));
+    }
 
     @Override
-    public Employee save(Employee employeeDTO) {
-        Employee employee = modelMapper.map(employeeDTO, Employee.class);
-        Employee saved = employeeRepository.save(employee);
-        return modelMapper.map(saved, Employee.class);
+    public Employee updateEmployee(String email, Employee updatedEmployee) {
+        return employeeRepository.findByEmail(email)
+                .map(existing -> {
+
+                    existing.setContactFirstName(updatedEmployee.getContactFirstName());
+                    existing.setContactLastName(updatedEmployee.getContactLastName());
+                    existing.setContactPosition(updatedEmployee.getContactPosition());
+                    existing.setEmail(updatedEmployee.getEmail());
+                    existing.setPhoneNumber(updatedEmployee.getPhoneNumber());
+                    existing.setCompanyName(updatedEmployee.getCompanyName());
+                    existing.setIndustry(updatedEmployee.getIndustry());
+                    existing.setCompanyLocation(updatedEmployee.getCompanyLocation());
+                    existing.setCompanyDescription(updatedEmployee.getCompanyDescription());
+                    return employeeRepository.save(existing);
+                })
+                .orElseThrow(() -> new RuntimeException("Employee not found with email: " + email));
     }
 
 
