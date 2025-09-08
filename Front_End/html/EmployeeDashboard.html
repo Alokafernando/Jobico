@@ -328,11 +328,11 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Job Title</label>
-                                <input type="text" class="form-input" placeholder="e.g. Senior Frontend Developer">
+                                <input type="text" class="form-input" id="jobTitle" placeholder="e.g. Senior Frontend Developer">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Department</label>
-                                <select class="form-select">
+                                <select class="form-select" id="jobDepartment">
                                     <option>Engineering</option>
                                     <option>Design</option>
                                     <option>Marketing</option>
@@ -344,7 +344,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Job Type</label>
-                                <select class="form-select">
+                                <select class="form-select" id="jobType">
                                     <option>Full-time</option>
                                     <option>Part-time</option>
                                     <option>Contract</option>
@@ -353,34 +353,85 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Location</label>
-                                <input type="text" class="form-input" placeholder="e.g. Remote, New York, etc.">
+                                <input type="text" class="form-input" id="jobLocation" placeholder="e.g. Remote, New York, etc.">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Job Description</label>
-                            <textarea class="form-textarea" placeholder="Describe the role, responsibilities, and requirements..."></textarea>
+                            <textarea class="form-textarea" id="jobDescription"></textarea>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Application Deadline</label>
-                                <input type="date" class="form-input">
+                                <input type="date" class="form-input" id="jobDeadline">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Salary Range</label>
-                                <input type="text" class="form-input" placeholder="e.g. $80,000 - $100,000">
+                                <input type="text" class="form-input" id="jobSalary" placeholder="e.g. $80,000 - $100,000">
                             </div>
                         </div>
 
-                        <div style="display: flex; gap: 10px;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Company Logo</label>
+                                <input type="file" class="form-input" id="jobLogo" accept="image/*">
+                            </div>
+                            <div class="form-group">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Job Requirements</label>
+                            <textarea class="form-textarea" id="requirements"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Key Skills</label>
+                            <input type="text" class="form-input" id="keySkills" placeholder="e.g. JavaScript, React, Node.js">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="overview-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Gender</label>
+                                    <select class="form-input"  id="gender">
+                                        <option value="Any">Any</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Experience</label>
+                                    <input type="text" class="form-input" id="experience" placeholder="e.g. 2 years - 3 years">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="form-label">Qualification</div>
+                                    <select class="form-input" id="qualification">
+                                        <option value="Bachelor's Degree">Bachelor's Degree</option>
+                                        <option value="High School">High School</option>
+                                        <option value="Associate Degree">Associate Degree</option>
+                                        <option value="Master's Degree">Master's Degree</option>
+                                        <option value="Doctorate">Doctorate</option>
+                                        <option value="Diploma">Diploma</option>
+                                        <option value="Certificate">Certificate</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-top: 25px">
                             <button class="action-btn btn-primary" id="publishJobBtn">Publish Job</button>
-                            <button class="action-btn btn-edit">Save as Draft</button>
                             <button class="action-btn btn-view" id="cancelCreateJob">Cancel</button>
                         </div>
                     </div>
 
-                    <table class="jobs-table">
+                    <table class="jobs-table" id="job-post-table">
                         <thead>
                         <tr>
                             <th>Job Title</th>

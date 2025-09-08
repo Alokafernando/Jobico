@@ -3,6 +3,7 @@ package org.example.back_end.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,28 +19,33 @@ public class JobPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title; // e.g. "Software Engineer"
+    private String title;
+    private String description;
+    private String department;
+    private String employmentType;   // Full-time, Internship, Contract, etc.
+    private String location;
+    private String requirements;
+    private String gender;
+    private String requiredEducation;
+    private String requiredExperience;
+    private String salaryRange;
 
-    @Lob
-    @Column(nullable = false)
-    private String description; // general job overview
+    private LocalDate applicationDeadline;
+    private LocalDate postedAt;
+    private LocalDateTime createdAt;
 
-    private String location;       // e.g. "Colombo, Sri Lanka"
-    private String employmentType; // e.g. "FULL_TIME", "PART_TIME", "CONTRACT"
-    private String salaryRange;    // e.g. "80,000 - 120,000 LKR"
+    private String companyName;
+    private String companyEmail;
+    private String companyPhone;
+    private String companyLogo;
 
-    // Requirements
+    private String type;   // Internship, Contract, etc.
+    private String status; // Active / Open / Closed
+
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> requiredSkills = new ArrayList<>();
-
-    private String requiredEducation;   // e.g. "Bachelor’s in Computer Science"
-    private String requiredExperience;  // e.g. "2+ years in software development"
-
-    private LocalDateTime postedAt = LocalDateTime.now();
-    private LocalDateTime applicationDeadline; // optional closing date
+    private List<String> keySkills = new ArrayList<>();   // ✅ store as list of strings
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee postedBy;  // Employer who posted the job
+    @JoinColumn(name = "employee_id")
+    private Employee postedBy;
 }

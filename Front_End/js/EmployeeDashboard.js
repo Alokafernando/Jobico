@@ -288,8 +288,15 @@ $(document).ready(function () {
     // -----------------------------
     // Job Posts & Applicants
     // -----------------------------
-    $("#createJobBtn").on("click", () => $("#create-job-form").toggle());
-    $("#cancelCreateJob").on("click", () => $("#create-job-form").hide());
+    $("#createJobBtn").on("click", () => {
+        $("#create-job-form").toggle().show();
+        $("#job-post-table").hide();
+    });
+    $("#cancelCreateJob").on("click", () => {
+        $("#create-job-form").hide()
+        $("#job-post-table").show();
+    });
+
     $(".btn-view[data-job-id]").on("click", function () { showPage("view-job"); });
     $(".btn-edit[data-job-id]").on("click", function () { showPage("edit-job"); });
     $(".btn-view[data-applicant-id]").on("click", function () { showPage("view-applicant"); });
@@ -316,3 +323,88 @@ $(document).ready(function () {
     // -----------------------------
     $("#toggleFilterBtn").on("click", e => { e.preventDefault(); $("#filter-options").toggle(); });
 });
+
+$("#publishJobBtn").on("click", function () {
+    const token = localStorage.getItem("token");
+    if (!token) return Swal.fire({ icon: "error", title: "Error", text: "You are not logged in." });
+
+    // Collect form values
+    const title = $("#jobTitle").val().trim();
+    const department = $("#jobDepartment").val();
+    const type = $("#jobType").val();
+    const location = $("#jobLocation").val().trim();
+    const description = $("#jobDescription").val().trim();
+    const deadline = $("#jobDeadline").val();
+    const salaryRange = $("#jobSalary").val().trim();
+    const requirements = $("#requirements").val().trim();
+    const gender = $("#gender").val();
+    const requiredExperience = $("#experience").val().trim();
+    const requiredEducation = $("#qualification").val();
+    const keySkillsInput = $("#keySkills").val().trim();
+    const keySkills = keySkillsInput ? keySkillsInput.split(',').map(skill => skill.trim()) : [];
+
+
+    const logoFile = $("#jobLogo")[0].files[0];
+    const today = new Date().toISOString().split("T")[0];
+
+    // Employee info from localStorage
+    const companyEmail = localStorage.getItem("userEmail");
+    const companyName = localStorage.getItem("companyName");
+    const companyPhone = localStorage.getItem("phoneNumber");
+
+    if (!title || !description) {
+        return Swal.fire({
+            icon: "warning",
+            title: "Incomplete Form",
+            text: "Please fill all required fields."
+        });
+    }
+
+    const jobData = {
+        title,
+        department,
+        employmentType: type,
+        location,
+        description,
+        applicationDeadline: deadline,
+        postedAt: today,
+        salaryRange,
+        requirements,
+        keySkills,
+        gender,
+        requiredExperience,
+        requiredEducation,
+        status: "Active",
+        companyEmail,
+        companyName,
+        companyPhone
+    };
+
+
+    const formData = new FormData();
+    formData.append("job", new Blob([JSON.stringify(jobData)], { type: "application/json" }));
+    if (logoFile) formData.append("logo", logoFile);
+
+    $.ajax({
+        url: "http://localhost:8080/api/jobs/create",
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` },
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function (response) {
+            Swal.fire({ icon: "success", title: "Job Posted!", text: "Your job post has been successfully published." });
+            $("#create-job-form").hide();
+            $("#job-post-table").show()
+            // Optionally reload job posts list here
+        },
+        error: function (xhr) {
+            Swal.fire({
+                icon: "error",
+                title: "Failed",
+                text: xhr.responseJSON?.message || "Could not create job. Please try again."
+            });
+        }
+    });
+});
+

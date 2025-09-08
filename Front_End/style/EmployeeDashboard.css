@@ -394,6 +394,7 @@ body {
 }
 
 .action-btn {
+    height: 35px;
     padding: 6px 12px;
     border-radius: 5px;
     font-size: 0.8rem;
