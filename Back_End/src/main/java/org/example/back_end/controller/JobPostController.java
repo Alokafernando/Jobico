@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,59 +34,17 @@ public class JobPostController {
             @RequestPart(value = "logo", required = false) MultipartFile logo
     ) {
         try {
-            // Find employee by email
-            Employee employee = employeeService.getEmployeeByEmail(jobDto.getCompanyEmail());
-            if (employee == null) {
-                return ResponseEntity.badRequest()
-                        .body("Employee not found with email: " + jobDto.getCompanyEmail());
-            }
-
-            // Map DTO → Entity
-            JobPost job = JobPost.builder()
-                    .title(jobDto.getTitle())
-                    .description(jobDto.getDescription())
-                    .department(jobDto.getDepartment())
-                    .employmentType(jobDto.getEmploymentType())
-                    .location(jobDto.getLocation())
-                    .requirements(jobDto.getRequirements())
-                    .gender(jobDto.getGender())
-                    .requiredEducation(jobDto.getRequiredEducation())
-                    .requiredExperience(jobDto.getRequiredExperience())
-                    .salaryRange(jobDto.getSalaryRange())
-                    .applicationDeadline(jobDto.getApplicationDeadline())
-                    .postedAt(jobDto.getPostedAt() != null ? jobDto.getPostedAt() : LocalDate.now())
-                    .createdAt(LocalDateTime.now())
-                    .companyEmail(jobDto.getCompanyEmail())
-                    .companyName(jobDto.getCompanyName())
-                    .companyPhone(jobDto.getCompanyPhone())
-                    .status(jobDto.getStatus() != null ? jobDto.getStatus() : "Active")
-                    .type(jobDto.getType())
-                    .keySkills(jobDto.getKeySkills() != null ? jobDto.getKeySkills() : new ArrayList<>())
-                    .postedBy(employee)
-                    .build();
-
-            // Handle logo upload
-            if (logo != null && !logo.isEmpty()) {
-                String fileName = System.currentTimeMillis() + "_" + logo.getOriginalFilename();
-                Path uploadPath = Paths.get(System.getProperty("user.dir"), "uploads/logos/");
-                if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
-
-                Path filePath = uploadPath.resolve(fileName);
-                logo.transferTo(filePath.toFile());
-
-                job.setCompanyLogo("/uploads/logos/" + fileName);
-            }
-
-            JobPost savedJob = jobService.createJob(job);
+            JobPost savedJob = jobService.createJob(jobDto, logo);
             return ResponseEntity.ok(savedJob);
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError()
-                    .body("Failed to create job: " + e.getMessage());
+                    .body("Failed to create job due to file upload error: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
         }
     }
-
 
 
     // ✅ Get all jobs

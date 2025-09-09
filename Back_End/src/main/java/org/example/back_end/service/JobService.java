@@ -1,12 +1,15 @@
 package org.example.back_end.service;
 
+import org.example.back_end.dto.JobPostDTO;
 import org.example.back_end.entity.JobPost;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface JobService {
-    JobPost createJob(JobPost job);
-    JobPost updateJob(Long id, JobPost updatedJob);
+    JobPost createJob(JobPostDTO jobDto, MultipartFile logo) throws IOException;
+    JobPost updateJob(Long id, JobPost job);
     void deleteJob(Long id);
     JobPost getJobById(Long id);
     List<JobPost> getAllJobs();

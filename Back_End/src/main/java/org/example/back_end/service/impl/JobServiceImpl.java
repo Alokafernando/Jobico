@@ -1,16 +1,22 @@
 package org.example.back_end.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.back_end.dto.JobPostDTO;
 import org.example.back_end.entity.Employee;
 import org.example.back_end.entity.JobPost;
-import org.example.back_end.repository.EmployeeRepository;
-
 import org.example.back_end.repository.JobRepository;
+import org.example.back_end.service.EmployeeService;
 import org.example.back_end.service.JobService;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,42 +24,80 @@ import java.util.List;
 public class JobServiceImpl implements JobService {
 
     private final JobRepository jobPostRepository;
-    private final EmployeeRepository employeeRepository;
-    private final ModelMapper modelMapper;
+    private final EmployeeService employeeService;
 
     @Override
-    public JobPost createJob(JobPost job) {
-        job.setCreatedAt(LocalDateTime.now());
-        if (job.getStatus() == null) job.setStatus("ACTIVE");
+    public JobPost createJob(JobPostDTO jobDto, MultipartFile logo) throws IOException {
+        // 1️⃣ Find employee
+        Employee employee = employeeService.getEmployeeByEmail(jobDto.getCompanyEmail());
+        if (employee == null) throw new RuntimeException("Employee not found with email: " + jobDto.getCompanyEmail());
+
+        // 2️⃣ Map DTO → Entity
+        JobPost job = JobPost.builder()
+                .title(jobDto.getTitle())
+                .description(jobDto.getDescription())
+                .department(jobDto.getDepartment())
+                .employmentType(jobDto.getEmploymentType())
+                .location(jobDto.getLocation())
+                .requirements(jobDto.getRequirements())
+                .gender(jobDto.getGender())
+                .requiredEducation(jobDto.getRequiredEducation())
+                .requiredExperience(jobDto.getRequiredExperience())
+                .salaryRange(jobDto.getSalaryRange())
+                .applicationDeadline(jobDto.getApplicationDeadline())
+                .keySkills(jobDto.getKeySkills() != null ? jobDto.getKeySkills() : new ArrayList<>())
+                .companyEmail(jobDto.getCompanyEmail())
+                .companyName(jobDto.getCompanyName())
+                .companyPhone(jobDto.getCompanyPhone())
+                .type(jobDto.getType())
+                .status(jobDto.getStatus() != null ? jobDto.getStatus() : "Active")
+                .postedBy(employee)
+                .postedAt(jobDto.getPostedAt() != null ? jobDto.getPostedAt() : LocalDate.now())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        // 3️⃣ Handle logo upload
+        if (logo != null && !logo.isEmpty()) {
+            String fileName = System.currentTimeMillis() + "_" + logo.getOriginalFilename();
+            Path uploadPath = Paths.get(System.getProperty("user.dir"), "uploads/logos/");
+            if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
+            Path filePath = uploadPath.resolve(fileName);
+            logo.transferTo(filePath.toFile());
+            job.setCompanyLogo("/uploads/logos/" + fileName);
+        }
+
+        // 4️⃣ Save and return
         return jobPostRepository.save(job);
     }
 
     @Override
     public JobPost updateJob(Long id, JobPost updatedJob) {
-        return jobPostRepository.findById(id)
-                .map(existing -> {
-                    existing.setTitle(updatedJob.getTitle());
-                    existing.setDescription(updatedJob.getDescription());
-                    existing.setLocation(updatedJob.getLocation());
-                    existing.setRequirements(updatedJob.getRequirements());
-                    existing.setSalaryRange(updatedJob.getSalaryRange());
-                    existing.setCompanyName(updatedJob.getCompanyName());
-                    existing.setCompanyEmail(updatedJob.getCompanyEmail());
-                    existing.setCompanyPhone(updatedJob.getCompanyPhone());
-                    existing.setCompanyLogo(updatedJob.getCompanyLogo());
-                    existing.setType(updatedJob.getType());
-                    existing.setStatus(updatedJob.getStatus());
-                    return jobPostRepository.save(existing);
-                })
+        JobPost existingJob = jobPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
+
+        existingJob.setTitle(updatedJob.getTitle());
+        existingJob.setDescription(updatedJob.getDescription());
+        existingJob.setDepartment(updatedJob.getDepartment());
+        existingJob.setEmploymentType(updatedJob.getEmploymentType());
+        existingJob.setLocation(updatedJob.getLocation());
+        existingJob.setRequirements(updatedJob.getRequirements());
+        existingJob.setGender(updatedJob.getGender());
+        existingJob.setRequiredEducation(updatedJob.getRequiredEducation());
+        existingJob.setRequiredExperience(updatedJob.getRequiredExperience());
+        existingJob.setSalaryRange(updatedJob.getSalaryRange());
+        existingJob.setApplicationDeadline(updatedJob.getApplicationDeadline());
+        existingJob.setKeySkills(updatedJob.getKeySkills() != null ? updatedJob.getKeySkills() : new ArrayList<>());
+        existingJob.setStatus(updatedJob.getStatus() != null ? updatedJob.getStatus() : existingJob.getStatus());
+        existingJob.setType(updatedJob.getType() != null ? updatedJob.getType() : existingJob.getType());
+
+        return jobPostRepository.save(existingJob);
     }
 
     @Override
     public void deleteJob(Long id) {
-        if (!jobPostRepository.existsById(id)) {
-            throw new RuntimeException("Job not found with id: " + id);
-        }
-        jobPostRepository.deleteById(id);
+        JobPost job = jobPostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
+        jobPostRepository.delete(job);
     }
 
     @Override
@@ -69,6 +113,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobPost> getAllJobsByEmployeeEmail(String email) {
-        return jobPostRepository.findByPostedByEmail(email);
+      //  return jobPostRepository.findById(email);
+        return null;
     }
 }

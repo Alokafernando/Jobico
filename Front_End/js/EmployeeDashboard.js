@@ -408,3 +408,67 @@ $("#publishJobBtn").on("click", function () {
     });
 });
 
+function loadAllJobs() {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    $.ajax({
+        url: "http://localhost:8080/api/jobs",
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` },
+        success: function(jobs) {
+            const tbody = $(".job-table-body");
+            tbody.empty();
+
+            jobs.forEach(job => {
+                // Convert ISO date to human-readable format
+                const postedDate = new Date(job.postedAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                const row = `
+                    <tr id="job-${job.id}">
+                        <td>
+                            <div class="job-title" id="job-title-${job.id}">${job.title}</div>
+                            <div class="job-company" id="job-company-${job.id}">${job.companyName}</div>
+                        </td>
+                        <td id="job-id-${job.id}">0</td>
+                        <td id="job-status-${job.id}">
+                            <span class="status-badge status-${job.status.toLowerCase()}">${job.status}</span>
+                        </td>
+                        <td id="job-posted-${job.id}">${postedDate}</td> <!-- Formatted date here -->
+                        <td>
+                            <button class="action-btn btn-view" id="btn-view-${job.id}" data-job-id="${job.id}">View</button>
+                            <button class="action-btn btn-edit" id="btn-edit-${job.id}" data-job-id="${job.id}">Edit</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+
+        },
+        error: function(xhr) {
+            Swal.fire({
+                icon: "error",
+                title: "Failed",
+                text: "Could not load jobs."
+            });
+        }
+    });
+}
+
+// Delegate click handlers once
+$(".job-table-body").on("click", ".btn-view", function() {
+    const jobId = $(this).data("job-id");
+    showPage("view-job");
+});
+
+$(".job-table-body").on("click", ".btn-edit", function() {
+    const jobId = $(this).data("job-id");
+    showPage("edit-job");
+});
+
+loadAllJobs();
+
