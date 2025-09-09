@@ -11,8 +11,6 @@ $(document).ready(function () {
     const $menuLinks = $(".menu-link");
     const $profileImg = $(".profile-img");
     const $logoutLink = $("#logout-link");
-    const $editModals = $(".edit-modal");
-    const $profilePictureModal = $("#edit-profile-picture-modal");
     const $confirmationModal = $("#confirmation-modal");
 
     // Profile display fields
@@ -169,11 +167,9 @@ $(document).ready(function () {
         });
     }
 
-    // -----------------------------
-    // Load Job Details
-    // -----------------------------
+    loadEmployeeJobsAndCount();
+
     function loadJobDetails(jobId) {
-        const token = localStorage.getItem("token");
         if (!token) return;
 
         $.ajax({
@@ -181,66 +177,36 @@ $(document).ready(function () {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
             success: function(job) {
-                // Set job title
                 $(".detail-title").text(job.title);
-
-                // Posted date
                 const postedDate = new Date(job.postedAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric"
                 });
                 $(".detail-subtitle").text(`${job.companyName} • Posted on ${postedDate}`);
+                $(".detail-status").text(job.status).removeClass().addClass(`detail-status status-${job.status.toLowerCase()}`);
 
-                // Status
-                $(".detail-status")
-                    .text(job.status)
-                    .removeClass()
-                    .addClass(`detail-status status-${job.status.toLowerCase()}`);
+                $("#view-job-department").text(job.department);
+                $("#view-job-type").text(job.employmentType);
+                $("#view-job-address").text(job.location);
+                $("#view-job-experience").text(job.requiredExperience);
+                $("#view-job-salaryRange").text(job.salaryRange);
+                $("#view-job-deadline").text(new Date(job.applicationDeadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }));
+                $("#view-job-description").text(job.description);
 
-                // Job Information
-                const infoItems = $(".detail-content .detail-card:first .info-item .info-value");
-                $(infoItems[0]).text(job.department);
-                $(infoItems[1]).text(job.employmentType);
-                $(infoItems[2]).text(job.location);
-                $(infoItems[3]).text(job.requiredExperience);
-                $(infoItems[4]).text(job.salaryRange);
-                $(infoItems[5]).text(new Date(job.applicationDeadline).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric"
-                }));
+                $("#view-all-requirement").empty();
+                if (job.requirements) {
+                    job.requirements.split(/[.\n]/).forEach(item => {
+                        let trimmed = item.trim();
+                        if (trimmed) $("#view-all-requirement").append(`<li>${trimmed.charAt(0).toUpperCase() + trimmed.slice(1)}</li>`);
+                    });
+                }
 
-                // Job Description & Requirements
-                $(".detail-card").each(function() {
-                    const title = $(this).find(".detail-card-title").text().trim();
-                    if (title === "Job Description") {
-                        const $ul = $(this).find("ul");
-                        $ul.empty();
+                $("#view-all-skills").empty();
+                if (Array.isArray(job.keySkills)) {
+                    job.keySkills.forEach(skill => $("#view-all-skills").append(`<li>${skill}</li>`));
+                }
 
-                        console.log(job)
-                        const requirements = [
-                            { label: "Education ", value: job.requiredEducation || "Not specified" },
-                            { label: "Experience", value: job.requiredExperience || "Not specified" },
-                            { label: "Gender    ", value: job.gender || "Any" },
-                            { label: "Skills    ", value: (job.keySkills && job.keySkills.length > 0) ? job.keySkills.join(", ") : "Not specified" }
-                        ];
-
-                        requirements.forEach(req => $ul.append(`<li>${req.label}: ${req.value}</li>`));
-                        $(this).find(".info-value").text(job.description || "No description provided");
-                    }
-                });
-
-                // Applications Overview
-                const appOverviewItems = $(".detail-content .detail-card:last .info-item .info-value");
-                $(appOverviewItems[0]).text(job.totalApplications || 0);
-                $(appOverviewItems[1]).text(job.newApplications || 0);
-                $(appOverviewItems[2]).text(job.inReview || 0);
-                $(appOverviewItems[3]).text(job.interviewStage || 0);
-                $(appOverviewItems[4]).text(job.rejected || 0);
-                $(appOverviewItems[5]).text(job.hired || 0);
-
-                // Show the view page
                 showPage("view-job");
             },
             error: function(xhr) {
@@ -250,33 +216,216 @@ $(document).ready(function () {
         });
     }
 
-    // -----------------------------
-    // Event Bindings
-    // -----------------------------
     $(".job-table-body").on("click", ".btn-view", function () {
         loadJobDetails($(this).data("job-id"));
     });
 
     $(".job-table-body").on("click", ".btn-edit", function () {
-        showPage("edit-job");
+        const jobId = $(this).data("job-id");
+        if (!token) return Swal.fire("Error", "Not logged in.", "error");
+
+        $.ajax({
+            url: `http://localhost:8080/api/jobs/${jobId}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(job) {
+                $("#jobTitle-update1").text("Edit Job: " + job.title);
+                $("#jobTitle-update2").val(job.title);
+                $("#jobDepartment-update").val(job.department);
+                $("#jobType-update").val(job.employmentType);
+                $("#jobLocation-update").val(job.location);
+                $("#jobDescription-update").val(job.description);
+                $("#jobDeadline-update").val(new Date(job.applicationDeadline).toISOString().split("T")[0]);
+                $("#jobSalary-update").val(job.salaryRange);
+                $("#requirements-update").val(job.requirements);
+                $("#jobExperience").val(job.requiredExperience);
+                $("#gender-update").val(job.gender);
+                $("#keySkills-update").val(job.keySkills ? job.keySkills.join(", ") : "");
+                $("#updateJobBtn").data("job-id", job.id);
+                showPage("edit-job");
+            },
+            error: () => Swal.fire("Error", "Failed to load job data.", "error")
+        });
     });
 
-    $("#createJobBtn").on("click", () => {
-        $("#create-job-form").toggle().show();
-        $("#job-post-table").hide();
+    $("#updateJobBtn").on("click", function (e) {
+        e.preventDefault();
+        const jobId = $(this).data("job-id");
+        const jobData = {
+            title: $("#jobTitle-update2").val().trim(),
+            department: $("#jobDepartment-update").val(),
+            employmentType: $("#jobType-update").val(),
+            location: $("#jobLocation-update").val().trim(),
+            requiredExperience: $("#jobExperience").val(),
+            salaryRange: $("#jobSalary-update").val().trim(),
+            applicationDeadline: $("#jobDeadline-update").val(),
+            requirements: $("#requirements-update").val().trim(),
+            keySkills: $("#keySkills-update").val() ? $("#keySkills-update").val().split(",").map(s => s.trim()) : [],
+            gender: $("#gender-update").val() || "Any"
+        };
+
+        $.ajax({
+            url: `http://localhost:8080/api/jobs/${jobId}`,
+            method: "PUT",
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+            data: JSON.stringify(jobData),
+            success: () => Swal.fire("Success", "Job updated successfully!", "success"),
+            error: xhr => Swal.fire("Error", "Failed to update job: " + (xhr.responseJSON?.message || xhr.statusText), "error")
+        });
     });
 
-    $("#cancelCreateJob").on("click", () => {
-        $("#create-job-form").hide();
-        $("#job-post-table").show();
+    // -----------------------------
+    // Settings Tabs & Password Toggle
+    // -----------------------------
+    $(".settings-tab").on("click", function () {
+        const tab = $(this).data("tab");
+        $(".settings-tab").removeClass("active");
+        $(this).addClass("active");
+        $(".settings-content").removeClass("active");
+        $(`#${tab}-settings`).addClass("active");
     });
 
-    $logoutLink.on("click", () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userEmail");
+    function setupPasswordToggle(inputId, toggleId) {
+        $(`#${toggleId}`).on("click", function () {
+            const $input = $(`#${inputId}`);
+            const type = $input.attr("type") === "password" ? "text" : "password";
+            $input.attr("type", type);
+            $(this).toggleClass("fa-eye fa-eye-slash");
+        });
+    }
+    setupPasswordToggle("currentPassword", "toggleCurrentPassword");
+    setupPasswordToggle("newPassword", "toggleNewPassword");
+    setupPasswordToggle("confirmPassword", "toggleConfirmPassword");
+
+    $("#saveAccountSettings").on("click", function () {
+        const email = localStorage.getItem("userEmail");
+        if (!email) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No user email found! Please log in again.'
+            });
+            return;
+        }
+
+        function safeVal(selector) {
+            return $(selector).length ? ($(selector).val() || "").trim() : "";
+        }
+
+        // ✅ Build object with updated values safely
+        const fullName = safeVal("#contact-person-name-setting").split(" ");
+        const updates = {
+            companyName: safeVal("#company-name-setting"),
+            email: safeVal("#company-email-setting"),
+            phoneNumber: safeVal("#company-number-setting"),
+            companyLocation: safeVal("#company-address-setting"),
+            industry: safeVal("#company-industry-setting"),
+            contactFirstName: fullName[0] || "",
+            contactLastName: fullName.slice(1).join(" ") || "",
+            contactPosition: safeVal("#contact-person-position-setting"),
+            companyDescription: safeVal("#companyDescription") // will be "" if field missing
+        };
+
+        $.ajax({
+            url: `http://localhost:8080/api/employee/update/${encodeURIComponent(email)}`,
+            method: "PUT",
+            headers: { "Authorization": `Bearer ${token}` },
+            contentType: "application/json",
+            data: JSON.stringify(updates),
+            success: function (updatedEmp) {
+                setEmployeeDetails(updatedEmp);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated!',
+                    text: 'Account settings saved successfully.'
+                });
+            },
+            error: function (xhr) {
+                const msg = xhr.responseJSON?.message || 'Failed to update account settings';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: msg
+                });
+            }
+        });
+    });
+
+    $("#saveSecuritySettings").on("click", function () {
+        const currentPassword = $("#currentPassword").val().trim();
+        const newPassword = $("#newPassword").val().trim();
+        const confirmPassword = $("#confirmPassword").val().trim();
+        const email = localStorage.getItem("userEmail");
+        const token = localStorage.getItem("token");
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Incomplete Form',
+                text: 'Please fill in all fields.'
+            });
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Password Mismatch',
+                text: 'New password and confirm password do not match.'
+            });
+            return;
+        }
+
+        if (!email) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Email not found',
+                text: 'Please login again.'
+            });
+            return;
+        }
+
+        $.ajax({
+            url: "http://localhost:8080/api/employee/change-password",
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` },
+            contentType: "application/json",
+            data: JSON.stringify({
+                email: email,
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            }),
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message || 'Password changed successfully!'
+                });
+                // Clear fields
+                $("#currentPassword, #newPassword, #confirmPassword").val('');
+            },
+            error: function (xhr) {
+                const message = xhr.responseJSON?.message || 'Failed to change password';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: message
+                });
+            }
+        });
+    });
+    // -----------------------------
+    // Logout
+    // -----------------------------
+    $logoutLink.on("click", function(e){
+        e.preventDefault();
+        $confirmationModal.show();
+    });
+
+    $("#modal-cancel").on("click", () => $confirmationModal.hide());
+    $("#modal-confirm").on("click", function(){
+        localStorage.clear();
         window.location.href = "../index.html";
     });
-
-    // Load jobs initially
-    loadEmployeeJobsAndCount();
+    $confirmationModal.on("click", function(e){ if(e.target===this) $(this).hide(); });
 });

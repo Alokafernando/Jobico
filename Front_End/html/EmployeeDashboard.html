@@ -13,7 +13,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo">
+            <div class="sidebar-logo" onclick="window.location.href='../index.html'" style="cursor: pointer;">
                 <div class="sidebar-logo-icon">💼</div>
                 <div class="sidebar-logo-text">Jobico</div>
             </div>
@@ -422,10 +422,10 @@
                 <div class="content-section">
                     <div class="detail-header">
                         <div>
-                            <h2 class="detail-title">Senior Frontend Developer</h2>
-                            <p class="detail-subtitle">Tech Solutions Inc. • Posted on May 15, 2023</p>
+                            <h2 class="detail-title"></h2>
+                            <p class="detail-subtitle"></p>
                         </div>
-                        <span class="detail-status status-active">Active</span>
+                        <span class="detail-status status-active"></span>
                     </div>
 
                     <div class="detail-content">
@@ -434,27 +434,27 @@
                             <div class="info-grid">
                                 <div class="info-item">
                                     <div class="info-label">Department</div>
-                                    <div class="info-value"></div>
+                                    <div class="info-value" id="view-job-department"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Job Type</div>
-                                    <div class="info-value"></div>
+                                    <div class="info-value" id="view-job-type"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Location</div>
-                                    <div class="info-value"></div>
+                                    <div class="info-value" id="view-job-address"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Experience Level</div>
-                                    <div class="info-value"></div>
+                                    <div class="info-value" id="view-job-experience"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Salary Range</div>
-                                    <div class="info-value"></div>
+                                    <div class="info-value" id="view-job-salaryRange"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Application Deadline</div>
-                                    <div class="info-value"></div>
+                                    <div class="info-value" id="view-job-deadline"></div>
                                 </div>
                             </div>
                         </div>
@@ -492,17 +492,20 @@
 
                     <div class="detail-card">
                         <h3 class="detail-card-title">Job Description</h3>
-                        <p class="info-value"></p>
+                        <p class="info-value" id="view-job-description"></p>
 
                         <h4 style="margin: 20px 0 10px 0;">Requirements:</h4>
                         <ul style="padding-left: 20px;">
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
+                            <li id="view-all-requirement"></li>
+                        </ul>
+
+                        <h4 style="margin: 20px 0 10px 0;">Skills:</h4>
+                        <ul style="padding-left: 20px;">
+                            <li id="view-all-skills"></li>
                         </ul>
                     </div>
+
+
 
                     <div class="detail-card">
                         <div class="section-header">
@@ -560,17 +563,17 @@
                 </div>
 
                 <div class="content-section">
-                    <h3 style="margin-bottom: 20px;">Edit Job: Senior Frontend Developer</h3>
+                    <h3 style="margin-bottom: 20px;" id="jobTitle-update1"></h3>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Job Title</label>
-                            <input type="text" class="form-input" value="Senior Frontend Developer">
+                            <input type="text" id="jobTitle-update2" class="form-input" >
                         </div>
                         <div class="form-group">
                             <label class="form-label">Department</label>
-                            <select class="form-select">
-                                <option selected>Engineering</option>
+                            <select id="jobDepartment-update" class="form-select">
+                                <option>Engineering</option>
                                 <option>Design</option>
                                 <option>Marketing</option>
                                 <option>Operations</option>
@@ -581,8 +584,8 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Job Type</label>
-                            <select class="form-select">
-                                <option selected>Full-time</option>
+                            <select id="jobType-update" class="form-select">
+                                <option>Full-time</option>
                                 <option>Part-time</option>
                                 <option>Contract</option>
                                 <option>Internship</option>
@@ -590,51 +593,81 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Location</label>
-                            <input type="text" class="form-input" value="Remote">
+                            <input type="text" id="jobLocation-update" class="form-input">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Job Description</label>
-                        <textarea class="form-textarea">We are looking for a skilled Senior Frontend Developer to join our growing engineering team. The ideal candidate will be responsible for building the client-side of our web applications and translating UI/UX design wireframes into code.</textarea>
+                        <textarea id="jobDescription-update" class="form-textarea"></textarea>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Application Deadline</label>
-                            <input type="date" class="form-input" value="2023-07-15">
+                            <input type="date" id="jobDeadline-update" class="form-input">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Salary Range</label>
-                            <input type="text" class="form-input" value="$90,000 - $120,000">
+                            <input type="text" id="jobSalary-update" class="form-input">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Status</label>
-                            <select class="form-select">
-                                <option selected>Active</option>
-                                <option>Pending</option>
-                                <option>Closed</option>
-                            </select>
+                            <label class="form-label">Company Logo</label>
+                            <input type="file" class="form-input" id="jobLogo-update" accept="image/*">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Job Requirements</label>
+                        <textarea class="form-textarea" id="requirements-update"></textarea>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Experience Level</label>
-                            <select class="form-select">
-                                <option selected>Senior (5+ years)</option>
+                            <select id="jobExperience" class="form-select">
+                                <option>Senior (5+ years)</option>
                                 <option>Mid-Level (3-5 years)</option>
                                 <option>Entry Level (0-2 years)</option>
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <select class="form-input"  id="gender-update">
+                                    <option value="Any">Any</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">Qualification</div>
+                        <select class="form-input" id="qualification-update">
+                            <option value="Bachelor's Degree">Bachelor's Degree</option>
+                            <option value="High School">High School</option>
+                            <option value="Associate Degree">Associate Degree</option>
+                            <option value="Master's Degree">Master's Degree</option>
+                            <option value="Doctorate">Doctorate</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Certificate">Certificate</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Key Skills</label>
+                        <input type="text" class="form-input" id="keySkills-update">
                     </div>
 
                     <div style="display: flex; gap: 10px;">
                         <button class="action-btn btn-primary" id="updateJobBtn">Update Job</button>
-                        <button class="action-btn btn-view">Save as Draft</button>
-                        <button class="action-btn btn-edit">Preview</button>
+                        <button class="action-btn btn-edit" id="previewBtn">Preview</button>
                     </div>
                 </div>
+
             </div>
 
             <!-- View Applicant Page -->
@@ -1226,12 +1259,11 @@
                 </div>
             </div>
 
+
         </div>
     </main>
 </div>
 
-<!-- Toast Notification Container -->
-<div id="toastContainer"></div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

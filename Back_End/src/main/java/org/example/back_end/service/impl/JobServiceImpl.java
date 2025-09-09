@@ -79,23 +79,30 @@ public class JobServiceImpl implements JobService {
         JobPost existingJob = jobPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
 
-        existingJob.setTitle(updatedJob.getTitle());
-        existingJob.setDescription(updatedJob.getDescription());
-        existingJob.setDepartment(updatedJob.getDepartment());
-        existingJob.setEmploymentType(updatedJob.getEmploymentType());
-        existingJob.setLocation(updatedJob.getLocation());
-        existingJob.setRequirements(updatedJob.getRequirements());
-        existingJob.setGender(updatedJob.getGender());
-        existingJob.setRequiredEducation(updatedJob.getRequiredEducation());
-        existingJob.setRequiredExperience(updatedJob.getRequiredExperience());
-        existingJob.setSalaryRange(updatedJob.getSalaryRange());
-        existingJob.setApplicationDeadline(updatedJob.getApplicationDeadline());
-        existingJob.setKeySkills(updatedJob.getKeySkills() != null ? updatedJob.getKeySkills() : new ArrayList<>());
+        existingJob.setTitle(updatedJob.getTitle() != null ? updatedJob.getTitle() : existingJob.getTitle());
+        existingJob.setDescription(updatedJob.getDescription() != null ? updatedJob.getDescription() : existingJob.getDescription());
+        existingJob.setDepartment(updatedJob.getDepartment() != null ? updatedJob.getDepartment() : existingJob.getDepartment());
+        existingJob.setEmploymentType(updatedJob.getEmploymentType() != null ? updatedJob.getEmploymentType() : existingJob.getEmploymentType());
+        existingJob.setLocation(updatedJob.getLocation() != null ? updatedJob.getLocation() : existingJob.getLocation());
+        existingJob.setRequirements(updatedJob.getRequirements() != null ? updatedJob.getRequirements() : existingJob.getRequirements());
+        existingJob.setGender(updatedJob.getGender() != null ? updatedJob.getGender() : existingJob.getGender());
+        existingJob.setRequiredEducation(updatedJob.getRequiredEducation() != null ? updatedJob.getRequiredEducation() : existingJob.getRequiredEducation());
+        existingJob.setRequiredExperience(updatedJob.getRequiredExperience() != null ? updatedJob.getRequiredExperience() : existingJob.getRequiredExperience());
+        existingJob.setSalaryRange(updatedJob.getSalaryRange() != null ? updatedJob.getSalaryRange() : existingJob.getSalaryRange());
+        existingJob.setApplicationDeadline(updatedJob.getApplicationDeadline() != null ? updatedJob.getApplicationDeadline() : existingJob.getApplicationDeadline());
+
+        if (updatedJob.getKeySkills() != null) {
+            existingJob.setKeySkills(updatedJob.getKeySkills());
+        } else if (existingJob.getKeySkills() == null) {
+            existingJob.setKeySkills(new ArrayList<>());
+        }
+
         existingJob.setStatus(updatedJob.getStatus() != null ? updatedJob.getStatus() : existingJob.getStatus());
         existingJob.setType(updatedJob.getType() != null ? updatedJob.getType() : existingJob.getType());
 
         return jobPostRepository.save(existingJob);
     }
+
 
     @Override
     public void deleteJob(Long id) {

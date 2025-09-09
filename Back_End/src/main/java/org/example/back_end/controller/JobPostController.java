@@ -6,22 +6,12 @@ import org.example.back_end.entity.Employee;
 import org.example.back_end.entity.JobPost;
 import org.example.back_end.service.EmployeeService;
 import org.example.back_end.service.JobService;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/jobs")
