@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.back_end.dto.JobPostDTO;
 import org.example.back_end.entity.Employee;
 import org.example.back_end.entity.JobPost;
+import org.example.back_end.repository.EmployeeRepository;
 import org.example.back_end.repository.JobRepository;
 import org.example.back_end.service.EmployeeService;
 import org.example.back_end.service.JobService;
@@ -17,7 +18,9 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class JobServiceImpl implements JobService {
 
     private final JobRepository jobPostRepository;
     private final EmployeeService employeeService;
+    private final EmployeeRepository employeeRepository;
 
     @Override
     public JobPost createJob(JobPostDTO jobDto, MultipartFile logo) throws IOException {
@@ -108,12 +112,22 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobPost> getAllJobs() {
-        return jobPostRepository.findAll();
+        return null;
     }
 
     @Override
     public List<JobPost> getAllJobsByEmployeeEmail(String email) {
-      //  return jobPostRepository.findById(email);
-        return null;
+        if (email == null || email.isEmpty()) return new ArrayList<>();
+        return jobPostRepository.findByPostedByEmail(email);
     }
+
+    @Override
+    public long countActiveJobsForEmployee(String email) {
+        return jobPostRepository.countByPostedBy_EmailAndStatus(email, "Active");
+    }
+
+
+
+
+
 }

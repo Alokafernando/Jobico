@@ -6,7 +6,10 @@ import org.example.back_end.entity.Employee;
 import org.example.back_end.entity.JobPost;
 import org.example.back_end.service.EmployeeService;
 import org.example.back_end.service.JobService;
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,11 +21,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/jobs") // ✅ REST endpoint for jobs
+@RequestMapping("/api/jobs")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:63342") // frontend access
+@CrossOrigin(origins = "http://localhost:63342")
 public class JobPostController {
 
     private final JobService jobService;
@@ -76,12 +80,20 @@ public class JobPostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getJobById(@PathVariable Long id) {
+    public ResponseEntity<JobPost> getJobById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(jobService.getJobById(id));
+            JobPost job = jobService.getJobById(id);
+            return ResponseEntity.ok(job);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+    @GetMapping("/my/active-job-count")
+    public ResponseEntity<Long> getMyActiveJobCount(@RequestParam String email) {
+        long count = jobService.countActiveJobsForEmployee(email);
+        return ResponseEntity.ok(count);
     }
 
 }

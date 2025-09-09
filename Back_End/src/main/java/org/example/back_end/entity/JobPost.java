@@ -43,7 +43,12 @@ public class JobPost {
     private String status; // Active / Open / Closed
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> keySkills = new ArrayList<>();   // ✅ store as list of strings
+    @CollectionTable(
+            name = "job_post_key_skills",
+            joinColumns = @JoinColumn(name = "job_post_id")
+    )
+    @Column(name = "key_skills")
+    private List<String> keySkills = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
