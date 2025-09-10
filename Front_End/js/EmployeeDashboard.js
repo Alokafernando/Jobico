@@ -239,9 +239,11 @@ $(document).ready(function () {
                 $("#jobSalary-update").val(job.salaryRange);
                 $("#requirements-update").val(job.requirements);
                 $("#jobExperience").val(job.requiredExperience);
+                $("#jobLogo-preview").attr("src", job.companyLogo || "/default-logo.png");
                 $("#gender-update").val(job.gender);
                 $("#keySkills-update").val(job.keySkills ? job.keySkills.join(", ") : "");
                 $("#updateJobBtn").data("job-id", job.id);
+                status: "Pending"
                 showPage("edit-job");
             },
             error: () => Swal.fire("Error", "Failed to load job data.", "error")
@@ -251,6 +253,7 @@ $(document).ready(function () {
     $("#updateJobBtn").on("click", function (e) {
         e.preventDefault();
         const jobId = $(this).data("job-id");
+
         const jobData = {
             title: $("#jobTitle-update2").val().trim(),
             department: $("#jobDepartment-update").val(),
@@ -261,18 +264,33 @@ $(document).ready(function () {
             applicationDeadline: $("#jobDeadline-update").val(),
             requirements: $("#requirements-update").val().trim(),
             keySkills: $("#keySkills-update").val() ? $("#keySkills-update").val().split(",").map(s => s.trim()) : [],
-            gender: $("#gender-update").val() || "Any"
+            gender: $("#gender-update").val() || "Any",
+            status: "Pending" // optional: force status
         };
+
+        const logoFile = $("#jobLogo-update")[0].files[0];
+        const formData = new FormData();
+
+        for (const key in jobData) {
+            formData.append(key, jobData[key]);
+        }
+
+        if (logoFile) {
+            formData.append("logo", logoFile);
+        }
 
         $.ajax({
             url: `http://localhost:8080/api/jobs/${jobId}`,
             method: "PUT",
-            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-            data: JSON.stringify(jobData),
+            headers: { "Authorization": `Bearer ${token}` },
+            data: formData,
+            processData: false,
+            contentType: false,
             success: () => Swal.fire("Success", "Job updated successfully!", "success"),
             error: xhr => Swal.fire("Error", "Failed to update job: " + (xhr.responseJSON?.message || xhr.statusText), "error")
         });
     });
+
 
     // -----------------------------
     // Settings Tabs & Password Toggle
@@ -428,4 +446,100 @@ $(document).ready(function () {
         window.location.href = "../index.html";
     });
     $confirmationModal.on("click", function(e){ if(e.target===this) $(this).hide(); });
+
+    $("#createJobBtn").on("click", function () {
+        $("#create-job-form").toggle();
+        $("#job-post-table").hide();
+    });
+    $("#cancelCreateJob").on("click", () => $("#create-job-form").hide());
+
+
+    $("#publishJobBtn").on("click", function () {
+        const token = localStorage.getItem("token");
+        if (!token) return Swal.fire({icon: "error", title: "Error", text: "You are not logged in."});
+
+        // Collect form values
+        const title = $("#jobTitle").val().trim();
+        const department = $("#jobDepartment").val();
+        const type = $("#jobType").val();
+        const location = $("#jobLocation").val().trim();
+        const description = $("#jobDescription").val().trim();
+        const deadline = $("#jobDeadline").val();
+        const salaryRange = $("#jobSalary").val().trim();
+        const requirements = $("#requirements").val().trim();
+        const gender = $("#gender").val();
+        const requiredExperience = $("#experience").val().trim();
+        const requiredEducation = $("#qualification").val();
+        const keySkillsInput = $("#keySkills").val().trim();
+        const keySkills = keySkillsInput ? keySkillsInput.split(',').map(skill => skill.trim()) : [];
+
+
+        const logoFile = $("#jobLogo")[0].files[0];
+        const today = new Date().toISOString().split("T")[0];
+
+        // Employee info from localStorage
+        const companyEmail = localStorage.getItem("userEmail");
+        const companyName = localStorage.getItem("companyName");
+        const companyPhone = localStorage.getItem("phoneNumber");
+
+        if (!title || !description) {
+            return Swal.fire({
+                icon: "warning",
+                title: "Incomplete Form",
+                text: "Please fill all required fields."
+            });
+        }
+
+        const jobData = {
+            title,
+            department,
+            employmentType: type,
+            location,
+            description,
+            applicationDeadline: deadline,
+            postedAt: today,
+            salaryRange,
+            requirements,
+            keySkills,
+            gender,
+            requiredExperience,
+            requiredEducation,
+            status: "Pending",
+            companyEmail,
+            companyName,
+            companyPhone
+        };
+
+
+        const formData = new FormData();
+        formData.append("job", new Blob([JSON.stringify(jobData)], {type: "application/json"}));
+        if (logoFile) formData.append("logo", logoFile);
+
+        $.ajax({
+            url: "http://localhost:8080/api/jobs/create",
+            method: "POST",
+            headers: {"Authorization": `Bearer ${token}`},
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (response) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Job Posted!",
+                    text: "Your job post has been successfully published."
+                });
+                $("#create-job-form").hide();
+                $("#job-post-table").show()
+                // Optionally reload job posts list here
+            },
+            error: function (xhr) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Failed",
+                    text: xhr.responseJSON?.message || "Could not create job. Please try again."
+                });
+            }
+        });
+    });
+
 });

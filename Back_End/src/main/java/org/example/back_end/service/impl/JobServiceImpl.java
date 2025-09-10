@@ -8,6 +8,7 @@ import org.example.back_end.repository.EmployeeRepository;
 import org.example.back_end.repository.JobRepository;
 import org.example.back_end.service.EmployeeService;
 import org.example.back_end.service.JobService;
+import org.example.back_end.util.ImgBBUploader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +29,7 @@ public class JobServiceImpl implements JobService {
 
     private final JobRepository jobPostRepository;
     private final EmployeeService employeeService;
-    private final EmployeeRepository employeeRepository;
+    private final ImgBBUploader imgBBUploader;
 
     @Override
     public JobPost createJob(JobPostDTO jobDto, MultipartFile logo) throws IOException {
@@ -54,20 +55,19 @@ public class JobServiceImpl implements JobService {
                 .companyName(jobDto.getCompanyName())
                 .companyPhone(jobDto.getCompanyPhone())
                 .type(jobDto.getType())
-                .status(jobDto.getStatus() != null ? jobDto.getStatus() : "Active")
+                .status(jobDto.getStatus() != null ? jobDto.getStatus() : "Pending")
                 .postedBy(employee)
                 .postedAt(jobDto.getPostedAt() != null ? jobDto.getPostedAt() : LocalDate.now())
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        // 3️⃣ Handle logo upload
         if (logo != null && !logo.isEmpty()) {
-            String fileName = System.currentTimeMillis() + "_" + logo.getOriginalFilename();
-            Path uploadPath = Paths.get(System.getProperty("user.dir"), "uploads/logos/");
-            if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
-            Path filePath = uploadPath.resolve(fileName);
-            logo.transferTo(filePath.toFile());
-            job.setCompanyLogo("/uploads/logos/" + fileName);
+            try {
+                String logoUrl = imgBBUploader.uploadImage(logo);
+                job.setCompanyLogo(logoUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to upload logo: " + e.getMessage(), e);
+            }
         }
 
         // 4️⃣ Save and return
@@ -97,7 +97,7 @@ public class JobServiceImpl implements JobService {
             existingJob.setKeySkills(new ArrayList<>());
         }
 
-        existingJob.setStatus(updatedJob.getStatus() != null ? updatedJob.getStatus() : existingJob.getStatus());
+        existingJob.setStatus("Pending");
         existingJob.setType(updatedJob.getType() != null ? updatedJob.getType() : existingJob.getType());
 
         return jobPostRepository.save(existingJob);
