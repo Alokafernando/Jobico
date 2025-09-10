@@ -108,6 +108,10 @@ $(document).ready(function () {
         $editAbout.val(about);
 
         localStorage.setItem("userEmail", email);
+
+        if (profession) {
+            loadJobsForSeeker(profession);
+        }
     }
 
     function loadUserDetails() {
@@ -403,5 +407,62 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    function loadJobsForSeeker(title) {
+        $.ajax({
+            url: `http://localhost:8080/api/jobs/for-seeker?title=${encodeURIComponent(title)}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function (jobs) {
+                const $grid = $(".jobs-grid");
+                $grid.empty(); // clear old results
+
+                if (!jobs || jobs.length === 0) {
+                    $grid.append("<p>No jobs found for your profession.</p>");
+                    return;
+                }
+
+                jobs.forEach(job => {
+                    const jobCard = `
+                <div class="job-card ${job.featured ? 'featured' : ''}">
+                  ${job.featured ? '<span class="featured-badge">Featured</span>' : ''}
+                  <div class="job-header">
+                    <div class="company-logo">
+                       ${job.companyLogo
+                        ? `<img src="${job.companyLogo}" alt="Company Logo" class="company-logo-img">`
+                        : "NA"}
+                    </div>
+                    <div class="job-info">
+                      <h3>${job.title}</h3>
+                      <p>${job.companyName}</p>
+                    </div>
+                  </div>
+                  <div class="job-details">
+                    <div class="detail-item">
+                      <i class="fas fa-map-marker-alt"></i>
+                      <span>${job.location || "Not specified"}</span>
+                    </div>
+                    <div class="detail-item">
+                      <i class="fas fa-clock"></i>
+                      <span>${job.employmentType || "N/A"}</span>
+                    </div>
+                  </div>
+                  <div class="job-footer">
+                    <div class="job-salary">${job.salaryRange || "Negotiable"}</div>
+                    <button class="apply-btn" data-job-id="${job.id}">Apply Now</button>
+                  </div>
+                </div>
+                `;
+                    $grid.append(jobCard);
+                });
+            },
+            error: function () {
+                Swal.fire("Error", "Failed to load seeker jobs.", "error");
+            }
+        });
+    }
+
+
 
 });

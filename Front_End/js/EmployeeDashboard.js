@@ -456,7 +456,11 @@ $(document).ready(function () {
 
     $("#publishJobBtn").on("click", function () {
         const token = localStorage.getItem("token");
-        if (!token) return Swal.fire({icon: "error", title: "Error", text: "You are not logged in."});
+        if (!token) return Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "You are not logged in."
+        });
 
         // Collect form values
         const title = $("#jobTitle").val().trim();
@@ -471,16 +475,10 @@ $(document).ready(function () {
         const requiredExperience = $("#experience").val().trim();
         const requiredEducation = $("#qualification").val();
         const keySkillsInput = $("#keySkills").val().trim();
-        const keySkills = keySkillsInput ? keySkillsInput.split(',').map(skill => skill.trim()) : [];
-
+        const keySkills = keySkillsInput ? keySkillsInput.split(',').map(s => s.trim()) : [];
 
         const logoFile = $("#jobLogo")[0].files[0];
         const today = new Date().toISOString().split("T")[0];
-
-        // Employee info from localStorage
-        const companyEmail = localStorage.getItem("userEmail");
-        const companyName = localStorage.getItem("companyName");
-        const companyPhone = localStorage.getItem("phoneNumber");
 
         if (!title || !description) {
             return Swal.fire({
@@ -490,6 +488,7 @@ $(document).ready(function () {
             });
         }
 
+        // Prepare job data
         const jobData = {
             title,
             department,
@@ -505,41 +504,75 @@ $(document).ready(function () {
             requiredExperience,
             requiredEducation,
             status: "Pending",
-            companyEmail,
-            companyName,
-            companyPhone
+            companyEmail: localStorage.getItem("userEmail"),
+            companyName: localStorage.getItem("companyName"),
+            companyPhone: localStorage.getItem("phoneNumber")
         };
 
+        // Function to convert JPG to PNG
+        function convertToPng(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) return resolve(null); // no file
 
-        const formData = new FormData();
-        formData.append("job", new Blob([JSON.stringify(jobData)], {type: "application/json"}));
-        if (logoFile) formData.append("logo", logoFile);
+                const img = new Image();
+                const reader = new FileReader();
 
-        $.ajax({
-            url: "http://localhost:8080/api/jobs/create",
-            method: "POST",
-            headers: {"Authorization": `Bearer ${token}`},
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: function (response) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Job Posted!",
-                    text: "Your job post has been successfully published."
-                });
-                $("#create-job-form").hide();
-                $("#job-post-table").show()
-                // Optionally reload job posts list here
-            },
-            error: function (xhr) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Failed",
-                    text: xhr.responseJSON?.message || "Could not create job. Please try again."
-                });
-            }
+                reader.onload = e => img.src = e.target.result;
+
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(blob => {
+                        resolve(new File([blob], file.name.replace(/\.\w+$/, ".png"), {type: "image/png"}));
+                    }, "image/png");
+                };
+
+                img.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        convertToPng(logoFile).then(pngFile => {
+            const formData = new FormData();
+            formData.append("job", new Blob([JSON.stringify(jobData)], {type: "application/json"}));
+            if (pngFile) formData.append("logo", pngFile);
+
+            $.ajax({
+                url: "http://localhost:8080/api/jobs/create",
+                method: "POST",
+                headers: {"Authorization": `Bearer ${token}`},
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Job Posted!",
+                        text: "Your job post has been successfully published."
+                    });
+                    $("#create-job-form").hide();
+                    $("#job-post-table").show();
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: xhr.responseJSON?.message || xhr.responseText || "Something went wrong."
+                    });
+                }
+            });
+        }).catch(err => {
+            Swal.fire({
+                icon: "error",
+                title: "File Error",
+                text: "Failed to process the logo image."
+            });
         });
     });
+
+
 
 });

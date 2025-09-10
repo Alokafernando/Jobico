@@ -16,6 +16,7 @@ public interface JobService {
     List<JobPost> getAllJobs();
     List<JobPost> getAllJobsByEmployeeEmail(String email);
     long countActiveJobsForEmployee(String email);
+    List<JobPost> getJobsForSeeker(String seekerTitle);
 
 
 }

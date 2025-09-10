@@ -133,6 +133,14 @@ public class JobServiceImpl implements JobService {
         return jobPostRepository.countByPostedBy_EmailAndStatus(email, "Active");
     }
 
+    @Override
+    public List<JobPost> getJobsForSeeker(String seekerTitle) {
+        String keyword = seekerTitle.replaceAll("(?i)senior|junior|mid|lead|intern", "").trim();
+        return jobPostRepository.findByTitleContainingIgnoreCase(keyword);
+    }
+
+
+
 
 
 

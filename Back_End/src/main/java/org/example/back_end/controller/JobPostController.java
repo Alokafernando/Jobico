@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @RestController
@@ -85,5 +86,14 @@ public class JobPostController {
         long count = jobService.countActiveJobsForEmployee(email);
         return ResponseEntity.ok(count);
     }
+
+
+    // JobController.java
+    @GetMapping("/for-seeker")
+    public ResponseEntity<List<JobPost>> getJobsForSeeker(@RequestParam String title) {
+        List<JobPost> jobs = jobService.getJobsForSeeker(title);
+        return ResponseEntity.ok(jobs);
+    }
+
 
 }

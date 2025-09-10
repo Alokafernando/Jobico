@@ -315,46 +315,50 @@
 
         <div class="filters-sidebar">
           <h2>Filters</h2>
+
+          <!-- Job Type -->
           <div class="filter-group">
             <h3>Job Type</h3>
             <div class="filter-options">
               <div class="filter-option">
-                <input type="checkbox" id="full-time" checked>
+                <input type="radio" id="full-time" name="job-type" checked>
                 <label for="full-time">Full-time</label>
               </div>
               <div class="filter-option">
-                <input type="checkbox" id="part-time">
+                <input type="radio" id="part-time" name="job-type">
                 <label for="part-time">Part-time</label>
               </div>
               <div class="filter-option">
-                <input type="checkbox" id="contract">
+                <input type="radio" id="contract" name="job-type">
                 <label for="contract">Contract</label>
               </div>
               <div class="filter-option">
-                <input type="checkbox" id="remote">
+                <input type="radio" id="remote" name="job-type">
                 <label for="remote">Remote</label>
               </div>
             </div>
           </div>
 
+          <!-- Experience Level -->
           <div class="filter-group">
             <h3>Experience Level</h3>
             <div class="filter-options">
               <div class="filter-option">
-                <input type="checkbox" id="entry-level">
+                <input type="radio" id="entry-level" name="experience">
                 <label for="entry-level">Entry Level</label>
               </div>
               <div class="filter-option">
-                <input type="checkbox" id="mid-level" checked>
+                <input type="radio" id="mid-level" name="experience" checked>
                 <label for="mid-level">Mid Level</label>
               </div>
               <div class="filter-option">
-                <input type="checkbox" id="senior-level" checked>
+                <input type="radio" id="senior-level" name="experience">
                 <label for="senior-level">Senior Level</label>
               </div>
             </div>
           </div>
 
+          <!-- Salary Range (already radio buttons) -->
           <div class="filter-group">
             <h3>Salary Range</h3>
             <div class="filter-options">
@@ -374,6 +378,7 @@
           </div>
         </div>
 
+
         <div class="content-section">
           <div class="section-header">
             <h2 class="section-title">Available Jobs</h2>
@@ -382,77 +387,30 @@
 
           <div class="jobs-grid">
             <div class="job-card featured">
-              <span class="featured-badge">Featured</span>
               <div class="job-header">
-                <div class="company-logo">TC</div>
+                <div class="company-logo">
+                </div>
                 <div class="job-info">
-                  <h3>Senior UX Designer</h3>
-                  <p>TechCorp International</p>
+                  <h3></h3>
+                  <p></p>
                 </div>
               </div>
               <div class="job-details">
                 <div class="detail-item">
                   <i class="fas fa-map-marker-alt"></i>
-                  <span>San Francisco, CA</span>
+                  <span></span>
                 </div>
                 <div class="detail-item">
                   <i class="fas fa-clock"></i>
-                  <span>Full-time</span>
+                  <span></span>
                 </div>
               </div>
               <div class="job-footer">
-                <div class="job-salary">$95,000 - $120,000</div>
+                <div class="job-salary"></div>
                 <button class="apply-btn">Apply Now</button>
               </div>
             </div>
 
-            <div class="job-card">
-              <div class="job-header">
-                <div class="company-logo">FB</div>
-                <div class="job-info">
-                  <h3>Product Designer</h3>
-                  <p>FutureBrands</p>
-                </div>
-              </div>
-              <div class="job-details">
-                <div class="detail-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>Remote</span>
-                </div>
-                <div class="detail-item">
-                  <i class="fas fa-clock"></i>
-                  <span>Full-time</span>
-                </div>
-              </div>
-              <div class="job-footer">
-                <div class="job-salary">$85,000 - $105,000</div>
-                <button class="apply-btn">Apply Now</button>
-              </div>
-            </div>
-
-            <div class="job-card">
-              <div class="job-header">
-                <div class="company-logo">DS</div>
-                <div class="job-info">
-                  <h3>UI/UX Developer</h3>
-                  <p>DesignStudio</p>
-                </div>
-              </div>
-              <div class="job-details">
-                <div class="detail-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>New York, NY</span>
-                </div>
-                <div class="detail-item">
-                  <i class="fas fa-clock"></i>
-                  <span>Full-time</span>
-                </div>
-              </div>
-              <div class="job-footer">
-                <div class="job-salary">$90,000 - $115,000</div>
-                <button class="apply-btn">Apply Now</button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
