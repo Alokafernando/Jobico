@@ -79,7 +79,6 @@ public class JobServiceImpl implements JobService {
         JobPost existingJob = jobPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
 
-        // Update all fields
         existingJob.setTitle(updatedJob.getTitle() != null ? updatedJob.getTitle() : existingJob.getTitle());
         existingJob.setDescription(updatedJob.getDescription() != null ? updatedJob.getDescription() : existingJob.getDescription());
         existingJob.setDepartment(updatedJob.getDepartment() != null ? updatedJob.getDepartment() : existingJob.getDepartment());
@@ -93,17 +92,18 @@ public class JobServiceImpl implements JobService {
         existingJob.setKeySkills(updatedJob.getKeySkills() != null ? updatedJob.getKeySkills() : existingJob.getKeySkills());
         existingJob.setStatus("Pending");
 
-        // Save logo if uploaded
         if (logoFile != null && !logoFile.isEmpty()) {
-            String filename = System.currentTimeMillis() + "_" + logoFile.getOriginalFilename();
-            Path uploadPath = Paths.get("uploads/logos/");
-            Files.createDirectories(uploadPath); // ensure directory exists
-            Files.write(uploadPath.resolve(filename), logoFile.getBytes());
-            existingJob.setCompanyLogo("/uploads/logos/" + filename); // save path in DB
+            try {
+                String logoUrl = imgBBUploader.uploadImage(logoFile);
+                existingJob.setCompanyLogo(logoUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to upload logo to ImgBB: " + e.getMessage(), e);
+            }
         }
 
         return jobPostRepository.save(existingJob);
     }
+
 
 
     @Override
