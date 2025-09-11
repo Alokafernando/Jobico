@@ -320,22 +320,15 @@
           <div class="filter-group">
             <h3>Job Type</h3>
             <div class="filter-options">
-              <div class="filter-option">
-                <input type="radio" id="full-time" name="job-type" checked>
-                <label for="full-time">Full-time</label>
-              </div>
-              <div class="filter-option">
-                <input type="radio" id="part-time" name="job-type">
-                <label for="part-time">Part-time</label>
-              </div>
-              <div class="filter-option">
-                <input type="radio" id="contract" name="job-type">
-                <label for="contract">Contract</label>
-              </div>
-              <div class="filter-option">
-                <input type="radio" id="remote" name="job-type">
-                <label for="remote">Remote</label>
-              </div>
+              <select name="jobType" id="jobType-filter">
+                <option value="" selected>Any</option>
+                <option value="full-time">Full-Time</option>
+                <option value="part-time">Part-Time</option>
+                <option value="internship">Internship</option>
+                <option value="contract">Contract</option>
+                <option value="freelance">Freelance</option>
+                <option value="temporary">Temporary</option>
+              </select>
             </div>
           </div>
 
@@ -343,39 +336,32 @@
           <div class="filter-group">
             <h3>Experience Level</h3>
             <div class="filter-options">
-              <div class="filter-option">
-                <input type="radio" id="entry-level" name="experience">
-                <label for="entry-level">Entry Level</label>
-              </div>
-              <div class="filter-option">
-                <input type="radio" id="mid-level" name="experience" checked>
-                <label for="mid-level">Mid Level</label>
-              </div>
-              <div class="filter-option">
-                <input type="radio" id="senior-level" name="experience">
-                <label for="senior-level">Senior Level</label>
-              </div>
+              <select name="experienceLevel" id="experienceLevel">
+                <option value="" selected>Any</option>
+                <option value="0-1">Less than 1 year</option>
+                <option value="1-3">1-3 years</option>
+                <option value="3-5">3-5 years</option>
+                <option value="5-10">5-10 years</option>
+                <option value="10+">10+ years</option>
+              </select>
             </div>
           </div>
 
-          <!-- Salary Range (already radio buttons) -->
+          <!-- Salary Range -->
           <div class="filter-group">
             <h3>Salary Range</h3>
             <div class="filter-options">
-              <div class="filter-option">
-                <input type="radio" id="salary-1" name="salary" checked>
-                <label for="salary-1">$50k - $80k</label>
-              </div>
-              <div class="filter-option">
-                <input type="radio" id="salary-2" name="salary">
-                <label for="salary-2">$80k - $100k</label>
-              </div>
-              <div class="filter-option">
-                <input type="radio" id="salary-3" name="salary">
-                <label for="salary-3">$100k+</label>
-              </div>
+              <select name="salaryRange" id="salaryRange">
+                <option value="" selected>Any</option>
+                <option value="20000-50000">20,000 - 50,000</option>
+                <option value="50000-80000">50,000 - 80,000</option>
+                <option value="80000-100000">80,000 - 100,000</option>
+                <option value="150000-200000">100,000 - 200,000</option>
+                <option value="200000+">200,000+</option>
+              </select>
             </div>
           </div>
+
         </div>
 
 

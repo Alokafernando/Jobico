@@ -409,11 +409,17 @@ $(document).ready(function () {
     });
 
 
-    function loadJobsForSeeker(title) {
+    function loadJobsForSeeker(title, jobType, experience, salary) {
         $.ajax({
-            url: `http://localhost:8080/api/jobs/for-seeker?title=${encodeURIComponent(title)}`,
+            url: "http://localhost:8080/api/jobs/for-seeker",
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
+            data: {
+                title: title || "",          // always send title
+                jobType: jobType || "",      // optional filter
+                experience: experience || "",// optional filter
+                salary: salary || ""         // optional filter
+            },
             success: function (jobs) {
                 const $grid = $(".jobs-grid");
                 $grid.empty(); // clear old results
@@ -462,6 +468,16 @@ $(document).ready(function () {
             }
         });
     }
+
+// Call this after DOM is ready
+    $("#jobType-filter, #experienceLevel, #salaryRange").on("change", function () {
+        const title = $("#professionTitle").text() || "";  // from profile
+        const jobType = $("#jobType-filter").val();
+        const experience = $("#experienceLevel").val();
+        const salary = $("#salaryRange").val();
+
+        loadJobsForSeeker(title, jobType, experience, salary);
+    });
 
 
 

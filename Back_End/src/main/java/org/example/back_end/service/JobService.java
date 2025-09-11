@@ -10,13 +10,13 @@ import java.util.Map;
 
 public interface JobService {
     JobPost createJob(JobPostDTO jobDto, MultipartFile logo) throws IOException;
-    JobPost updateJob(Long id, JobPost job);
+    JobPost updateJobWithLogo(Long id, JobPost updatedJob, MultipartFile logoFile) throws IOException;
     void deleteJob(Long id);
     JobPost getJobById(Long id);
     List<JobPost> getAllJobs();
     List<JobPost> getAllJobsByEmployeeEmail(String email);
     long countActiveJobsForEmployee(String email);
-    List<JobPost> getJobsForSeeker(String seekerTitle);
+    List<JobPost> getJobsForSeeker(String seekerTitle, String jobType, String experience, String salary);
 
 
 }

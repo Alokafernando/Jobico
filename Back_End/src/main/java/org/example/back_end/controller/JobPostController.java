@@ -58,9 +58,11 @@ public class JobPostController {
     @PutMapping("/{id}")
     public ResponseEntity<JobPost> updateJob(
             @PathVariable Long id,
-            @RequestBody JobPost updatedJob
-    ) {
-        return ResponseEntity.ok(jobService.updateJob(id, updatedJob));
+            @RequestPart("job") JobPost updatedJob,
+            @RequestPart(value = "logo", required = false) MultipartFile logoFile) throws IOException {
+
+        JobPost job = jobService.updateJobWithLogo(id, updatedJob, logoFile);
+        return ResponseEntity.ok(job);
     }
 
     // ✅ Delete job
@@ -88,12 +90,17 @@ public class JobPostController {
     }
 
 
-    // JobController.java
     @GetMapping("/for-seeker")
-    public ResponseEntity<List<JobPost>> getJobsForSeeker(@RequestParam String title) {
-        List<JobPost> jobs = jobService.getJobsForSeeker(title);
+    public ResponseEntity<List<JobPost>> getJobsForSeeker(
+            @RequestParam String title,
+            @RequestParam(required = false) String jobType,
+            @RequestParam(required = false) String experience,
+            @RequestParam(required = false) String salary) {
+
+        List<JobPost> jobs = jobService.getJobsForSeeker(title, jobType, experience, salary);
         return ResponseEntity.ok(jobs);
     }
+
 
 
 }

@@ -75,30 +75,32 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public JobPost updateJob(Long id, JobPost updatedJob) {
+    public JobPost updateJobWithLogo(Long id, JobPost updatedJob, MultipartFile logoFile) throws IOException {
         JobPost existingJob = jobPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
 
+        // Update all fields
         existingJob.setTitle(updatedJob.getTitle() != null ? updatedJob.getTitle() : existingJob.getTitle());
         existingJob.setDescription(updatedJob.getDescription() != null ? updatedJob.getDescription() : existingJob.getDescription());
         existingJob.setDepartment(updatedJob.getDepartment() != null ? updatedJob.getDepartment() : existingJob.getDepartment());
         existingJob.setEmploymentType(updatedJob.getEmploymentType() != null ? updatedJob.getEmploymentType() : existingJob.getEmploymentType());
         existingJob.setLocation(updatedJob.getLocation() != null ? updatedJob.getLocation() : existingJob.getLocation());
         existingJob.setRequirements(updatedJob.getRequirements() != null ? updatedJob.getRequirements() : existingJob.getRequirements());
-        existingJob.setGender(updatedJob.getGender() != null ? updatedJob.getGender() : existingJob.getGender());
-        existingJob.setRequiredEducation(updatedJob.getRequiredEducation() != null ? updatedJob.getRequiredEducation() : existingJob.getRequiredEducation());
-        existingJob.setRequiredExperience(updatedJob.getRequiredExperience() != null ? updatedJob.getRequiredExperience() : existingJob.getRequiredExperience());
         existingJob.setSalaryRange(updatedJob.getSalaryRange() != null ? updatedJob.getSalaryRange() : existingJob.getSalaryRange());
+        existingJob.setRequiredExperience(updatedJob.getRequiredExperience() != null ? updatedJob.getRequiredExperience() : existingJob.getRequiredExperience());
+        existingJob.setGender(updatedJob.getGender() != null ? updatedJob.getGender() : existingJob.getGender());
         existingJob.setApplicationDeadline(updatedJob.getApplicationDeadline() != null ? updatedJob.getApplicationDeadline() : existingJob.getApplicationDeadline());
-
-        if (updatedJob.getKeySkills() != null) {
-            existingJob.setKeySkills(updatedJob.getKeySkills());
-        } else if (existingJob.getKeySkills() == null) {
-            existingJob.setKeySkills(new ArrayList<>());
-        }
-
+        existingJob.setKeySkills(updatedJob.getKeySkills() != null ? updatedJob.getKeySkills() : existingJob.getKeySkills());
         existingJob.setStatus("Pending");
-        existingJob.setType(updatedJob.getType() != null ? updatedJob.getType() : existingJob.getType());
+
+        // Save logo if uploaded
+        if (logoFile != null && !logoFile.isEmpty()) {
+            String filename = System.currentTimeMillis() + "_" + logoFile.getOriginalFilename();
+            Path uploadPath = Paths.get("uploads/logos/");
+            Files.createDirectories(uploadPath); // ensure directory exists
+            Files.write(uploadPath.resolve(filename), logoFile.getBytes());
+            existingJob.setCompanyLogo("/uploads/logos/" + filename); // save path in DB
+        }
 
         return jobPostRepository.save(existingJob);
     }
@@ -134,10 +136,16 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobPost> getJobsForSeeker(String seekerTitle) {
+    public List<JobPost> getJobsForSeeker(String seekerTitle,
+                                          String jobType,
+                                          String experience,
+                                          String salary) {
+        // remove rank keywords
         String keyword = seekerTitle.replaceAll("(?i)senior|junior|mid|lead|intern", "").trim();
-        return jobPostRepository.findByTitleContainingIgnoreCase(keyword);
+
+        return jobPostRepository.searchJobs(keyword, jobType, experience, salary);
     }
+
 
 
 

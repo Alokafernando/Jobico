@@ -294,10 +294,12 @@
                             <div class="form-group">
                                 <label class="form-label">Job Type</label>
                                 <select class="form-select" id="jobType">
-                                    <option>Full-time</option>
-                                    <option>Part-time</option>
-                                    <option>Contract</option>
+                                    <option>Full-Time</option>
+                                    <option>Part-Time</option>
                                     <option>Internship</option>
+                                    <option>Contract</option>
+                                    <option>Freelance</option>
+                                    <option>Temporary</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -318,7 +320,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Salary Range</label>
-                                <input type="text" class="form-input" id="jobSalary" placeholder="e.g. $80,000 - $100,000">
+                                <input type="text" class="form-input" id="jobSalary" placeholder="e.g. 80,000 - 100,000">
                             </div>
                         </div>
 
@@ -354,21 +356,28 @@
 
                                 <div class="form-group">
                                     <label class="form-label">Experience</label>
-                                    <input type="text" class="form-input" id="experience" placeholder="e.g. 2 years - 3 years">
+                                    <select id="experience" class="form-input" name="experience" required>
+                                        <option value="">Select experience level</option>
+                                        <option value="0-1">Less than 1 year</option>
+                                        <option value="1-3">1-3 years</option>
+                                        <option value="3-5">3-5 years</option>
+                                        <option value="5-10">5-10 years</option>
+                                        <option value="10+">10+ years</option>
+                                    </select>
                                 </div>
+
+
 
 
                                 <div class="form-group">
                                     <div class="form-label">Qualification</div>
                                     <select class="form-input" id="qualification">
-                                        <option value="Bachelor's Degree">Bachelor's Degree</option>
-                                        <option value="High School">High School</option>
-                                        <option value="Associate Degree">Associate Degree</option>
-                                        <option value="Master's Degree">Master's Degree</option>
-                                        <option value="Doctorate">Doctorate</option>
-                                        <option value="Diploma">Diploma</option>
-                                        <option value="Certificate">Certificate</option>
-                                        <option value="Other">Other</option>
+                                        <option value="high_school">High School</option>
+                                        <option value="associate">Associate Degree</option>
+                                        <option value="bachelor">Bachelor's Degree</option>
+                                        <option value="master">Master's Degree</option>
+                                        <option value="doctorate">Doctorate</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </div>
                             </div>
@@ -585,10 +594,13 @@
                         <div class="form-group">
                             <label class="form-label">Job Type</label>
                             <select id="jobType-update" class="form-select">
-                                <option>Full-time</option>
-                                <option>Part-time</option>
-                                <option>Contract</option>
-                                <option>Internship</option>
+                                <option selected>Any</option>
+                                <option >Full-Time</option>
+                                <option >Part-Time</option>
+                                <option >Internship</option>
+                                <option >Contract</option>
+                                <option >Freelance</option>
+                                <option >Temporary</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -627,9 +639,12 @@
                         <div class="form-group">
                             <label class="form-label">Experience Level</label>
                             <select id="jobExperience" class="form-select">
-                                <option>Senior (5+ years)</option>
-                                <option>Mid-Level (3-5 years)</option>
-                                <option>Entry Level (0-2 years)</option>
+                                <option selected>Select experience level</option>
+                                <option value="-1">Less than 1 year</option>
+                                <option value="1-3">1-3 years</option>
+                                <option value="3-5">3-5 years</option>
+                                <option value="5-10">5-10 years</option>
+                                <option value="10+">10+ years</option>
                             </select>
                         </div>
 

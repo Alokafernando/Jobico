@@ -253,7 +253,9 @@ $(document).ready(function () {
     $("#updateJobBtn").on("click", function (e) {
         e.preventDefault();
         const jobId = $(this).data("job-id");
+        const token = localStorage.getItem("token");
 
+        // Build job object
         const jobData = {
             title: $("#jobTitle-update2").val().trim(),
             department: $("#jobDepartment-update").val(),
@@ -269,27 +271,56 @@ $(document).ready(function () {
         };
 
         const logoFile = $("#jobLogo-update")[0].files[0];
-        const formData = new FormData();
 
-        for (const key in jobData) {
-            formData.append(key, jobData[key]);
+        // Convert JPG to PNG if needed
+        function convertToPng(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) return resolve(null);
+
+                const img = new Image();
+                const reader = new FileReader();
+                reader.onload = e => img.src = e.target.result;
+
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(blob => {
+                        resolve(new File([blob], file.name.replace(/\.\w+$/, ".png"), { type: "image/png" }));
+                    }, "image/png");
+                };
+                img.onerror = reject;
+                reader.readAsDataURL(file);
+            });
         }
 
-        if (logoFile) {
-            formData.append("logo", logoFile);
-        }
+        convertToPng(logoFile).then(pngFile => {
+            const formData = new FormData();
+            formData.append("job", new Blob([JSON.stringify(jobData)], { type: "application/json" }));
+            if (pngFile) formData.append("logo", pngFile);
 
-        $.ajax({
-            url: `http://localhost:8080/api/jobs/${jobId}`,
-            method: "PUT",
-            headers: { "Authorization": `Bearer ${token}` },
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: () => Swal.fire("Success", "Job updated successfully!", "success"),
-            error: xhr => Swal.fire("Error", "Failed to update job: " + (xhr.responseJSON?.message || xhr.statusText), "error")
+            $.ajax({
+                url: `http://localhost:8080/api/jobs/${jobId}`,
+                method: "PUT",
+                headers: { "Authorization": `Bearer ${token}` },
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: () => Swal.fire("Success", "Job updated successfully!", "success"),
+                error: xhr => Swal.fire("Error", "Failed to update job: " + (xhr.responseJSON?.message || xhr.statusText), "error")
+            });
+        }).catch(err => {
+            Swal.fire({
+                icon: "error",
+                title: "File Error",
+                text: "Failed to process the logo image."
+            });
         });
     });
+
+
 
 
     // -----------------------------
@@ -451,7 +482,10 @@ $(document).ready(function () {
         $("#create-job-form").toggle();
         $("#job-post-table").hide();
     });
-    $("#cancelCreateJob").on("click", () => $("#create-job-form").hide());
+    $("#cancelCreateJob").on("click", () => {
+        $("#create-job-form").hide();
+        $("#job-post-table").show();
+    });
 
 
     $("#publishJobBtn").on("click", function () {
@@ -469,7 +503,7 @@ $(document).ready(function () {
         const location = $("#jobLocation").val().trim();
         const description = $("#jobDescription").val().trim();
         const deadline = $("#jobDeadline").val();
-        const salaryRange = $("#jobSalary").val().trim();
+        const salaryRange = $("#jobSalary").val().trim().replace(/\s|LKR/g, "");
         const requirements = $("#requirements").val().trim();
         const gender = $("#gender").val();
         const requiredExperience = $("#experience").val().trim();

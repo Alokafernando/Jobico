@@ -917,42 +917,78 @@ input:checked + .slider:before {
 }
 
 /* Find Jobs Page Styles */
+#find-jobs {
+    /*display: grid;*/
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
 .filters-sidebar {
     background: white;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     margin-bottom: 30px;
+    flex: 1 1 250px;
+}
+
+.content-section {
+    flex: 3 1 700px;
 }
 
 .filter-group {
     margin-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+
+.filter-group:last-child {
+    border-bottom: none;
 }
 
 .filter-group h3 {
-    margin-bottom: 10px;
-    color: var(--dark);
-    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
+/* Updated filter options for dropdowns */
 .filter-options {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
-.filter-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.filter-options select {
+    width: 25%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 0.95rem;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.filter-option input {
-    accent-color: var(--primary);
+.filter-options select:hover {
+    border-color: #ff6b35;
+    box-shadow: 0 0 5px rgba(255,107,53,0.3);
 }
 
-.filter-option label {
-    font-size: 0.9rem;
+.filter-options select:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 5px rgba(255,107,53,0.5);
+}
+
+/* Optional: label styling for dropdowns */
+.filter-options label {
+    font-size: 0.95rem;
+    color: #555;
+    font-weight: 500;
+    margin-bottom: 5px;
 }
 
 /* Edit Modal Styles */
@@ -1343,5 +1379,21 @@ textarea.form-control {
     .edit-modal-content {
         width: 95%;
         margin: 20px;
+    }
+
+    #find-jobs {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+
+    .filters-sidebar {
+        flex: 1 1 100%;
+        margin-bottom: 20px;
+    }
+
+    .content-section {
+        flex: 1 1 100%;
     }
 }
