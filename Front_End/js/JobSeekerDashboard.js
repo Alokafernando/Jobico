@@ -340,39 +340,34 @@ $(document).ready(function () {
         $("#confirm-password").val('');
     }
 
-    $("#save-password-btn").on("click", function(){
+    $("#save-password-btn").on("click", function () {
         const currentPassword = $("#current-password").val().trim();
         const newPassword = $("#new-password").val().trim();
         const confirmPassword = $("#confirm-password").val().trim();
 
         if (!currentPassword || !newPassword || !confirmPassword) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Incomplete Form',
-                text: 'Please fill in all fields.',
-                confirmButtonText: 'OK'
-            });
+            showAlert('warning', 'Incomplete Form', 'Please fill in all fields.');
+            $("#edit-password-modal").css("z-index", 9);
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            showAlert('error', 'Password Too Short', 'New password must be at least 6 characters long.');
+            $("#edit-password-modal").css("z-index", 9);
+
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Password Mismatch',
-                text: 'New password and confirm password do not match.',
-                confirmButtonText: 'OK'
-            });
+            showAlert('error', 'Password Mismatch', 'New password and confirm password do not match.');
+            $("#edit-password-modal").css("z-index", 9);
             return;
         }
 
         const email = localStorage.getItem("userEmail");
         if (!email) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Email Not Found',
-                text: 'User email not found. Please login again.',
-                confirmButtonText: 'OK'
-            });
+            showAlert('warning', 'Email Not Found', 'User email not found. Please login again.');
+            $("#edit-password-modal").css("z-index", 9);
             return;
         }
 
@@ -386,28 +381,34 @@ $(document).ready(function () {
                 currentPassword: currentPassword,
                 newPassword: newPassword
             }),
-            success: function() {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Password changed successfully!',
-                    confirmButtonText: 'OK'
-                });
+            success: function () {
+                showAlert('success', 'Success', 'Password changed successfully!');
                 $("#edit-password-modal").hide();
                 clearPasswordFields();
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 const message = xhr.responseJSON?.message || "Failed to change password";
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: message,
-                    confirmButtonText: 'OK'
-                });
+                showAlert('error', 'Error', message);
             }
         });
-    });
 
+        function clearPasswordFields() {
+            $("#current-password").val('');
+            $("#new-password").val('');
+            $("#confirm-password").val('');
+        }
+
+        function showAlert(icon, title, text) {
+            Swal.fire({
+                icon: icon,
+                title: title,
+                text: text,
+                confirmButtonText: 'OK',
+                customClass: { popup: 'swal-popup-front' }
+            });
+            $("#edit-password-modal").css("z-index", 9);
+        }
+    });
 
     function loadJobsForSeeker(title, jobType, experience, salary) {
         $.ajax({
@@ -415,10 +416,10 @@ $(document).ready(function () {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
             data: {
-                title: title || "",          // always send title
-                jobType: jobType || "",      // optional filter
-                experience: experience || "",// optional filter
-                salary: salary || ""         // optional filter
+                title: title || "",
+                jobType: jobType || "",
+                experience: experience || "",
+                salary: salary || ""
             },
             success: function (jobs) {
                 const $grid = $(".jobs-grid");
@@ -469,9 +470,8 @@ $(document).ready(function () {
         });
     }
 
-// Call this after DOM is ready
     $("#jobType-filter, #experienceLevel, #salaryRange").on("change", function () {
-        const title = $("#professionTitle").text() || "";  // from profile
+        const title = $("#professionTitle").text() || "";
         const jobType = $("#jobType-filter").val();
         const experience = $("#experienceLevel").val();
         const salary = $("#salaryRange").val();
@@ -479,6 +479,86 @@ $(document).ready(function () {
         loadJobsForSeeker(title, jobType, experience, salary);
     });
 
+
+    function showJobDetails(job) {
+        $(".job-title").text(job.title || "N/A");
+        $(".job-type").text(job.employmentType || "N/A");
+        $(".company").html(`<i class="fas fa-building"></i>&nbsp;${job.companyName || "N/A"}`);
+
+        $(".job-meta").html(`
+        <div class="job-meta-item"><i class="fas fa-map-marker-alt"></i> ${job.location || "N/A"}</div>
+        <div class="job-meta-item"><i class="fas fa-calendar-alt"></i> Post Date: ${job.postedAt || "N/A"}</div>
+        <div class="job-meta-item"><i class="fas fa-users"></i> ${job.applicants || 0} applicants</div> <!--not completed-->
+    `);
+
+        $("#modalKeySkills").empty();
+        let skills = Array.isArray(job.keySkills)
+            ? job.keySkills
+            : (typeof job.keySkills === "string"
+                ? job.keySkills.split(",").map(s => s.trim())
+                : []);
+        skills.forEach(skill => {
+            $("#modalKeySkills").append(`<span class="skill-tag">${skill}</span>`);
+        });
+
+        let description = Array.isArray(job.description) ? job.description : (typeof job.description === "string" ? [job.description] : []);
+        $(".job-description").html(description.map(p => `<p>${p}</p>`).join(""));
+
+        let responsibilities = Array.isArray(job.responsibilities) ? job.responsibilities : (typeof job.responsibilities === "string" ? job.responsibilities.split(",").map(r => r.trim()) : []);
+        $(".responsibilities ul").empty();
+        responsibilities.forEach(r => {
+            $(".responsibilities ul").append(`<li>${r}</li>`);
+        });
+
+        let requirements = Array.isArray(job.requirements) ? job.requirements : (typeof job.requirements === "string" ? job.requirements.split(",").map(r => r.trim()) : []);
+        $(".requirements-list").empty();
+        requirements.forEach(req => {
+            $(".requirements-list").append(`<li>${req}</li>`);
+        });
+
+
+        $(".job-overview").html(`
+        <h3 class="section-title"><i class="fas fa-info-circle"></i> Job Overview</h3>
+        <div class="overview-item"><span class="overview-title">Offered Salary</span><span class="overview-value">${job.salaryRange || "N/A"}</span></div>
+        <div class="overview-item"><span class="overview-title">Gender</span><span class="overview-value">${job.gender || "Any"}</span></div>
+        <div class="overview-item"><span class="overview-title">Industry</span><span class="overview-value">${job.postedBy?.industry || "N/A"}</span></div>
+        <div class="overview-item"><span class="overview-title">Experience</span><span class="overview-value">${job.requiredExperience || "N/A"}</span></div>
+        <div class="overview-item"><span class="overview-title">Qualification</span><span class="overview-value">${job.requiredEducation || "N/A"}</span></div>
+    `);
+
+        $("#descriptionModal").fadeIn();
+    }
+
+    $(document).on("click", ".apply-btn", function () {
+        const jobId = $(this).data("job-id");
+
+        $.ajax({
+            url: `http://localhost:8080/api/jobs/${jobId}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(jobData) {
+                showJobDetails(jobData);
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load job details.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    });
+
+    $("#closeDescModal").on("click", function () {
+        $("#descriptionModal").fadeOut();
+    });
+
+    $(document).on("click", ".description-background", function (e) {
+        if ($(e.target).closest(".application-popup").length === 0) {
+            $(".description-background").fadeOut();
+        }
+    });
 
 
 });

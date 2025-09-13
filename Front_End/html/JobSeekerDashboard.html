@@ -1011,9 +1011,102 @@
   </div>
 </div>
 
+<div class="description-background" id="descriptionModal">
+  <div class="description-modal-content">
+    <div class="popup-header">
+      <h2>Job Details</h2>
+      <button class="popup-close" id="closeDescModal">&times;</button>
+    </div>
+    <div class="popup-body">
+      <div class="job-content">
+        <div class="job-description-details">
+          <h1 class="job-title" id="modalJobTitle"></h1>
+          <span class="job-type" id="modalJobType"></span>
+          <p class="company"><i class="fas fa-building"></i> <span id="modalCompany"></span></p>
+
+          <div class="job-meta">
+            <div class="job-meta-item"><i class="fas fa-map-marker-alt"></i> <span id="modalLocation"></span></div>
+            <div class="job-meta-item"><i class="fas fa-calendar-alt"></i> <span id="modalPostDate"></span></div>
+            <div class="job-meta-item"><i class="fas fa-users"></i> <span id="modalApplicants"></span></div>
+          </div>
+
+          <h4>Key Skills</h4>
+          <div class="key-skills" id="modalKeySkills">
+            <!-- Skills will be inserted here dynamically -->
+          </div>
+
+
+          <div class="section-title"><i class="fas fa-file-alt"></i> Job Description</div>
+          <div class="job-description" id="modalDescription"></div>
+
+<!--          <div class="responsibilities">-->
+<!--            <h4>Key Responsibilities:</h4>-->
+<!--            <ul>-->
+<!--              <li>Analyze historical sales data, market trends, and promotions to create forecasts.</li>-->
+<!--              <li>Partner with Account Managers, Operations, and Clients.</li>-->
+<!--              <li>Spot anomalies, forecast errors, and improve models.</li>-->
+<!--              <li>Maintain forecasting across global marketplaces (Amazon, Shopify, etc.).</li>-->
+<!--              <li>Work hands-on with Google Sheets, Excel, and forecasting tools.</li>-->
+<!--              <li>Defend insights and recommendations to clients and teams.</li>-->
+<!--            </ul>-->
+<!--          </div>-->
+
+          <div class="section-title"><i class="fas fa-list-check"></i> Requirements</div>
+          <ul class="requirements-list" id="modalRequirements"></ul>
+        </div>
+
+        <div class="job-sidebar">
+          <div class="apply-section">
+            <button class="apply-btn" id="applyDescriptionButton"><i class="fas fa-paper-plane"></i> Apply For This Job</button>
+            <p class="applicant-count"><i class="fas fa-users"></i> 237 applicants</p>
+          </div>
+
+          <div class="job-overview">
+            <h3 class="section-title"><i class="fas fa-info-circle"></i> Job Overview</h3>
+            <div class="overview-item">
+              <span class="overview-title">Offered Salary</span>
+              <span class="overview-value" id="modalSalary"></span>
+            </div>
+            <div class="overview-item">
+              <span class="overview-title">Gender</span>
+              <span class="overview-value" id="modalGender"></span>
+            </div>
+            <div class="overview-item">
+              <span class="overview-title">Career Level</span>
+              <span class="overview-value" id="modalCareerLevel"></span>
+            </div>
+            <div class="overview-item">
+              <span class="overview-title">Industry</span>
+              <span class="overview-value" id="modalIndustry"></span>
+            </div>
+            <div class="overview-item">
+              <span class="overview-title">Experience</span>
+              <span class="overview-value" id="modalExperience"></span>
+            </div>
+            <div class="overview-item">
+              <span class="overview-title">Qualification</span>
+              <span class="overview-value" id="modalQualification"></span>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <div class="action-section">
+        <a href="#" class="view-jobs-link">View all jobs at this company <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/JobSeekerDashboard.js"></script>
+
 
 
 </body>

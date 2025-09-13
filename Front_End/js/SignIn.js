@@ -81,7 +81,13 @@ $('#loginForm').on('submit', function(e) {
         },
         error: function(xhr) {
             btn.removeClass('btn-loading').text('Sign In to Your Future');
-            showMessage(xhr.responseJSON?.message || "Login failed ❌");
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Failed',
+                text: xhr.responseJSON?.message || "Login failed ❌",
+                confirmButtonColor: '#ff6b35'
+            });
+
         }
     });
 });
