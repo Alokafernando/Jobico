@@ -480,84 +480,111 @@ $(document).ready(function () {
     });
 
 
+    // ---------- Show Job Details ----------
     function showJobDetails(job) {
-        $(".job-title").text(job.title || "N/A");
-        $(".job-type").text(job.employmentType || "N/A");
-        $(".company").html(`<i class="fas fa-building"></i>&nbsp;${job.companyName || "N/A"}`);
+        $("#modalJobTitle").text(job.title || "N/A");
+        $("#modalJobType").text(job.employmentType || "N/A");
+        $("#modalCompany").text(job.companyName || "N/A");
 
-        $(".job-meta").html(`
-        <div class="job-meta-item"><i class="fas fa-map-marker-alt"></i> ${job.location || "N/A"}</div>
-        <div class="job-meta-item"><i class="fas fa-calendar-alt"></i> Post Date: ${job.postedAt || "N/A"}</div>
-        <div class="job-meta-item"><i class="fas fa-users"></i> ${job.applicants || 0} applicants</div> <!--not completed-->
-    `);
+        $("#modalLocation").text(job.location || "N/A");
+        $("#modalPostDate").text(job.postedAt || "N/A");
+        $("#modalApplicants").text(job.applicants || 0);
 
+        $("#modalCompanyLogo").attr("src", job.companyLogo && job.companyLogo.trim() !== ""
+            ? job.companyLogo
+            : "images/default-logo.png"
+        );
+        $("#modalCompanyName").text(job.companyName || "N/A");
+
+        // Key Skills
         $("#modalKeySkills").empty();
         let skills = Array.isArray(job.keySkills)
             ? job.keySkills
             : (typeof job.keySkills === "string"
                 ? job.keySkills.split(",").map(s => s.trim())
                 : []);
-        skills.forEach(skill => {
-            $("#modalKeySkills").append(`<span class="skill-tag">${skill}</span>`);
-        });
+        skills.forEach(skill => $("#modalKeySkills").append(`<span class="skill-tag">${skill}</span>`));
 
-        let description = Array.isArray(job.description) ? job.description : (typeof job.description === "string" ? [job.description] : []);
-        $(".job-description").html(description.map(p => `<p>${p}</p>`).join(""));
+        // Description
+        let description = Array.isArray(job.description)
+            ? job.description
+            : (typeof job.description === "string" ? [job.description] : []);
+        $("#modalDescription").html(description.map(p => `<p>${p}</p>`).join(""));
 
-        let responsibilities = Array.isArray(job.responsibilities) ? job.responsibilities : (typeof job.responsibilities === "string" ? job.responsibilities.split(",").map(r => r.trim()) : []);
-        $(".responsibilities ul").empty();
-        responsibilities.forEach(r => {
-            $(".responsibilities ul").append(`<li>${r}</li>`);
-        });
+        // Requirements
+        let requirements = Array.isArray(job.requirements)
+            ? job.requirements
+            : (typeof job.requirements === "string" ? job.requirements.split(",").map(r => r.trim()) : []);
+        $("#modalRequirements").empty();
+        requirements.forEach(req => $("#modalRequirements").append(`<li>${req}</li>`));
 
-        let requirements = Array.isArray(job.requirements) ? job.requirements : (typeof job.requirements === "string" ? job.requirements.split(",").map(r => r.trim()) : []);
-        $(".requirements-list").empty();
-        requirements.forEach(req => {
-            $(".requirements-list").append(`<li>${req}</li>`);
-        });
-
-
-        $(".job-overview").html(`
-        <h3 class="section-title"><i class="fas fa-info-circle"></i> Job Overview</h3>
-        <div class="overview-item"><span class="overview-title">Offered Salary</span><span class="overview-value">${job.salaryRange || "N/A"}</span></div>
-        <div class="overview-item"><span class="overview-title">Gender</span><span class="overview-value">${job.gender || "Any"}</span></div>
-        <div class="overview-item"><span class="overview-title">Industry</span><span class="overview-value">${job.postedBy?.industry || "N/A"}</span></div>
-        <div class="overview-item"><span class="overview-title">Experience</span><span class="overview-value">${job.requiredExperience || "N/A"}</span></div>
-        <div class="overview-item"><span class="overview-title">Qualification</span><span class="overview-value">${job.requiredEducation || "N/A"}</span></div>
-    `);
+        // Overview
+        $("#modalSalary").text(job.salaryRange || "N/A");
+        $("#modalGender").text(job.gender || "Any");
+        $("#modalIndustry").text(job.postedBy?.industry || "N/A");
+        $("#modalExperience").text(job.requiredExperience || "N/A");
+        $("#modalQualification").text(job.requiredEducation || "N/A");
 
         $("#descriptionModal").fadeIn();
     }
 
-    $(document).on("click", ".apply-btn", function () {
+// ---------- Open Job Details Modal ----------
+    $(document).on("click", ".apply-btn[data-job-id]", function() {
         const jobId = $(this).data("job-id");
 
         $.ajax({
             url: `http://localhost:8080/api/jobs/${jobId}`,
             method: "GET",
-            headers: { "Authorization": `Bearer ${token}` },
-            success: function(jobData) {
-                showJobDetails(jobData);
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to load job details.',
-                    confirmButtonText: 'OK'
-                });
+            headers: { "Authorization": `Bearer ${token}` }, // if you have auth
+            success: function(jobData) { showJobDetails(jobData); },
+            error: function() {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load job details.' });
             }
         });
     });
 
-    $("#closeDescModal").on("click", function () {
-        $("#descriptionModal").fadeOut();
+// ---------- Close Modals ----------
+    $("#closeDescModal").click(() => $("#descriptionModal").fadeOut());
+    $("#closeApplicationModal").click(() => $("#applicationModal").fadeOut());
+
+// Close by clicking outside
+    $(document).on("click", ".description-background", function(e){
+        if($(e.target).closest(".description-modal-content, .application-modal-content").length === 0){
+            $(this).fadeOut();
+        }
     });
 
-    $(document).on("click", ".description-background", function (e) {
-        if ($(e.target).closest(".application-popup").length === 0) {
-            $(".description-background").fadeOut();
-        }
+// ---------- Open Application Modal ----------
+    $("#applyDescriptionButton").click(function() {
+        // Copy Job Title & Company to Application Modal
+        const title = $("#modalJobTitle").text();
+        const company = $("#modalCompanyName").text();
+        $("#applicationModal .modal-header h2").text(`Apply for Job: ${title}`);
+        $("#applicationModal .company-name").text(`at ${company}`);
+        $("#applicationModal").fadeIn();
+    });
+
+// ---------- Submit Application ----------
+    $(".application-form").submit(function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: "http://localhost:8080/api/job-applications",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function() {
+                Swal.fire({ icon: 'success', title: 'Success', text: 'Application submitted!' });
+                $("#applicationModal").fadeOut();
+            },
+            error: function() {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to submit application.' });
+            }
+        });
     });
 
 
