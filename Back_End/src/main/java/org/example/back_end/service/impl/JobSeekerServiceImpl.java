@@ -92,6 +92,10 @@ public class JobSeekerServiceImpl implements JobSeekerService {
         jobSeekerRepository.save(seeker);
     }
 
-
+    @Override
+    public JobSeeker getById(Long id) {
+        return jobSeekerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job seeker not found"));
+    }
 
 }

@@ -22,7 +22,7 @@ public class JobPost {
     private String title;
     private String description;
     private String department;
-    private String employmentType;   // Full-time, Internship, Contract, etc.
+    private String employmentType;
     private String location;
     private String requirements;
     private String gender;
@@ -39,8 +39,8 @@ public class JobPost {
     private String companyPhone;
     private String companyLogo;
 
-    private String type;   // Internship, Contract, etc.
-    private String status; // Active / Open / Closed
+    private String type;
+    private String status;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(

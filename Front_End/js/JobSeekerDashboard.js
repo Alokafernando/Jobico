@@ -482,14 +482,18 @@ $(document).ready(function () {
 
     // ---------- Show Job Details ----------
     function showJobDetails(job) {
+        // Job Info
         $("#modalJobTitle").text(job.title || "N/A");
+        $("#modalJobTitle").data("job-id", job.id);
         $("#modalJobType").text(job.employmentType || "N/A");
         $("#modalCompany").text(job.companyName || "N/A");
 
+        // Meta Info
         $("#modalLocation").text(job.location || "N/A");
         $("#modalPostDate").text(job.postedAt || "N/A");
         $("#modalApplicants").text(job.applicants || 0);
 
+        // Company Logo
         $("#modalCompanyLogo").attr("src", job.companyLogo && job.companyLogo.trim() !== ""
             ? job.companyLogo
             : "images/default-logo.png"
@@ -500,9 +504,7 @@ $(document).ready(function () {
         $("#modalKeySkills").empty();
         let skills = Array.isArray(job.keySkills)
             ? job.keySkills
-            : (typeof job.keySkills === "string"
-                ? job.keySkills.split(",").map(s => s.trim())
-                : []);
+            : (typeof job.keySkills === "string" ? job.keySkills.split(",").map(s => s.trim()) : []);
         skills.forEach(skill => $("#modalKeySkills").append(`<span class="skill-tag">${skill}</span>`));
 
         // Description
@@ -518,13 +520,14 @@ $(document).ready(function () {
         $("#modalRequirements").empty();
         requirements.forEach(req => $("#modalRequirements").append(`<li>${req}</li>`));
 
-        // Overview
+        // Job Overview
         $("#modalSalary").text(job.salaryRange || "N/A");
         $("#modalGender").text(job.gender || "Any");
         $("#modalIndustry").text(job.postedBy?.industry || "N/A");
         $("#modalExperience").text(job.requiredExperience || "N/A");
         $("#modalQualification").text(job.requiredEducation || "N/A");
 
+        // Show Modal
         $("#descriptionModal").fadeIn();
     }
 
@@ -535,20 +538,20 @@ $(document).ready(function () {
         $.ajax({
             url: `http://localhost:8080/api/jobs/${jobId}`,
             method: "GET",
-            headers: { "Authorization": `Bearer ${token}` }, // if you have auth
-            success: function(jobData) { showJobDetails(jobData); },
-            error: function() {
+            headers: { "Authorization": `Bearer ${token}` },
+            success: showJobDetails,
+            error: function(xhr) {
+                console.error(xhr);
                 Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load job details.' });
             }
         });
     });
 
 // ---------- Close Modals ----------
-    $("#closeDescModal").click(() => $("#descriptionModal").fadeOut());
-    $("#closeApplicationModal").click(() => $("#applicationModal").fadeOut());
+    $("#closeDescModal, #closeApplicationModal").click(() => $(".description-background, .application-modal").fadeOut());
 
 // Close by clicking outside
-    $(document).on("click", ".description-background", function(e){
+    $(document).on("click", ".description-background, .application-modal", function(e){
         if($(e.target).closest(".description-modal-content, .application-modal-content").length === 0){
             $(this).fadeOut();
         }
@@ -556,36 +559,101 @@ $(document).ready(function () {
 
 // ---------- Open Application Modal ----------
     $("#applyDescriptionButton").click(function() {
-        // Copy Job Title & Company to Application Modal
         const title = $("#modalJobTitle").text();
         const company = $("#modalCompanyName").text();
+        const jobId = $("#modalJobTitle").data("job-id");
+
         $("#applicationModal .modal-header h2").text(`Apply for Job: ${title}`);
         $("#applicationModal .company-name").text(`at ${company}`);
+        $("#applicationModal").data("job-id", jobId);
         $("#applicationModal").fadeIn();
     });
 
-// ---------- Submit Application ----------
+    // ---------- Submit Application ----------
     $(".application-form").submit(function(e) {
         e.preventDefault();
 
-        const formData = new FormData(this);
+        getJobSeekerId(function(jobSeekerId) {
+            const token = localStorage.getItem("token");
+            const jobPostId = $("#applicationModal").data("job-id"); //job post id
+            console.log(jobPostId)
+            const resumeFile = $("#resume-upload")[0].files[0];
 
-        $.ajax({
-            url: "http://localhost:8080/api/job-applications",
-            method: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: { "Authorization": `Bearer ${token}` },
-            success: function() {
-                Swal.fire({ icon: 'success', title: 'Success', text: 'Application submitted!' });
-                $("#applicationModal").fadeOut();
-            },
-            error: function() {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to submit application.' });
+            // Validation
+            if (!resumeFile) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Please upload your resume.' });
+                return;
             }
+            if (!jobPostId) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Invalid job selected!' });
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("jobSeekerId", jobSeekerId);
+            formData.append("jobPostId", jobPostId);
+            formData.append("resume", resumeFile);
+
+            $.ajax({
+                url: "http://localhost:8080/api/applications/apply",
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` },
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Application submitted!',
+                        confirmButtonText: 'OK',
+                    }).then(() => {
+                        // now hide the modal
+                        $("#applicationModal").fadeOut();
+                        $(".application-form")[0].reset();
+                        $(".file-input-label span").text("Please select a resume...");
+                    });
+
+                },
+                error: function(xhr) {
+                    const msg = xhr.responseJSON?.message || 'Failed to submit application.';
+                    Swal.fire({ icon: 'error', title: 'Error', text: msg });
+                    console.error(xhr);
+                }
+            });
         });
     });
 
+// ---------- Helper: Get JobSeeker ID ----------
+    function getJobSeekerId(callback) {
+        const token = localStorage.getItem("token");
+        const email = localStorage.getItem("userEmail");
 
+        if (!token || !email) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'User not logged in!' });
+            return;
+        }
+
+        $.ajax({
+            url: `http://localhost:8080/api/jobseekers/email/${encodeURIComponent(email)}`,
+            method: 'GET',
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(user) {
+                if (!user?.id) {
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Invalid user data returned!' });
+                    return;
+                }
+                callback(user.id);
+            },
+            error: function() {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to fetch user ID!' });
+            }
+        });
+    }
+
+// ---------- Update file input label ----------
+    $("#resume-upload").change(function() {
+        const fileName = $(this)[0].files[0]?.name || "Please select a resume...";
+        $(this).siblings(".file-input-label").find("span").text(fileName);
+    });
 });

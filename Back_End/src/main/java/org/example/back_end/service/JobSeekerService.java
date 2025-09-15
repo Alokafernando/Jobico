@@ -9,4 +9,5 @@ public interface JobSeekerService {
     JobSeeker save(JobSeeker seeker);
     JobSeeker updateProfile(String email, Map<String, Object> updates);
     void changePassword(String email, String currentPassword, String newPassword);
+    JobSeeker getById(Long id);
 }
