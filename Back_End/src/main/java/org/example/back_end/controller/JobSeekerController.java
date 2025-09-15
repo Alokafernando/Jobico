@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.back_end.entity.JobSeeker;
 import org.example.back_end.service.AuthService;
 import org.example.back_end.service.JobSeekerService;
+import org.example.back_end.util.ImgBBUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ public class JobSeekerController {
 
     private final JobSeekerService jobSeekerService;
     private final PasswordEncoder passwordEncoder;
+    private final ImgBBUploader imgBBUploader;
 
 
     @GetMapping("/email/{email}")
@@ -78,6 +80,18 @@ public class JobSeekerController {
         }
     }
 
+    @PostMapping("/profile-picture")
+    public ResponseEntity<?> uploadProfilePicture(
+            @RequestParam("email") String email,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            String uploadedUrl = imgBBUploader.uploadImage(file);
+            JobSeeker updatedSeeker = jobSeekerService.updateProfilePicture(email, uploadedUrl);
+            return ResponseEntity.ok(updatedSeeker);
 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to upload profile picture: " + e.getMessage());
+        }
+    }
 
 }

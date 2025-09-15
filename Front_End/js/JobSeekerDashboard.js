@@ -2,6 +2,14 @@ $(document).ready(function () {
     // -----------------------------
     // Cached jQuery selectors
     // -----------------------------
+    const savedProfileImage = localStorage.getItem("profileImage");
+    if(savedProfileImage) {
+        $("#avatar-preview").attr("src", savedProfileImage);
+        $("#header-avatar").attr("src", savedProfileImage);
+        $("#sidebar-avatar").attr("src", savedProfileImage);
+        $("#profile-avatar").attr("src", savedProfileImage);
+    }
+
     const $pageSections = $(".page-section");
     const $menuLinks = $(".menu-link");
     const $profileImg = $(".profile-img");
@@ -68,6 +76,15 @@ $(document).ready(function () {
     // Load User Details from server
     // -----------------------------
     function setUserDetails(user) {
+
+        const profileImgUrl = user.profileImage || "../assets/profiles/default-avatar.jpg";
+        $("#avatar-preview").attr("src", profileImgUrl);
+        $("#header-avatar").attr("src", profileImgUrl);
+        $("#sidebar-avatar").attr("src", profileImgUrl);
+        $("#profile-avatar").attr("src", profileImgUrl);
+
+        localStorage.setItem("profileImage", profileImgUrl);
+
         const firstName = user.firstName || "";
         const lastName = user.lastName || "";
         const profession = user.professionTitle || "";
@@ -205,14 +222,22 @@ $(document).ready(function () {
             headers: { "Authorization": `Bearer ${token}` },
             contentType: "application/json",
             data: JSON.stringify(updates),
-            success: function(updatedUser) {
-                setUserDetails(updatedUser);
-                closeModals();
+            success: function(response) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
-                    text: 'Profile updated successfully!',
+                    text: 'Profile picture updated!',
                     confirmButtonText: 'OK'
+                }).then(() => {
+                    $profilePictureModal.hide();
+                    if(response.profileImage) {
+                        $("#avatar-preview").attr("src", response.profileImage);
+                        $("#header-avatar").attr("src", response.profileImage);
+                        $("#sidebar-avatar").attr("src", response.profileImage);
+                        $("#profile-avatar").attr("src", response.profileImage);
+                        localStorage.setItem("profileImage", response.profileImage);
+                    }
+                    $("#file-upload").val('');
                 });
             },
             error: function(xhr) {
@@ -230,16 +255,24 @@ $(document).ready(function () {
     // -----------------------------
     // Open/Close Modals
     // -----------------------------
-    function closeModals() { $editModals.hide(); $profilePictureModal.hide(); $confirmationModal.hide(); }
+    function closeModals() {
+        $editModals.hide();
+        $profilePictureModal.hide();
+        $confirmationModal.hide();
+
+        const savedImage = localStorage.getItem("profileImage") || "../assets/profiles/default-avatar.jpg";
+        $("#avatar-preview").attr("src", savedImage);
+
+        $("#file-upload").val('');
+    }
+
 
     $(".edit-modal-close, .modal-btn-cancel").on("click", closeModals);
-    $editModals.on("click", function (e) { if (e.target === this) closeModals(); });
 
-    $("#edit-profile-btn").on("click", () => $("#edit-profile-modal").css("display", "flex"));
-    $(".edit-btn").on("click", function () {
-        const editType = $(this).data("edit");
-        $("#edit-" + editType + "-modal").css("display", "flex");
+    $editModals.on("click", function (e) {
+        if (e.target === this) closeModals();
     });
+
 
     // -----------------------------
     // Logout
@@ -270,6 +303,7 @@ $(document).ready(function () {
         }
     });
 
+
     $("#save-profile-picture").on("click", function() {
         const file = $("#file-upload")[0].files[0];
         if (!file) {
@@ -294,17 +328,20 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             data: formData,
-            success: function() {
+            success: function(response) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
                     text: 'Profile picture updated!',
                     confirmButtonText: 'OK'
+                }).then(() => {
+                    $profilePictureModal.hide();
+                    const newSrc = response.profileImage || "../assets/profiles/default-avatar.jpg";
+                    $("#sidebar-avatar, #header-avatar, #profile-avatar, #avatar-preview").attr("src", newSrc);
+                    $("#file-upload").val('');
                 });
-                $profilePictureModal.hide();
             },
             error: function(xhr){
-                console.error("Failed to upload picture", xhr);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -313,7 +350,9 @@ $(document).ready(function () {
                 });
             }
         });
+
     });
+
 
     // -----------------------------
     // Change Password Modal

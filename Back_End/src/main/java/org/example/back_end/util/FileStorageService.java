@@ -35,7 +35,6 @@ public class FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            // Return the relative path or URL for database
             return "/uploads/resumes/" + fileName;
 
         } catch (IOException ex) {

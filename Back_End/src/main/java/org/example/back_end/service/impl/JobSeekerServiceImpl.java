@@ -98,4 +98,15 @@ public class JobSeekerServiceImpl implements JobSeekerService {
                 .orElseThrow(() -> new RuntimeException("Job seeker not found"));
     }
 
+    @Override
+    public JobSeeker updateProfilePicture(String email, String pictureUrl) {
+        JobSeeker seeker = jobSeekerRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Job seeker not found with email: " + email));
+
+        seeker.setProfileImage(pictureUrl);
+        return jobSeekerRepository.save(seeker);
+    }
+
+
+
 }

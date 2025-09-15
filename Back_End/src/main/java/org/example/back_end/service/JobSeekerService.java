@@ -10,4 +10,6 @@ public interface JobSeekerService {
     JobSeeker updateProfile(String email, Map<String, Object> updates);
     void changePassword(String email, String currentPassword, String newPassword);
     JobSeeker getById(Long id);
+    JobSeeker updateProfilePicture(String email, String imageUrl);
+
 }
