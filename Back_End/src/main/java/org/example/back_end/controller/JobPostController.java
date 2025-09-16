@@ -6,6 +6,10 @@ import org.example.back_end.entity.Employee;
 import org.example.back_end.entity.JobPost;
 import org.example.back_end.service.EmployeeService;
 import org.example.back_end.service.JobService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,15 +95,39 @@ public class JobPostController {
 
 
     @GetMapping("/for-seeker")
-    public ResponseEntity<List<JobPost>> getJobsForSeeker(
+    public ResponseEntity<Page<JobPost>> getJobsForSeeker(
             @RequestParam String title,
             @RequestParam(required = false) String jobType,
             @RequestParam(required = false) String experience,
-            @RequestParam(required = false) String salary) {
-
-        List<JobPost> jobs = jobService.getJobsForSeeker(title, jobType, experience, salary);
-        return ResponseEntity.ok(jobs);
+            @RequestParam(required = false) String salary,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        Page<JobPost> jobsPage = jobService.getJobsForSeeker(title, jobType, experience, salary, page, size);
+        return ResponseEntity.ok(jobsPage);
     }
+
+    @GetMapping("/recommended")
+    public ResponseEntity<Page<JobPost>> getRecommendedJobs(
+            @RequestParam String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        Page<JobPost> recommendedJobs = jobService.getRecommendedJobs(title, page, size);
+        return ResponseEntity.ok(recommendedJobs);
+    }
+
+    @GetMapping("/for-seeker/count")
+    public ResponseEntity<Long> getFilteredJobsCount(
+            @RequestParam String title,
+            @RequestParam(required = false) String jobType,
+            @RequestParam(required = false) String experience,
+            @RequestParam(required = false) String salary
+    ) {
+        long count = jobService.getFilteredJobsCount(title, jobType, experience, salary);
+        return ResponseEntity.ok(count);
+    }
+
 
 
 }

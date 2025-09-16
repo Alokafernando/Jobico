@@ -159,84 +159,18 @@
         <div class="content-section">
           <div class="section-header">
             <h2 class="section-title">Recommended For You</h2>
-            <a href="#" class="view-all">View All</a>
           </div>
 
-          <div class="jobs-grid">
-            <div class="job-card featured">
-              <span class="featured-badge">Featured</span>
-              <div class="job-header">
-                <div class="company-logo">TC</div>
-                <div class="job-info">
-                  <h3>Senior UX Designer</h3>
-                  <p>TechCorp International</p>
-                </div>
-              </div>
-              <div class="job-details">
-                <div class="detail-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>San Francisco, CA</span>
-                </div>
-                <div class="detail-item">
-                  <i class="fas fa-clock"></i>
-                  <span>Full-time</span>
-                </div>
-              </div>
-              <div class="job-footer">
-                <div class="job-salary">$95,000 - $120,000</div>
-                <button class="apply-btn">Apply Now</button>
-              </div>
-            </div>
+          <div class="jobs-recommend-grid">
+            <!-- Recommended job cards will be injected here by JS -->
+          </div>
 
-            <div class="job-card">
-              <div class="job-header">
-                <div class="company-logo">ID</div>
-                <div class="job-info">
-                  <h3>Product Designer</h3>
-                  <p>InnovateDesign</p>
-                </div>
-              </div>
-              <div class="job-details">
-                <div class="detail-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>Remote</span>
-                </div>
-                <div class="detail-item">
-                  <i class="fas fa-clock"></i>
-                  <span>Contract</span>
-                </div>
-              </div>
-              <div class="job-footer">
-                <div class="job-salary">$85,000 - $105,000</div>
-                <button class="apply-btn">Apply Now</button>
-              </div>
-            </div>
-
-            <div class="job-card">
-              <div class="job-header">
-                <div class="company-logo">DS</div>
-                <div class="job-info">
-                  <h3>UI/UX Developer</h3>
-                  <p>DesignStudio</p>
-                </div>
-              </div>
-              <div class="job-details">
-                <div class="detail-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>New York, NY</span>
-                </div>
-                <div class="detail-item">
-                  <i class="fas fa-clock"></i>
-                  <span>Full-time</span>
-                </div>
-              </div>
-              <div class="job-footer">
-                <div class="job-salary">$90,000 - $115,000</div>
-                <button class="apply-btn">Apply Now</button>
-              </div>
-            </div>
+          <!-- Pagination buttons -->
+          <div class="jobs-recommend-pagination" style="margin-top: 10px; text-align: center;">
+            <!-- JS will populate Previous / Next buttons here -->
           </div>
         </div>
+
 
         <!-- Application Status Section -->
         <div class="content-section">
@@ -368,37 +302,19 @@
         <div class="content-section">
           <div class="section-header">
             <h2 class="section-title">Available Jobs</h2>
-            <span class="view-all">1256 jobs found</span>
+            <span class="view-all" id="jobs-count">0 jobs found</span>
           </div>
 
           <div class="jobs-grid">
-            <div class="job-card featured">
-              <div class="job-header">
-                <div class="company-logo">
-                </div>
-                <div class="job-info">
-                  <h3></h3>
-                  <p></p>
-                </div>
-              </div>
-              <div class="job-details">
-                <div class="detail-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span></span>
-                </div>
-                <div class="detail-item">
-                  <i class="fas fa-clock"></i>
-                  <span></span>
-                </div>
-              </div>
-              <div class="job-footer">
-                <div class="job-salary"></div>
-                <button class="apply-btn">Apply Now</button>
-              </div>
-            </div>
+            <!-- Job cards will be dynamically injected here -->
+          </div>
 
+          <!-- Pagination buttons -->
+          <div class="jobs-pagination" style="margin-top: 15px; text-align: center;">
+            <!-- JS will inject Previous / Next buttons here -->
           </div>
         </div>
+
       </div>
 
       <!-- Applications Section -->

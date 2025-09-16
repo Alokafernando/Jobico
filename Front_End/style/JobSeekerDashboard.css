@@ -490,6 +490,12 @@ body {
     gap: 20px;
 }
 
+.jobs-recommend-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
 .job-card {
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -2039,5 +2045,5 @@ textarea.form-control {
 }
 
 .swal-modal-front {
-    z-index: 100000 !important;
+    z-index: 999999 !important;
 }

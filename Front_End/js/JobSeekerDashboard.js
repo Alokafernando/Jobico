@@ -128,6 +128,7 @@ $(document).ready(function () {
 
         if (profession) {
             loadJobsForSeeker(profession);
+            loadRecommendedJobsForSeeker(profession)
         }
     }
 
@@ -227,18 +228,22 @@ $(document).ready(function () {
                     icon: 'success',
                     title: 'Success',
                     text: 'Profile picture updated!',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal-popup-front'
+                    }
                 }).then(() => {
-                    $profilePictureModal.hide();
-                    if(response.profileImage) {
-                        $("#avatar-preview").attr("src", response.profileImage);
-                        $("#header-avatar").attr("src", response.profileImage);
-                        $("#sidebar-avatar").attr("src", response.profileImage);
-                        $("#profile-avatar").attr("src", response.profileImage);
+                    // $profilePictureModal.hide();hide
+
+                    if (response.profileImage) {
+                        $("#avatar-preview, #header-avatar, #sidebar-avatar, #profile-avatar")
+                            .attr("src", response.profileImage);
                         localStorage.setItem("profileImage", response.profileImage);
                     }
+
                     $("#file-upload").val('');
                 });
+
             },
             error: function(xhr) {
                 console.error("Failed to update profile", xhr);
@@ -265,6 +270,26 @@ $(document).ready(function () {
 
         $("#file-upload").val('');
     }
+
+    // Edit Profile button click
+    $("#edit-profile-btn").on("click", function() {
+        $("#edit-profile-modal").css({
+            "display": "flex",  // modal eka pennanna
+            "z-index": 1000      // front layer ekata
+        });
+    });
+
+// Close modal on clicking close button or cancel
+    $("#edit-profile-modal .edit-modal-close, #edit-profile-modal .modal-btn-cancel").on("click", function() {
+        $("#edit-profile-modal").hide();
+    });
+
+// Close modal on clicking outside the content
+    $("#edit-profile-modal").on("click", function(e) {
+        if ($(e.target).is("#edit-profile-modal")) {
+            $(this).hide();
+        }
+    });
 
 
     $(".edit-modal-close, .modal-btn-cancel").on("click", closeModals);
@@ -307,16 +332,18 @@ $(document).ready(function () {
     $("#save-profile-picture").on("click", function() {
         const file = $("#file-upload")[0].files[0];
         if (!file) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'No File Selected',
-                text: 'Please select a file to upload.',
-                confirmButtonText: 'OK'
-            });
+            Swal.fire({ icon: 'warning', title: 'No File Selected', text: 'Please select a file.' });
+            return;
+        }
+
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/bmp"];
+        if (!allowedTypes.includes(file.type)) {
+            Swal.fire({ icon: 'error', title: 'Invalid File Type', text: 'Unsupported file format. Use PNG, JPG, or GIF.' });
             return;
         }
 
         const email = localStorage.getItem("userEmail");
+        const token = localStorage.getItem("token");
         const formData = new FormData();
         formData.append("file", file);
         formData.append("email", email);
@@ -332,26 +359,23 @@ $(document).ready(function () {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
-                    text: 'Profile picture updated!',
-                    confirmButtonText: 'OK'
+                    text: 'Profile picture updated!'
                 }).then(() => {
                     $profilePictureModal.hide();
-                    const newSrc = response.profileImage || "../assets/profiles/default-avatar.jpg";
-                    $("#sidebar-avatar, #header-avatar, #profile-avatar, #avatar-preview").attr("src", newSrc);
                     $("#file-upload").val('');
+
                 });
             },
             error: function(xhr){
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Failed to upload picture',
-                    confirmButtonText: 'OK'
+                    text: xhr.responseJSON?.message || 'Failed to upload picture. Try another image.'
                 });
             }
         });
-
     });
+
 
 
     // -----------------------------
@@ -449,65 +473,187 @@ $(document).ready(function () {
         }
     });
 
-    function loadJobsForSeeker(title, jobType, experience, salary) {
+    let seekerPage = 0; // current page for seeker jobs
+    const seekerPageSize = 6;
+
+    function loadJobsForSeeker(title, jobType, experience, salary, page = 0) {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const requestData = {
+            title: title || "",
+            jobType: jobType || "",
+            experience: experience || "",
+            salary: salary || "",
+            page: page,
+            size: seekerPageSize
+        };
+
+        // 1️⃣ Load paginated jobs
         $.ajax({
             url: "http://localhost:8080/api/jobs/for-seeker",
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            data: requestData,
+            success: function (response) {
+                const jobs = response.content; // page content
+                const seekerPage = response.number; // current page index
+                const totalPages = response.totalPages;
+
+                const $grid = $(".jobs-grid");
+                $grid.empty();
+
+                if (!jobs || jobs.length === 0) {
+                    $grid.append("<p>No jobs found for your profession.</p>");
+                } else {
+                    jobs.forEach(job => {
+                        const jobCard = `
+                    <div class="job-card ${job.featured ? 'featured' : ''}">
+                      ${job.featured ? '<span class="featured-badge">Featured</span>' : ''}
+                      <div class="job-header">
+                        <div class="company-logo">
+                           ${job.companyLogo ? `<img src="${job.companyLogo}" alt="Company Logo" class="company-logo-img">` : "NA"}
+                        </div>
+                        <div class="job-info">
+                          <h3>${job.title}</h3>
+                          <p>${job.companyName}</p>
+                        </div>
+                      </div>
+                      <div class="job-details">
+                        <div class="detail-item">
+                          <i class="fas fa-map-marker-alt"></i>
+                          <span>${job.location || "Not specified"}</span>
+                        </div>
+                        <div class="detail-item">
+                          <i class="fas fa-clock"></i>
+                          <span>${job.employmentType || "N/A"}</span>
+                        </div>
+                      </div>
+                      <div class="job-footer">
+                        <div class="job-salary">${job.salaryRange || "Negotiable"}</div>
+                        <button class="apply-btn" data-job-id="${job.id}">Apply Now</button>
+                      </div>
+                    </div>`;
+                        $grid.append(jobCard);
+                    });
+                }
+
+                // Pagination buttons
+                const $pagination = $(".jobs-grid-pagination");
+                $pagination.empty();
+                if (seekerPage > 0) {
+                    $pagination.append(`<button id="prevPage">Previous</button>`);
+                }
+                if (seekerPage < totalPages - 1) {
+                    $pagination.append(`<button id="nextPage">Next</button>`);
+                }
+
+                $("#prevPage").click(() => loadJobsForSeeker(title, jobType, experience, salary, seekerPage - 1));
+                $("#nextPage").click(() => loadJobsForSeeker(title, jobType, experience, salary, seekerPage + 1));
+            },
+            error: function () {
+                Swal.fire("Error", "Failed to load seeker jobs.", "error");
+            }
+        });
+
+        // 2️⃣ Load total count
+        $.ajax({
+            url: "http://localhost:8080/api/jobs/for-seeker/count",
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
             data: {
                 title: title || "",
                 jobType: jobType || "",
                 experience: experience || "",
-                salary: salary || ""
+                salary: salary || "",
             },
-            success: function (jobs) {
-                const $grid = $(".jobs-grid");
-                $grid.empty(); // clear old results
-
-                if (!jobs || jobs.length === 0) {
-                    $grid.append("<p>No jobs found for your profession.</p>");
-                    return;
-                }
-
-                jobs.forEach(job => {
-                    const jobCard = `
-                <div class="job-card ${job.featured ? 'featured' : ''}">
-                  ${job.featured ? '<span class="featured-badge">Featured</span>' : ''}
-                  <div class="job-header">
-                    <div class="company-logo">
-                       ${job.companyLogo
-                        ? `<img src="${job.companyLogo}" alt="Company Logo" class="company-logo-img">`
-                        : "NA"}
-                    </div>
-                    <div class="job-info">
-                      <h3>${job.title}</h3>
-                      <p>${job.companyName}</p>
-                    </div>
-                  </div>
-                  <div class="job-details">
-                    <div class="detail-item">
-                      <i class="fas fa-map-marker-alt"></i>
-                      <span>${job.location || "Not specified"}</span>
-                    </div>
-                    <div class="detail-item">
-                      <i class="fas fa-clock"></i>
-                      <span>${job.employmentType || "N/A"}</span>
-                    </div>
-                  </div>
-                  <div class="job-footer">
-                    <div class="job-salary">${job.salaryRange || "Negotiable"}</div>
-                    <button class="apply-btn" data-job-id="${job.id}">Apply Now</button>
-                  </div>
-                </div>
-                `;
-                    $grid.append(jobCard);
-                });
+            success: function(count) {
+                $("#jobs-count").text(`${count} jobs found`);
             },
-            error: function () {
-                Swal.fire("Error", "Failed to load seeker jobs.", "error");
+            error: function() {
+                $("#jobs-count").text(`0 jobs found`);
             }
         });
     }
+
+
+
+// === Recommended jobs ===
+    let recommendPage = 0;
+    const recommendPageSize = 6;
+
+    function loadRecommendedJobsForSeeker(professionTitle, page = 0) {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        $.ajax({
+            url: "http://localhost:8080/api/jobs/recommended",
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            data: {
+                title: professionTitle || "",
+                page: page,
+                size: recommendPageSize
+            },
+            success: function (response) {
+                const jobs = response.content;
+                recommendPage = response.number;
+                const totalPages = response.totalPages;
+
+                const $grid = $(".jobs-recommend-grid");
+                $grid.empty();
+
+                if (!jobs || jobs.length === 0) {
+                    $grid.append("<p>No recommended jobs found.</p>");
+                } else {
+                    jobs.forEach(job => {
+                        const jobCard = `
+                        <div class="job-card ${job.featured ? 'featured' : ''}">
+                            ${job.featured ? '<span class="featured-badge">Featured</span>' : ''}
+                            <div class="job-header">
+                                <div class="company-logo">
+                                    ${job.companyLogo ? `<img src="${job.companyLogo}" alt="Company Logo" class="company-logo-img">` : "NA"}
+                                </div>
+                                <div class="job-info">
+                                    <h3>${job.title}</h3>
+                                    <p>${job.companyName}</p>
+                                </div>
+                            </div>
+                            <div class="job-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>${job.location || "Not specified"}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${job.employmentType || "N/A"}</span>
+                                </div>
+                            </div>
+                            <div class="job-footer">
+                                <div class="job-salary">${job.salaryRange || "Negotiable"}</div>
+                                <button class="apply-btn" data-job-id="${job.id}">Apply Now</button>
+                            </div>
+                        </div>`;
+                        $grid.append(jobCard);
+                    });
+                }
+
+                // Pagination
+                const $pagination = $(".jobs-recommend-pagination");
+                $pagination.empty();
+                if (recommendPage > 0) $pagination.append(`<button id="prevRecommend">Previous</button>`);
+                if (recommendPage < totalPages - 1) $pagination.append(`<button id="nextRecommend">Next</button>`);
+
+                $("#prevRecommend").click(() => loadRecommendedJobsForSeeker(professionTitle, recommendPage - 1));
+                $("#nextRecommend").click(() => loadRecommendedJobsForSeeker(professionTitle, recommendPage + 1));
+            },
+            error: function() {
+                Swal.fire("Error", "Failed to load recommended jobs.", "error");
+            }
+        });
+    }
+
+
 
     $("#jobType-filter, #experienceLevel, #salaryRange").on("change", function () {
         const title = $("#professionTitle").text() || "";
@@ -569,6 +715,24 @@ $(document).ready(function () {
         // Show Modal
         $("#descriptionModal").fadeIn();
     }
+
+    // -----------------------------
+// Open Edit Modals (About, Details, Skills)
+// -----------------------------
+    $(document).on("click", ".edit-btn", function() {
+        const section = $(this).data("edit");
+
+        let modalId = null;
+        if (section === "about") modalId = "#edit-about-modal";
+        if (section === "details") modalId = "#edit-details-modal";
+        if (section === "skills") modalId = "#edit-skills-modal";
+        if (section === "profile") modalId = "#edit-profile-modal";
+
+        if (modalId) {
+            $(modalId).css("display", "flex");
+        }
+    });
+
 
 // ---------- Open Job Details Modal ----------
     $(document).on("click", ".apply-btn[data-job-id]", function() {
@@ -695,4 +859,10 @@ $(document).ready(function () {
         const fileName = $(this)[0].files[0]?.name || "Please select a resume...";
         $(this).siblings(".file-input-label").find("span").text(fileName);
     });
+
+
+
+
+
+
 });

@@ -9,6 +9,9 @@ import org.example.back_end.repository.JobRepository;
 import org.example.back_end.service.EmployeeService;
 import org.example.back_end.service.JobService;
 import org.example.back_end.util.ImgBBUploader;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -136,20 +139,32 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobPost> getJobsForSeeker(String seekerTitle,
+    public Page<JobPost> getJobsForSeeker(String seekerTitle,
                                           String jobType,
                                           String experience,
-                                          String salary) {
-        // remove rank keywords
+                                          String salary,
+                                          int page,
+                                          int size) {
+        // Remove rank keywords like senior, junior, mid, lead, intern
         String keyword = seekerTitle.replaceAll("(?i)senior|junior|mid|lead|intern", "").trim();
 
-        return jobPostRepository.searchJobs(keyword, jobType, experience, salary);
+        Pageable pageable = PageRequest.of(page, size);
+        return jobPostRepository.searchJobs(keyword, jobType, experience, salary, pageable);
     }
 
+    @Override
+    public Page<JobPost> getRecommendedJobs(String seekerTitle, int page, int size) {
+        String keyword = seekerTitle.replaceAll("(?i)senior|junior|mid|lead|intern", "").trim();
 
+        Pageable pageable = PageRequest.of(page, size);
+        return jobPostRepository.findRecommendedJobs(keyword, pageable);
+    }
 
-
-
+    @Override
+    public long getFilteredJobsCount(String title, String jobType, String experience, String salary) {
+        String keyword = title.replaceAll("(?i)senior|junior|mid|lead|intern", "").trim();
+        return jobPostRepository.countFilteredJobs(keyword, jobType, experience, salary);
+    }
 
 
 
