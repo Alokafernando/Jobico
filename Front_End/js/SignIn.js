@@ -29,6 +29,7 @@ $('#loginForm').on('submit', function(e) {
                     method: "GET",
                     headers: { "Authorization": `Bearer ${data.accessToken}` },
                     success: function(employee) {
+                        localStorage.setItem("employeeId", employee.id);
                         localStorage.setItem("userEmail", employee.email || email);
                         localStorage.setItem("companyName", employee.companyName || "");
                         localStorage.setItem("industry", employee.industry || "");

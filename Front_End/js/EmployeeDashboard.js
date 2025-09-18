@@ -97,7 +97,7 @@ $(document).ready(function () {
         localStorage.setItem("userEmail", emp.email);
         localStorage.setItem("employeeId", emp.id);
         loadApplicants(emp.id);
-
+        loadRecentApplicants();
     }
 
     function loadEmployeeDetails() {
@@ -880,12 +880,10 @@ $(document).ready(function () {
         const token = localStorage.getItem("token");
         const employeeId = localStorage.getItem("employeeId");
 
+        console.log(employeeId)
         if (!employeeId) {
             return Swal.fire("Error", "Employee ID missing. Please log in again.", "error");
         }
-
-
-        console.log(employeeId)
 
         $.ajax({
             url: `http://localhost:8080/api/applications/recent?employeeId=${employeeId}`,
