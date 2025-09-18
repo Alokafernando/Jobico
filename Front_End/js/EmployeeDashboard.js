@@ -874,6 +874,83 @@ $(document).ready(function () {
         });
     });
 
+    loadRecentApplicants();
+
+    function loadRecentApplicants() {
+        const token = localStorage.getItem("token");
+        const employeeId = localStorage.getItem("employeeId");
+
+        if (!employeeId) {
+            return Swal.fire("Error", "Employee ID missing. Please log in again.", "error");
+        }
+
+
+        console.log(employeeId)
+
+        $.ajax({
+            url: `http://localhost:8080/api/applications/recent?employeeId=${employeeId}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(applicants) {
+                const $grid = $(".applicants-grid");
+                $grid.empty();
+
+                if (!applicants.length) {
+                    $grid.append("<p>No recent applicants found.</p>");
+                    return;
+                }
+
+                applicants.forEach(app => {
+                    console.log(app)
+                    const rating = "N/A"; // placeholder
+                    const appliedCount = 1; // placeholder
+                    const matchScore = "N/A"; // placeholder
+
+                    const card = `
+                        <div class="applicant-card">
+                            <div class="applicant-header">
+                                <img src="${app.profileImage}" alt="Applicant" class="applicant-img">
+                                <div class="applicant-info">
+                                    <h4>${app.jobSeekerName}</h4>
+                                    <p>${app.jobTitle}</p>
+                                </div>
+                            </div>
+                            <div class="applicant-details">
+                                <div class="detail-item">
+                                    <div class="detail-value">4.4</div>
+                                    <div class="detail-label">Rating</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">1</div>
+                                    <div class="detail-label">Applied</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">70%</div>
+                                    <div class="detail-label">Match</div>
+                                </div>
+                            </div>
+                            <div class="applicant-actions">
+                                <button class="action-btn btn-view" data-applicant-id="${app.id}">View Profile</button>
+                                <a href="${app.resumeUrl}" target="_blank" class="action-btn btn-edit">View Resume</a>
+                            </div>
+                        </div>
+                        `;
+
+                    $grid.append(card);
+                });
+
+                $(".btn-view").off("click").on("click", function() {
+                    const applicationId = $(this).data("applicant-id");
+                    loadApplicantDetails(applicationId);
+                });
+            },
+            error: function() {
+                Swal.fire("Error", "Failed to load recent applicants.", "error");
+            }
+        });
+    }
+
+
 
 
 

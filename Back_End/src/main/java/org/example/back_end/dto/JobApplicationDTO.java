@@ -16,4 +16,7 @@ public class JobApplicationDTO {
     private String jobTitle;
     private String resumeUrl;
     private ApplicationStatus status;
+    private String profileImage;
+
+
 }

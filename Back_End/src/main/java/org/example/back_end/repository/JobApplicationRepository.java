@@ -1,6 +1,8 @@
 package org.example.back_end.repository;
 
 import org.example.back_end.dto.ApplicantDetailsDTO;
+import org.example.back_end.dto.JobApplicationDTO;
+import org.example.back_end.dto.ReviewRequest;
 import org.example.back_end.entity.JobApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,6 +42,24 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
         WHERE a.id = :applicationId
     """)
     List<ApplicantDetailsDTO> getFullApplicantDetailsList(@Param("applicationId") Long applicationId);
+
+    @Query("""
+        SELECT new org.example.back_end.dto.JobApplicationDTO(
+            a.id,
+            a.jobSeeker.id,
+            CONCAT(a.jobSeeker.firstName, ' ', a.jobSeeker.lastName),
+            a.jobPost.id,
+            a.jobPost.title,
+            a.resumeUrl,
+            a.status,
+            a.jobSeeker.profileImage
+        )
+        FROM JobApplication a
+        WHERE a.employee.id = :employeeId
+        ORDER BY a.appliedAt DESC
+    """)
+    List<JobApplicationDTO> findRecentApplicationsByEmployeeId(@Param("employeeId") Long employeeId);
+
 
 
 

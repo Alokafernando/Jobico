@@ -2,7 +2,9 @@ package org.example.back_end.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.back_end.dto.ApplicantDetailsDTO;
+import org.example.back_end.dto.JobApplicationDTO;
 import org.example.back_end.entity.*;
+import org.example.back_end.repository.ApplicationReviewRepository;
 import org.example.back_end.repository.JobApplicationRepository;
 import org.example.back_end.repository.JobRepository;
 import org.example.back_end.repository.JobSeekerRepository;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +24,9 @@ import java.util.Optional;
 public class JobApplicationServiceImpl implements JobApplicationService {
 
     private final JobApplicationRepository jobApplicationRepository;
-    private final JobRepository jobPostRepository;
-    private final JobSeekerRepository jobSeekerRepository;
     private final FileStorageService fileStorageService;
     private final EmailServiceImpl emailService; // Injected
+    private final ApplicationReviewRepository applicationReviewRepository;
 
     @Override
     public JobApplication applyForJob(JobSeeker seeker, JobPost post, MultipartFile resumeFile) {
@@ -103,8 +105,6 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
 
-
-
     @Override
     public List<JobApplication> getApplicationsBySeeker(String email) {
         return jobApplicationRepository.findByJobSeeker_Email(email);
@@ -114,4 +114,14 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     public List<JobApplication> getApplicationsForEmployee(Long employeeId) {
         return jobApplicationRepository.findByEmployeeId(employeeId);
     }
+
+    @Override
+    public List<JobApplicationDTO> getRecentApplicants(Long employeeId) {
+        List<JobApplicationDTO> applications = jobApplicationRepository.findRecentApplicationsByEmployeeId(employeeId);
+        return applications;
+    }
+
+
+
+
 }

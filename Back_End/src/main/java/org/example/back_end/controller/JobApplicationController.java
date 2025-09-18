@@ -93,7 +93,8 @@ public class JobApplicationController {
                 application.getJobPost().getId(),
                 application.getJobPost().getTitle(),
                 application.getResumeUrl(),
-                application.getStatus()
+                application.getStatus(),
+                application.getJobSeeker().getProfileImage()
         );
     }
 
@@ -149,6 +150,18 @@ public class JobApplicationController {
         }
         return ResponseEntity.ok(applicant);
     }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<JobApplicationDTO>> getRecentApplicants(@RequestParam Long employeeId) {
+        List<JobApplicationDTO> applicants = jobApplicationService.getRecentApplicants(employeeId);
+
+        if (applicants.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(applicants);
+    }
+
+
 
 
 

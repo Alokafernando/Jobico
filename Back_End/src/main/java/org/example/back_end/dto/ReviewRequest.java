@@ -1,6 +1,7 @@
 package org.example.back_end.dto;
 
 import lombok.Data;
+import org.example.back_end.entity.ApplicationStatus;
 
 @Data
 public class ReviewRequest {
@@ -8,5 +9,5 @@ public class ReviewRequest {
     private Long employeeId;
     private Integer rating;
     private String notes;
-    private String status;
+    private ApplicationStatus status;
 }
