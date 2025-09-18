@@ -33,4 +33,8 @@ public class JobApplication {
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status = ApplicationStatus.SUBMITTED;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 }

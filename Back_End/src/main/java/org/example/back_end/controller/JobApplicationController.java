@@ -1,12 +1,12 @@
 package org.example.back_end.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.back_end.dto.ApplicantDetailsDTO;
 import org.example.back_end.dto.JobApplicationDTO;
 import org.example.back_end.entity.*;
 import org.example.back_end.repository.JobRepository;
 import org.example.back_end.service.JobApplicationService;
 import org.example.back_end.service.JobSeekerService;
-import org.example.back_end.util.FileStorageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,9 +29,10 @@ import java.util.stream.Collectors;
 public class JobApplicationController {
 
     private final JobApplicationService jobApplicationService;
-    private final JobRepository jobPostService;
+    private final JobRepository jobRepository;
     private final JobSeekerService jobSeekerService;
-    private final FileStorageService fileStorageService;
+
+
 
 
     @PostMapping("/apply")
@@ -42,7 +43,7 @@ public class JobApplicationController {
     ) {
         try {
             JobSeeker seeker = jobSeekerService.getById(jobSeekerId);
-            JobPost post = jobPostService.getById(jobPostId);
+            JobPost post = jobRepository.getById(jobPostId);
 
             JobApplication application = jobApplicationService.applyForJob(seeker, post, resume);
 
@@ -123,6 +124,33 @@ public class JobApplicationController {
             e.printStackTrace();
         }
     }
+
+    @GetMapping("/my-applications")
+    public ResponseEntity<?> getMyApplications(@RequestParam String email) {
+        try {
+            List<JobApplication> applications = jobApplicationService.getApplicationsBySeeker(email);
+            return ResponseEntity.ok(applications);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to fetch applications");
+        }
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<JobApplication>> getEmployeeApplications(@PathVariable Long employeeId) {
+        List<JobApplication> applications = jobApplicationService.getApplicationsForEmployee(employeeId);
+        return ResponseEntity.ok(applications);
+    }
+
+    @GetMapping("/{applicationId}")
+    public ResponseEntity<?> getFullApplicantDetails(@PathVariable Long applicationId) {
+        ApplicantDetailsDTO applicant = jobApplicationService.getFullApplicantDetails(applicationId);
+        if (applicant == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(applicant);
+    }
+
+
 
 
 }

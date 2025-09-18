@@ -34,6 +34,7 @@ $(document).ready(function () {
     const $editContactPosition = $("#contact-person-position-setting");
     const $editCompanyDescription = $("#companyDescription");
 
+
     // -----------------------------
     // SPA Page Navigation
     // -----------------------------
@@ -94,6 +95,9 @@ $(document).ready(function () {
         $editCompanyDescription.val(emp.companyDescription || "");
 
         localStorage.setItem("userEmail", emp.email);
+        localStorage.setItem("employeeId", emp.id);
+        loadApplicants(emp.id);
+
     }
 
     function loadEmployeeDetails() {
@@ -606,6 +610,270 @@ $(document).ready(function () {
             });
         });
     });
+
+    $("#toggleFilterBtn").on('click', function(e){
+        e.preventDefault(); // prevent default link behavior
+        $("#filter-options").toggle(); // toggle visibility
+    });
+
+    $("#profile-view").on('click', function(e){
+        e.preventDefault(); // prevent default link behavior
+        $("#view-applicant-page").show(); // toggle visibility
+    });
+
+    // ==============================
+// Applicants Section
+// ==============================
+    function loadApplicants(employeeId) {
+        const token = localStorage.getItem("token");
+        if (!token || !employeeId) return Swal.fire("Error", "Not logged in", "error");
+
+        $.ajax({
+            url: `http://localhost:8080/api/applications/employee/${employeeId}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(applicants) {
+                if (applicants.length > 0) {
+                    localStorage.setItem("applicationId", applicants[0].id); // ✅ save first application ID
+                    console.log("Saved Application ID:", localStorage.getItem("applicationId"));
+                }
+
+                const applicationId = localStorage.getItem("applicationId");
+                console.log("Saved Application ID:", applicationId);
+
+                const tbody = $("#applicants-table-body");
+                tbody.empty();
+
+                applicants.forEach(app => {
+                    const appliedDate = new Date(app.appliedAt).toLocaleDateString('en-GB', {
+                        day: 'numeric', month: 'short', year: 'numeric'
+                    });
+
+                    const statusMap = {
+                        "SUBMITTED": { class: "reviewing", label: "New" },
+                        "REVIEWING": { class: "pending", label: "Reviewing" },
+                        "INTERVIEW": { class: "active", label: "Interview" },
+                        "REJECTED": { class: "closed", label: "Rejected" }
+                    };
+                    const statusInfo = statusMap[app.status] || { class: "pending", label: app.status };
+
+                    const row = `
+                        <tr>
+                            <td>
+                                <div class="job-title">${app.jobSeeker.firstName} ${app.jobSeeker.lastName}</div>
+                                <div class="job-company">${app.jobSeeker.email}</div>
+                            </td>
+                            <td>${app.jobPost.title}</td>
+                            <td><span class="status-badge status-${statusInfo.class}">${statusInfo.label}</span></td>
+                            <td>${appliedDate}</td>
+                            <td>
+                                <button class="action-btn btn-view btn-view-applicant" data-applicant-id="${app.id}">View</button>
+                                <button class="action-btn btn-edit">Contact</button>
+                            </td>
+                        </tr>
+                        `;
+
+                    tbody.append(row);
+                });
+
+            },
+            error: function() {
+                Swal.fire("Error", "Failed to load applicants.", "error");
+            }
+        });
+    }
+
+    // Show applicant detail page when clicking "View"
+    $("#applicants-table-body").on("click", ".btn-view-applicant", function () {
+        const applicationId = $(this).data("applicant-id");
+        if (!applicationId) return Swal.fire("Error", "Applicant ID missing", "error");
+
+        loadApplicantDetails(applicationId);
+    });
+
+
+    // Show applicant page when clicking "View"
+    // $("#applicants-table-body").on("click", ".btn-view", function() {
+    //     // const applicationId = $(this).data("applicant-id");
+    //     // if (!applicationId) {
+    //     //     return Swal.fire("Error", "Applicant ID is missing!", "error");
+    //     // }
+    //     console.lo
+    //     $("#view-applicant-page").show();
+    //     $("#applicants-page").hide();
+    //
+    //     // localStorage.setItem("applicationId", applicationId);
+    //     //
+    //     // loadApplicantDetails(applicationId);
+    // });
+
+    // $("#backToApplicants").on("click", function() {
+    //     $("#view-applicant-page").hide();
+    //     $("#applicants-page").show(); // show the applicants list page again
+    // });
+
+
+
+    // function loadApplicantDetails(applicationId) {
+    //     const token = localStorage.getItem("token");
+    //
+    //     $.ajax({
+    //         url: `http://localhost:8080/api/applications/${applicationId}`,
+    //         method: "GET",
+    //         headers: { "Authorization": `Bearer ${token}` },
+    //         success: function(app) {
+    //             console.log("Applicant details:", app);
+    //
+    //             // Populate details with flattened fields
+    //             $("#view-applicant-name").text(app.firstName + " " + app.lastName);
+    //             $("#applicant-profile-image").attr("src", app.profileImage || "default.jpg");
+    //             $("#view-applicant-email").text(app.email);
+    //             $("#view-applicant-phone").text(app.phoneNumber || "N/A");
+    //             $("#view-applicant-status").text(app.status);
+    //             $("#view-applicant-date").text(new Date(app.appliedAt).toLocaleDateString('en-GB'));
+    //             $("#view-applicant-status-text").text(app.status);
+    //             $(".detail-subtitle").text(`${app.professionTitle || "N/A"} • Applied for ${app.jobTitle}`);
+    //
+    //             // Hide list, show detail page
+    //             $("#applicants-page").hide();
+    //             $("#view-applicant-page").show();
+    //         },
+    //         error: function() {
+    //             Swal.fire("Error", "Failed to load applicant details.", "error");
+    //         }
+    //     });
+    // }
+    function loadApplicantDetails(applicationId) {
+        const token = localStorage.getItem("token");
+
+        $.ajax({
+            url: `http://localhost:8080/api/applications/${applicationId}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(app) {
+                console.log("Applicant Data:", app);
+                $("#view-applicant-name").text(app.firstName + " " + app.lastName);//not set
+                $("#applicant-profile-image").attr("src", app.profileImage || "default.jpg");
+                $("#view-applicant-email").text(app.email);
+                $("#view-applicant-phone").text(app.phoneNumber || "N/A");
+                $("#view-applicant-status").text(app.status);
+                $("#view-applicant-date").text(new Date(app.appliedAt).toLocaleDateString('en-GB'));
+                $("#view-applicant-status-text").text(app.status);
+                $(".detail-subtitle").text(`${app.professionTitle || "N/A"} • Applied for ${app.jobTitle}`);
+                $("#view-applicant-address").text(app.address);
+
+                const job = {
+                    keySkills: app.jobSkills || [],
+                    requiredExperience: app.jobExperience,
+                    requiredEducation: app.jobEducation
+                };
+                const matchScore = calculateMatch(job, app);
+                $("#view-applicant-matching-score").text(matchScore + "%");
+
+                $("#view-applicant-about").text(app.about);
+
+                const $skillsContainer = $("#view-applicant-skills");
+                $skillsContainer.empty();
+
+                app.skills.forEach(skill => {
+                    $skillsContainer.append(`<span class="skill-tag">${skill}</span>`);
+                });
+
+                $("#view-applicant-resume")
+                    .attr("data-url", app.resumeUrl)
+                    .off("click")
+                    .on("click", function() {
+                        const url = $(this).data("url");
+                        if (url) window.open(url, "_blank");
+                        else Swal.fire("Error", "Resume not available.", "error");
+                    });
+
+                $("#applicant-status-select").val(app.status);
+
+                showPage("view-applicant");
+            },
+            error: function() {
+                Swal.fire("Error", "Failed to load applicant details.", "error");
+            }
+        });
+    }
+
+    // data matching
+    function calculateMatch(job, seeker) {
+        let score = 0;
+        const jobSkills = job.keySkills || [];
+        const seekerSkills = seeker.skills || [];
+        const matchedSkills = jobSkills.filter(skill => seekerSkills.includes(skill));
+        const skillScore = jobSkills.length ? (matchedSkills.length / jobSkills.length) * 50 : 0;
+        score += skillScore;
+        const jobExp = parseInt(job.requiredExperience) || 0;
+        const seekerExp = parseInt(seeker.experience) || 0;
+        const expScore = seekerExp >= jobExp ? 30 : (seekerExp / jobExp) * 30; // 30% weight
+        score += expScore;
+        const educationScore = seeker.education === job.requiredEducation ? 20 : 0; // 20% weight
+        score += educationScore;
+        return Math.round(score);
+    }
+
+
+    function loadApplicantReview(applicationId) {
+        const token = localStorage.getItem("token");
+
+        $.ajax({
+            url: `http://localhost:8080/api/reviews/application/${applicationId}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(reviews) {
+                const employeeId = localStorage.getItem("employeeId");
+                const myReview = reviews.find(r => r.reviewer.id == employeeId);
+
+                if (myReview) {
+                    $("#applicant-status-select").val(myReview.jobApplication.status);
+                    $("#applicant-rating").val(myReview.rating);
+                    $("#applicant-notes").val(myReview.internalNotes);
+                }
+            },
+            error: function() {
+                console.error("Failed to load applicant review.");
+            }
+        });
+    }
+
+// Save Review
+    $("#save-applicant-review").on("click", function() {
+        const applicationId = localStorage.getItem("applicationId");
+        const employeeId = localStorage.getItem("employeeId");
+        const rating = parseInt($("#applicant-rating").val());
+        const notes = $("#applicant-notes").val().trim();
+        const status = $("#applicant-status-select").val();
+        const token = localStorage.getItem("token");
+
+        if (!applicationId || !employeeId)
+            return Swal.fire("Error", "Missing IDs.", "error");
+
+        $.ajax({
+            url: `http://localhost:8080/api/reviews/save?status=${encodeURIComponent(status)}`,
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` },
+            contentType: "application/json",
+            data: JSON.stringify({
+                applicationId: applicationId,
+                employeeId: employeeId,
+                rating: rating,
+                notes: notes
+            }),
+            success: function(response) {
+                Swal.fire("Success", "Review saved successfully!", "success");
+
+                // Update status in UI
+                $("#view-applicant-status").text(status);
+            },
+            error: function() {
+                Swal.fire("Error", "Failed to save review.", "error");
+            }
+        });
+    });
+
 
 
 

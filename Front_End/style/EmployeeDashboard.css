@@ -393,6 +393,15 @@ body {
     color: var(--danger);
 }
 
+.status-reviewing {
+    background: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+.page-content {
+    display: none;
+}
+
 .action-btn {
     height: 35px;
     padding: 6px 12px;

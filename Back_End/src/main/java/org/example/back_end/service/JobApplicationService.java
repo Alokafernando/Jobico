@@ -1,5 +1,6 @@
 package org.example.back_end.service;
 
+import org.example.back_end.dto.ApplicantDetailsDTO;
 import org.example.back_end.entity.ApplicationStatus;
 import org.example.back_end.entity.JobApplication;
 import org.example.back_end.entity.JobPost;
@@ -13,5 +14,7 @@ public interface JobApplicationService {
     List<JobApplication> getApplicationsForSeeker(Long seekerId);
     List<JobApplication> getApplicationsForJob(Long jobId);
     JobApplication updateApplicationStatus(Long applicationId, ApplicationStatus status);
-    JobApplication getApplicationById(Long applicationId);
+    ApplicantDetailsDTO getFullApplicantDetails(Long applicationId);
+    List<JobApplication> getApplicationsBySeeker(String email);
+    List<JobApplication> getApplicationsForEmployee(Long employeeId);
 }

@@ -138,6 +138,9 @@ $(document).ready(function () {
             return;
         }
         const email = localStorage.getItem("userEmail");
+        if (email) {
+            loadMyApplications(email);
+        }
         if (!email) return console.error("No userEmail found in localStorage");
 
         $.ajax({
@@ -576,8 +579,6 @@ $(document).ready(function () {
         });
     }
 
-
-
 // === Recommended jobs ===
     let recommendPage = 0;
     const recommendPageSize = 6;
@@ -796,6 +797,11 @@ $(document).ready(function () {
             formData.append("jobSeekerId", jobSeekerId);
             formData.append("jobPostId", jobPostId);
             formData.append("resume", resumeFile);
+            console.log("jobSeekerId:", jobSeekerId);
+            console.log("jobPostId:", jobPostId);
+            console.log("resumeFile:", resumeFile);
+
+
 
             $.ajax({
                 url: "http://localhost:8080/api/applications/apply",
@@ -861,7 +867,85 @@ $(document).ready(function () {
     });
 
 
+    function loadMyApplications(email) {
+        const token = localStorage.getItem("token");
 
+        $.ajax({
+            url: "http://localhost:8080/api/applications/my-applications",
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            data: { email: email },
+            success: function (response) {
+                console.log('applications response:', response); // check what you get
+                const apps = response; // response is the array
+                const $tbody = $("#application-table");
+                $tbody.empty();
+
+                if (!apps || apps.length === 0) {
+                    $tbody.append("<tr><td colspan='5'>No applications found</td></tr>");
+                    return;
+                }
+
+                apps.forEach(app => {
+                    let statusClass = "status-submitted";
+                    if (app.status === "PENDING") statusClass = "status-reviewing";
+                    if (app.status === "ACCEPTED") statusClass = "status-interview";
+                    if (app.status === "REJECTED") statusClass = "status-rejected";
+
+                    const row = `
+<tr>
+  <td>
+    <div class="app-job-title">${app.jobPost?.title || "N/A"}</div>
+    <div class="app-company">${app.jobPost?.companyName || "Unknown"}</div>
+  </td>
+  <td>${app.jobPost?.companyName || "Unknown"}</td>
+  <td>${app.appliedAt
+                        ? new Date(app.appliedAt.replace(' ', 'T'))
+                            .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                        : "N/A"}</td>
+  <td><span class="status-badge ${statusClass}">${app.status}</span></td>
+  <td>
+    <button class="action-btn btn-view"
+        data-position="${app.jobPost?.title || ''}"
+        data-company="${app.jobPost?.companyName || ''}"
+        data-date="${app.appliedAt
+                        ? new Date(app.appliedAt.replace(' ', 'T'))
+                            .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                        : ''}"
+        data-status="${app.status || ''}"
+        data-resume="${app.resumeFile || '#'}"
+        >View</button>
+  </td>
+</tr>
+`;
+                    $tbody.append(row);
+                });
+
+                $(".btn-view").click(function () {
+                    const data = {
+                        position: $(this).data("position"),
+                        company: $(this).data("company"),
+                        date: $(this).data("date"),
+                        status: $(this).data("status"),
+                        resume: $(this).data("resume")
+                    };
+                    showApplicationModal(data);
+                });
+            },
+            error: function () {
+                Swal.fire("Error", "Failed to load your applications", "error");
+            }
+        });
+    }
+
+    function showApplicationModal(data) {
+        $("#modalPosition").text(data.position || "N/A");
+        $("#showModalCompany").text(data.company || "N/A");
+        $("#modalDate").text(data.date || "N/A");
+        $("#modalStatus").text(data.status || "N/A");
+
+        $("#applicationShowModal").addClass("active");
+    }
 
 
 

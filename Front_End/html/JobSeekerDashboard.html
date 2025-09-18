@@ -337,67 +337,67 @@
               <th>Actions</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-              <td>
-                <div class="app-job-title">Senior Product Designer</div>
-                <div class="app-company">TechSolutions Inc.</div>
-              </td>
-              <td>TechSolutions Inc.</td>
-              <td>Jun 15, 2023</td>
-              <td><span class="status-badge status-interview">Interview</span></td>
-              <td>
-                <button class="action-btn btn-view">View</button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="app-job-title">UX Researcher</div>
-                <div class="app-company">DataInsight Co.</div>
-              </td>
-              <td>DataInsight Co.</td>
-              <td>Jun 12, 2023</td>
-              <td><span class="status-badge status-reviewing">Reviewing</span></td>
-              <td>
-                <button class="action-btn btn-view">View</button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="app-job-title">UI Designer</div>
-                <div class="app-company">CreativeMinds</div>
-              </td>
-              <td>CreativeMinds</td>
-              <td>Jun 8, 2023</td>
-              <td><span class="status-badge status-submitted">Submitted</span></td>
-              <td>
-                <button class="action-btn btn-view">View</button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="app-job-title">Product Design Lead</div>
-                <div class="app-company">InnovateTech</div>
-              </td>
-              <td>InnovateTech</td>
-              <td>Jun 2, 2023</td>
-              <td><span class="status-badge status-rejected">Rejected</span></td>
-              <td>
-                <button class="action-btn btn-view">View</button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="app-job-title">UX/UI Designer</div>
-                <div class="app-company">WebTech Solutions</div>
-              </td>
-              <td>WebTech Solutions</td>
-              <td>May 28, 2023</td>
-              <td><span class="status-badge status-interview">Interview</span></td>
-              <td>
-                <button class="action-btn btn-view">View</button>
-              </td>
-            </tr>
+            <tbody id="application-table">
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <div class="app-job-title">Senior Product Designer</div>-->
+<!--                <div class="app-company">TechSolutions Inc.</div>-->
+<!--              </td>-->
+<!--              <td>TechSolutions Inc.</td>-->
+<!--              <td>Jun 15, 2023</td>-->
+<!--              <td><span class="status-badge status-interview">Interview</span></td>-->
+<!--              <td>-->
+<!--                <button class="action-btn btn-view">View</button>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <div class="app-job-title">UX Researcher</div>-->
+<!--                <div class="app-company">DataInsight Co.</div>-->
+<!--              </td>-->
+<!--              <td>DataInsight Co.</td>-->
+<!--              <td>Jun 12, 2023</td>-->
+<!--              <td><span class="status-badge status-reviewing">Reviewing</span></td>-->
+<!--              <td>-->
+<!--                <button class="action-btn btn-view">View</button>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <div class="app-job-title">UI Designer</div>-->
+<!--                <div class="app-company">CreativeMinds</div>-->
+<!--              </td>-->
+<!--              <td>CreativeMinds</td>-->
+<!--              <td>Jun 8, 2023</td>-->
+<!--              <td><span class="status-badge status-submitted">Submitted</span></td>-->
+<!--              <td>-->
+<!--                <button class="action-btn btn-view">View</button>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <div class="app-job-title">Product Design Lead</div>-->
+<!--                <div class="app-company">InnovateTech</div>-->
+<!--              </td>-->
+<!--              <td>InnovateTech</td>-->
+<!--              <td>Jun 2, 2023</td>-->
+<!--              <td><span class="status-badge status-rejected">Rejected</span></td>-->
+<!--              <td>-->
+<!--                <button class="action-btn btn-view">View</button>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <div class="app-job-title">UX/UI Designer</div>-->
+<!--                <div class="app-company">WebTech Solutions</div>-->
+<!--              </td>-->
+<!--              <td>WebTech Solutions</td>-->
+<!--              <td>May 28, 2023</td>-->
+<!--              <td><span class="status-badge status-interview">Interview</span></td>-->
+<!--              <td>-->
+<!--                <button class="action-btn btn-view">View</button>-->
+<!--              </td>-->
+<!--            </tr>-->
             </tbody>
           </table>
         </div>
@@ -1048,6 +1048,25 @@
   </div>
 </div>
 
+<!-- Application Details Modal -->
+<div id="applicationShowModal" class="custom-modal">
+  <div class="application-show-modal-content">
+    <div class="application-show-modal-header">
+      <h2>Application Details</h2>
+      <button class="application-show-modal-close">&times;</button>
+    </div>
+    <div class="application-show-modal-body">
+      <p><strong>Position:</strong> <span id="modalPosition"></span></p>
+      <p><strong>Company:</strong> <span id="showModalCompany"></span></p>
+      <p><strong>Date Applied:</strong> <span id="modalDate"></span></p>
+      <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+      <p><strong>Resume:</strong> <a id="modalResume" href="#" target="_blank">View Resume</a></p>
+    </div>
+    <div class="application-show-modal-footer">
+      <button class="application-modal-btn application-modal-btn-cancel">Close</button>
+    </div>
+  </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

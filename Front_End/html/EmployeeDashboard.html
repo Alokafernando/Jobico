@@ -10,7 +10,6 @@
 </head>
 <body>
 <div class="dashboard-container">
-    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo" onclick="window.location.href='../index.html'" style="cursor: pointer;">
@@ -69,9 +68,7 @@
         </ul>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Top Header -->
         <header class="top-header">
             <div class="search-box">
                 <i class="fas fa-search search-icon"></i>
@@ -87,16 +84,13 @@
             </div>
         </header>
 
-        <!-- Dashboard Content -->
         <div class="dashboard-content">
-            <!-- Dashboard Page -->
             <div id="dashboard-page" class="page-content active">
                 <h1 class="page-title">
                     <i class="fas fa-home"></i>
                     Employee Dashboard
                 </h1>
 
-                <!-- Stats Grid -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon applicants">
@@ -139,7 +133,6 @@
                     </div>
                 </div>
 
-                <!-- Active Jobs Section -->
                 <div class="content-section">
                     <div class="section-header">
                         <h2 class="section-title">Active Job Posts</h2>
@@ -162,7 +155,6 @@
                     </table>
                 </div>
 
-                <!-- Recent Applicants Section -->
                 <div class="content-section">
                     <div class="section-header">
                         <h2 class="section-title">Recent Applicants</h2>
@@ -257,7 +249,6 @@
                 </div>
             </div>
 
-            <!-- Job Posts Page -->
             <div id="job-posts-page" class="page-content">
                 <h1 class="page-title">
                     <i class="fas fa-briefcase"></i>
@@ -270,7 +261,6 @@
                         <button class="action-btn btn-primary" id="createJobBtn">Create New Job</button>
                     </div>
 
-                    <!-- Create New Job Form (Initially Hidden) -->
                     <div id="create-job-form" style="display: none;">
                         <h3 style="margin-bottom: 20px;">Create New Job Post</h3>
 
@@ -401,24 +391,12 @@
                         </thead>
                         <tbody class="job-table-body">
                         <tr>
-<!--                            <td>-->
-<!--                                <div class="job-title">Senior Frontend Developer</div>-->
-<!--                                <div class="job-company">Tech Solutions Inc.</div>-->
-<!--                            </td>-->
-<!--                            <td>42</td>-->
-<!--                            <td><span class="status-badge status-active">Active</span></td>-->
-<!--                            <td>May 15, 2023</td>-->
-<!--                            <td>-->
-<!--                                <button class="action-btn btn-view" data-job-id="1">View</button>-->
-<!--                                <button class="action-btn btn-edit" data-job-id="1">Edit</button>-->
-<!--                            </td>-->
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- View Job Page -->
             <div id="view-job-page" class="page-content">
                 <div class="section-header">
                     <h1 class="page-title">
@@ -561,7 +539,6 @@
                 </div>
             </div>
 
-            <!-- Edit Job Page -->
             <div id="edit-job-page" class="page-content">
                 <div class="section-header">
                     <h1 class="page-title">
@@ -685,7 +662,6 @@
 
             </div>
 
-            <!-- View Applicant Page -->
             <div id="view-applicant-page" class="page-content">
                 <div class="section-header">
                     <h1 class="page-title">
@@ -698,10 +674,10 @@
                 <div class="content-section">
                     <div class="detail-header">
                         <div style="display: flex; align-items: center;">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Applicant" style="width: 80px; height: 80px; border-radius: 50%; margin-right: 20px;">
+                            <img src="../assets/profiles/default-avatar.jpg" id="applicant-profile-image" alt="Applicant" style="width: 80px; height: 80px; border-radius: 50%; margin-right: 20px;">
                             <div>
-                                <h2 class="detail-title">Sarah Johnson</h2>
-                                <p class="detail-subtitle">Frontend Developer • Applied for Senior Frontend Developer</p>
+                                <h2 class="detail-title" id="view-applicant-name"></h2>
+                                <p class="detail-subtitle"></p>
                             </div>
                         </div>
                         <span class="detail-status status-active">New Application</span>
@@ -713,19 +689,19 @@
                             <div class="info-grid">
                                 <div class="info-item">
                                     <div class="info-label">Email</div>
-                                    <div class="info-value">sarah.johnson@example.com</div>
+                                    <div class="info-value" id="view-applicant-email"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Phone</div>
-                                    <div class="info-value">(555) 123-4567</div>
+                                    <div class="info-value" id="view-applicant-phone"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Location</div>
-                                    <div class="info-value">San Francisco, CA</div>
+                                    <div class="info-value" id="view-applicant-address">San Francisco, CA</div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Application Date</div>
-                                    <div class="info-value">June 12, 2023</div>
+                                    <div class="info-value" id="view-applicant-date"></div>
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Status</div>
@@ -733,65 +709,61 @@
                                 </div>
                                 <div class="info-item">
                                     <div class="info-label">Match Score</div>
-                                    <div class="info-value">85%</div>
+                                    <div class="info-value" id="view-applicant-matching-score">85%</div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="detail-card">
                             <h3 class="detail-card-title">Professional Summary</h3>
-                            <p>Experienced Frontend Developer with 5+ years of expertise in building responsive and accessible web applications. Skilled in React, JavaScript, and modern CSS frameworks. Passionate about creating intuitive user experiences and optimizing performance.</p>
+                            <p id="view-applicant-about">Experienced Frontend Developer with 5+ years of expertise in building responsive and accessible web applications. Skilled in React, JavaScript, and modern CSS frameworks. Passionate about creating intuitive user experiences and optimizing performance.</p>
 
                             <h4 style="margin: 20px 0 10px 0;">Skills:</h4>
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                                <span class="skill-tag">React.js</span>
-                                <span class="skill-tag">JavaScript</span>
-                                <span class="skill-tag">TypeScript</span>
-                                <span class="skill-tag">HTML/CSS</span>
-                                <span class="skill-tag">Redux</span>
-                                <span class="skill-tag">Webpack</span>
+                            <div id="view-applicant-skills" style="display: flex; flex-wrap: wrap; gap: 8px;">
+
                             </div>
                         </div>
                     </div>
 
-                    <div class="detail-card">
-                        <h3 class="detail-card-title">Work Experience</h3>
-                        <div style="margin-bottom: 20px;">
-                            <h4 style="margin-bottom: 5px;">Senior Frontend Developer - Tech Innovations Inc.</h4>
-                            <p style="color: var(--gray); margin-bottom: 8px;">January 2020 - Present</p>
-                            <ul style="padding-left: 20px;">
-                                <li>Led development of company's main customer-facing web application using React</li>
-                                <li>Improved page load performance by 40% through code splitting and lazy loading</li>
-                                <li>Mentored junior developers and established frontend best practices</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 style="margin-bottom: 5px;">Frontend Developer - Web Solutions LLC</h4>
-                            <p style="color: var(--gray); margin-bottom: 8px;">June 2017 - December 2019</p>
-                            <ul style="padding-left: 20px;">
-                                <li>Developed responsive web applications for various clients</li>
-                                <li>Collaborated with designers to implement pixel-perfect UI components</li>
-                                <li>Implemented accessibility features to ensure WCAG compliance</li>
-                            </ul>
-                        </div>
-                    </div>
+<!--                    <div class="detail-card">-->
+<!--                        <h3 class="detail-card-title">Work Experience</h3>-->
+<!--                        <div style="margin-bottom: 20px;">-->
+<!--                            <h4 style="margin-bottom: 5px;">Senior Frontend Developer - Tech Innovations Inc.</h4>-->
+<!--                            <p style="color: var(&#45;&#45;gray); margin-bottom: 8px;">January 2020 - Present</p>-->
+<!--                            <ul style="padding-left: 20px;">-->
+<!--                                <li>Led development of company's main customer-facing web application using React</li>-->
+<!--                                <li>Improved page load performance by 40% through code splitting and lazy loading</li>-->
+<!--                                <li>Mentored junior developers and established frontend best practices</li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <h4 style="margin-bottom: 5px;">Frontend Developer - Web Solutions LLC</h4>-->
+<!--                            <p style="color: var(&#45;&#45;gray); margin-bottom: 8px;">June 2017 - December 2019</p>-->
+<!--                            <ul style="padding-left: 20px;">-->
+<!--                                <li>Developed responsive web applications for various clients</li>-->
+<!--                                <li>Collaborated with designers to implement pixel-perfect UI components</li>-->
+<!--                                <li>Implemented accessibility features to ensure WCAG compliance</li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="detail-card">-->
+<!--                        <h3 class="detail-card-title">Education</h3>-->
+<!--                        <div style="margin-bottom: 15px;">-->
+<!--                            <h4 style="margin-bottom: 5px;">B.S. in Computer Science - Stanford University</h4>-->
+<!--                            <p style="color: var(&#45;&#45;gray);">2013 - 2017</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                     <div class="detail-card">
-                        <h3 class="detail-card-title">Education</h3>
-                        <div style="margin-bottom: 15px;">
-                            <h4 style="margin-bottom: 5px;">B.S. in Computer Science - Stanford University</h4>
-                            <p style="color: var(--gray);">2013 - 2017</p>
-                        </div>
-                    </div>
-
-                    <div class="detail-card">
-                        <div class="section-header">
+                        <div >
                             <h3 class="detail-card-title">Application Materials</h3>
                         </div>
                         <div style="display: flex; gap: 15px;">
-                            <button class="action-btn btn-view">
+                            <button class="action-btn btn-view" id="view-applicant-resume" data-url="">
                                 <i class="fas fa-file-pdf" style="margin-right: 5px;"></i> View Resume
                             </button>
+
                             <button class="action-btn btn-view">
                                 <i class="fas fa-file-alt" style="margin-right: 5px;"></i> View Cover Letter
                             </button>
@@ -802,42 +774,39 @@
                     </div>
 
                     <div class="detail-card">
-                        <div class="section-header">
+                        <div >
                             <h3 class="detail-card-title">Application Status</h3>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Update Status</label>
-                                <select class="form-select">
-                                    <option selected>New</option>
-                                    <option>In Review</option>
-                                    <option>Interview Scheduled</option>
-                                    <option>Offer Extended</option>
-                                    <option>Hired</option>
-                                    <option>Rejected</option>
+                                <select class="form-select" id="applicant-status-select">
+                                    <option value="SUBMITTED">New</option>
+                                    <option value="REVIEWING">In Review</option>
+                                    <option value="INTERVIEW">Interview Scheduled</option>
+                                    <option value="REJECTED">Rejected</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Rating</label>
-                                <select class="form-select">
-                                    <option>1 Star</option>
-                                    <option>2 Stars</option>
-                                    <option>3 Stars</option>
-                                    <option>4 Stars</option>
-                                    <option selected>5 Stars</option>
+                            <div class="form-group mt-3">
+                                <label class="form-label" for="applicant-rating">Rating</label>
+                                <select id="applicant-rating" class="form-select">
+                                    <option value="1">1 Star</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="5" selected>5 Stars</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Notes</label>
-                            <textarea class="form-textarea" placeholder="Add internal notes about this applicant..."></textarea>
+                        <div class="form-group ">
+                            <label class="form-label" for="applicant-notes">Internal Notes</label>
+                            <textarea id="applicant-notes" class="form-textarea" placeholder="Add internal notes about this applicant..."></textarea>
                         </div>
-                        <button class="action-btn btn-primary" id="saveApplicantChanges">Save Changes</button>
+                        <button id="save-applicant-review" class="action-btn btn-primary">Save Changes</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Applicants Page -->
             <div id="applicants-page" class="page-content">
                 <h1 class="page-title">
                     <i class="fas fa-users"></i>
@@ -850,7 +819,6 @@
                         <a href="#" class="view-all" id="toggleFilterBtn">Filter Options</a>
                     </div>
 
-                    <!-- Filter Options (Initially Hidden) -->
                     <div id="filter-options" class="filter-container" style="display: none;">
                         <h3 class="filter-title">Filter Applicants</h3>
                         <div class="filter-options">
@@ -913,52 +881,12 @@
                             <th>Actions</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <div class="job-title">Sarah Johnson</div>
-                                <div class="job-company">sarah@example.com</div>
-                            </td>
-                            <td>Frontend Developer</td>
-                            <td><span class="status-badge status-active">New</span></td>
-                            <td>Jun 12, 2023</td>
-                            <td>
-                                <button class="action-btn btn-view" data-applicant-id="1">View</button>
-                                <button class="action-btn btn-edit">Contact</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="job-title">Michael Chen</div>
-                                <div class="job-company">michael@example.com</div>
-                            </td>
-                            <td>UX Designer</td>
-                            <td><span class="status-badge status-pending">Review</span></td>
-                            <td>Jun 10, 2023</td>
-                            <td>
-                                <button class="action-btn btn-view" data-applicant-id="2">View</button>
-                                <button class="action-btn btn-edit">Contact</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="job-title">Jessica Williams</div>
-                                <div class="job-company">jessica@example.com</div>
-                            </td>
-                            <td>Product Manager</td>
-                            <td><span class="status-badge status-active">Interview</span></td>
-                            <td>Jun 8, 2023</td>
-                            <td>
-                                <button class="action-btn btn-view" data-applicant-id="3">View</button>
-                                <button class="action-btn btn-edit">Contact</button>
-                            </td>
-                        </tr>
+                        <tbody id="applicants-table-body">
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Profile Page -->
             <div id="profile-page" class="page-content">
                 <h1 class="page-title">
                     <i class="fas fa-user"></i>
@@ -1013,10 +941,6 @@
                                     <div class="info-label">Company Industry</div>
                                     <div class="info-value" id="profile-industry"></div>
                                 </div>
-<!--                                <div class="info-item">-->
-<!--                                    <div class="info-label" id="profile-contact-position">Position</div>-->
-<!--                                    <div class="info-value"></div>-->
-<!--                                </div>-->
                                 <div class="info-item">
                                     <div class="info-label"></div>
                                     <div class="info-value"></div>
@@ -1040,31 +964,9 @@
                         </div>
                     </div>
 
-<!--                    <div class="detail-card">-->
-<!--                        <h3 class="detail-card-title">Account Activity</h3>-->
-<!--                        <div class="info-grid">-->
-<!--                            <div class="info-item">-->
-<!--                                <div class="info-label">Member Since</div>-->
-<!--                                <div class="info-value" id="member-since"></div>-->
-<!--                            </div>-->
-<!--                            <div class="info-item">-->
-<!--                                <div class="info-label">Last Login</div>-->
-<!--                                <div class="info-value">Today, 09:42 AM</div>-->
-<!--                            </div>-->
-<!--                            <div class="info-item">-->
-<!--                                <div class="info-label">Jobs Posted</div>-->
-<!--                                <div class="info-value">42</div>-->
-<!--                            </div>-->
-<!--                            <div class="info-item">-->
-<!--                                <div class="info-label">Active Jobs</div>-->
-<!--                                <div class="info-value">8</div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
             </div>
 
-            <!-- Messages Page -->
             <div id="messages-page" class="page-content">
                 <h1 class="page-title">
                     <i class="fas fa-envelope"></i>
@@ -1077,7 +979,6 @@
                         <a href="#" class="view-all" id="newMessageBtn">New Message</a>
                     </div>
 
-                    <!-- New Message Form (Initially Hidden) -->
                     <div id="new-message-form" style="display: none; margin-bottom: 20px;">
                         <h3 style="margin-bottom: 15px;">Compose New Message</h3>
                         <div class="form-group">
@@ -1156,7 +1057,6 @@
                 </div>
             </div>
 
-            <!-- Settings Page -->
             <div id="settings-page" class="page-content">
                 <h1 class="page-title">
                     <i class="fas fa-cog"></i>
@@ -1168,7 +1068,6 @@
                     <div class="settings-tab" data-tab="security">Security</div>
                 </div>
 
-                <!-- Account Settings -->
                 <div id="account-settings" class="settings-content active">
                     <div class="content-section">
                         <div class="section-header">
@@ -1226,7 +1125,6 @@
                     </div>
                 </div>
 
-                <!-- Security Settings -->
                 <div id="security-settings" class="settings-content">
                     <div class="content-section">
                         <div class="section-header">
