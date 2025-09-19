@@ -5,8 +5,10 @@ import org.example.back_end.entity.Employee;
 import org.example.back_end.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,5 +52,16 @@ public class EmployeeController {
         }
     }
 
+    // Get all employees
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        List<Employee> employees = employeeService.getAllEmployees();
+        if (!employees.isEmpty()) {
+            return ResponseEntity.ok(employees);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
 
 }

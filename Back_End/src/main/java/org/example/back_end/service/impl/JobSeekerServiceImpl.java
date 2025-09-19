@@ -107,6 +107,10 @@ public class JobSeekerServiceImpl implements JobSeekerService {
         return jobSeekerRepository.save(seeker);
     }
 
+    @Override
+    public List<JobSeeker> getAllSeekers() {
+        return jobSeekerRepository.findAll();
+    }
 
 
 }

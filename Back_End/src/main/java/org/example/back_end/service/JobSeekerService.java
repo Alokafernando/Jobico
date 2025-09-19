@@ -1,7 +1,9 @@
 package org.example.back_end.service;
 
+import org.example.back_end.entity.Employee;
 import org.example.back_end.entity.JobSeeker;
 
+import java.util.List;
 import java.util.Map;
 
 public interface JobSeekerService {
@@ -11,5 +13,6 @@ public interface JobSeekerService {
     void changePassword(String email, String currentPassword, String newPassword);
     JobSeeker getById(Long id);
     JobSeeker updateProfilePicture(String email, String imageUrl);
+    List<JobSeeker> getAllSeekers();
 
 }

@@ -55,6 +55,21 @@ public interface JobRepository extends JpaRepository<JobPost, Long> {
                              @Param("location") String location,
                              Pageable pageable);
 
+    Page<JobPost> findAll(Pageable pageable);
+
+    @Query("SELECT j FROM JobPost j WHERE j.status = :status")
+    Page<JobPost> findByStatus(@Param("status") String status, Pageable pageable);
+
+    @Query("SELECT COUNT(j) FROM JobPost j WHERE j.status = :status")
+    long countByStatus(@Param("status") String status);
+
+    @Query("SELECT j FROM JobPost j WHERE " +
+            "(:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(j.companyName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND (:location IS NULL OR j.location = :location)")
+    Page<JobPost> adminSearchJobs(@Param("keyword") String keyword,
+                                  @Param("location") String location,
+                                  Pageable pageable);
 
 
 

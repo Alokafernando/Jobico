@@ -8,6 +8,7 @@ import org.example.back_end.repository.JobRepository;
 import org.example.back_end.service.JobApplicationService;
 import org.example.back_end.service.JobSeekerService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +33,8 @@ public class JobApplicationController {
     private final JobRepository jobRepository;
     private final JobSeekerService jobSeekerService;
 
+    @Autowired
+    private JavaMailSender mailSender;
 
 
 
@@ -55,9 +58,6 @@ public class JobApplicationController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-    @Autowired
-    private JavaMailSender mailSender;
 
 
     @GetMapping("/seeker/{seekerId}")
@@ -161,6 +161,15 @@ public class JobApplicationController {
         return ResponseEntity.ok(applicants);
     }
 
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<JobApplication>> getAllApplication() {
+        List<JobApplication> applications = jobApplicationService.getAllApplicants();
+        if ( applications.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(applications);
+    }
 
 
 

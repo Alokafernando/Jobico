@@ -116,7 +116,7 @@
     <div class="nav-actions">
       <input type="text" placeholder="Search...">
       <div class="notification"><i class="fas fa-bell"></i><span class="notification-badge">3</span></div>
-      <div class="profile"><img src="https://i.pravatar.cc/40" alt="Admin"><span>Buddhika</span></div>
+      <div class="profile"><img src="../assets/profiles/default-avatar.jpg" alt="Admin"><span>Admin</span></div>
     </div>
   </header>
 
@@ -159,18 +159,18 @@
           <th>Actions</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-          <td>#101</td>
-          <td>Frontend Developer</td>
-          <td>Tech Lanka</td>
-          <td><span class="status active">Active</span></td>
-          <td>23</td>
-          <td>
-            <button class="btn secondary"><i class="fas fa-eye"></i></button>
-            <button class="btn danger"><i class="fas fa-trash"></i></button>
-          </td>
-        </tr>
+        <tbody id="admin-post-panel">
+<!--        <tr>-->
+<!--          <td>#101</td>-->
+<!--          <td>Frontend Developer</td>-->
+<!--          <td>Tech Lanka</td>-->
+<!--          <td><span class="status active">Active</span></td>-->
+<!--          <td>23</td>-->
+<!--          <td>-->
+<!--            <button class="btn secondary"><i class="fas fa-eye"></i></button>-->
+<!--            <button class="btn danger"><i class="fas fa-trash"></i></button>-->
+<!--          </td>-->
+<!--        </tr>-->
         </tbody>
       </table>
     </div>
@@ -191,18 +191,18 @@
           <th>Actions</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-          <td>#E01</td>
-          <td>Zaara Tours</td>
-          <td>zaara@mail.com</td>
-          <td><span class="status reviewing">Reviewing</span></td>
-          <td>5</td>
-          <td>
-            <button class="btn secondary"><i class="fas fa-edit"></i></button>
-            <button class="btn danger"><i class="fas fa-trash"></i></button>
-          </td>
-        </tr>
+        <tbody id="admin-employee-panel">
+<!--        <tr>-->
+<!--          <td>#E01</td>-->
+<!--          <td>Zaara Tours</td>-->
+<!--          <td>zaara@mail.com</td>-->
+<!--          <td><span class="status reviewing">Reviewing</span></td>-->
+<!--          <td>5</td>-->
+<!--          <td>-->
+<!--            <button class="btn secondary"><i class="fas fa-edit"></i></button>-->
+<!--            <button class="btn danger"><i class="fas fa-trash"></i></button>-->
+<!--          </td>-->
+<!--        </tr>-->
         </tbody>
       </table>
     </div>
@@ -222,14 +222,14 @@
           <th>Profile</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-          <td>#S04</td>
-          <td>Kavindu Fernando</td>
-          <td>kavindu@mail.com</td>
-          <td>12</td>
-          <td><button class="btn secondary"><i class="fas fa-user"></i> View</button></td>
-        </tr>
+        <tbody id="admin-seeker-panel">
+<!--        <tr>-->
+<!--          <td>#S04</td>-->
+<!--          <td>Kavindu Fernando</td>-->
+<!--          <td>kavindu@mail.com</td>-->
+<!--          <td>12</td>-->
+<!--          <td><button class="btn secondary"><i class="fas fa-user"></i> View</button></td>-->
+<!--        </tr>-->
         </tbody>
       </table>
     </div>
@@ -250,17 +250,17 @@
           <th>Action</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-          <td>#A23</td>
-          <td>Kavindu Fernando</td>
-          <td>Backend Developer</td>
-          <td><span class="status pending">Pending</span></td>
-          <td><a href="/uploads/resume.pdf" target="_blank">View</a></td>
-          <td>
-            <button class="btn primary"><i class="fas fa-envelope"></i> Invite</button>
-          </td>
-        </tr>
+        <tbody id="admin-application-panel">
+<!--        <tr>-->
+<!--          <td>#A23</td>-->
+<!--          <td>Kavindu Fernando</td>-->
+<!--          <td>Backend Developer</td>-->
+<!--          <td><span class="status pending">Pending</span></td>-->
+<!--          <td><a href="/uploads/resume.pdf" target="_blank">View</a></td>-->
+<!--          <td>-->
+<!--            <button class="btn primary"><i class="fas fa-envelope"></i> Invite</button>-->
+<!--          </td>-->
+<!--        </tr>-->
         </tbody>
       </table>
     </div>
@@ -278,21 +278,22 @@
   <section id="settings" class="hidden">
     <div class="table-container">
       <h2>Settings</h2>
-      <form>
+      <form id="admin-settings-form">
         <div class="form-group">
-          <label>Admin Name</label>
-          <input type="text" class="form-control" value="Buddhika">
+          <label for="adminName">Admin Name</label>
+          <input type="text" id="adminName" class="form-control" placeholder="Enter name">
         </div>
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" class="form-control" value="admin@jobico.com">
+          <label for="adminEmail">Email</label>
+          <input type="email" id="adminEmail" class="form-control" placeholder="Enter email">
         </div>
         <div class="form-group">
-          <label>Password</label>
-          <input type="password" class="form-control" value="••••••••">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" class="form-control" placeholder="••••••••">
         </div>
-        <button class="btn primary">Save Changes</button>
+        <button type="submit" class="btn primary">Save Changes</button>
       </form>
+      <div id="statusMessage" style="margin-top:10px;"></div>
     </div>
   </section>
 
@@ -328,39 +329,8 @@
 </div>
 
 <!-- -------- Scripts -------- -->
-<script>
-  // Sidebar navigation
-  document.querySelectorAll('.menu-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="../js/AdminDashboard.js"></script>
 
-      const sectionId = item.getAttribute('data-section');
-      document.querySelectorAll('main section').forEach(sec => sec.classList.add('hidden'));
-      if(sectionId) {
-        document.getElementById(sectionId).classList.remove('hidden');
-        document.getElementById("page-title").innerText = item.innerText;
-      }
-    });
-  });
-
-  // Modal controls
-  function openModal(id){ document.getElementById(id).classList.add('show'); }
-  function closeModal(id){ document.getElementById(id).classList.remove('show'); }
-
-  // Chart (Reports)
-  const ctx = document.getElementById('reportChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Jobs', 'Employers', 'Seekers', 'Applications'],
-      datasets: [{
-        label: 'Platform Stats',
-        data: [120, 45, 350, 560],
-        backgroundColor: '#FF6A00'
-      }]
-    }
-  });
-</script>
 </body>
 </html>

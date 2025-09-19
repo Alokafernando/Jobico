@@ -22,7 +22,7 @@ $('#loginForm').on('submit', function(e) {
             localStorage.setItem("role", data.role);
 
             if (data.role === "ROLE_ADMIN") {
-                console.log('admin dashboard');
+                window.location.href = "../html/AdminDashboard.html";
             } else if (data.role === "ROLE_EMPLOYEE") {
                 $.ajax({
                     url: `http://localhost:8080/api/employee/email/${encodeURIComponent(email)}`,

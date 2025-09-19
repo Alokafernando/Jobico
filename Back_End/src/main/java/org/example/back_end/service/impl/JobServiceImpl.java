@@ -35,6 +35,7 @@ public class JobServiceImpl implements JobService {
     private final EmployeeService employeeService;
     private final ImgBBUploader imgBBUploader;
 
+
     ///create job -> employee
     @Override
     public JobPost createJob(JobPostDTO jobDto, MultipartFile logo) throws IOException {
@@ -180,5 +181,39 @@ public class JobServiceImpl implements JobService {
         if (location != null && location.equals("Select Location")) location = null;
         return jobPostRepository.searchJobs(keyword, location, pageable);
     }
+
+    @Override
+    public Page<JobPost> getAllJobsForAdmin(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return jobPostRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<JobPost> getJobsByStatus(String status, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return jobPostRepository.findByStatus(status, pageable);
+    }
+
+    @Override
+    public long countJobsByStatus(String status) {
+        return jobPostRepository.countByStatus(status);
+    }
+
+    @Override
+    public Page<JobPost> adminSearchJobs(String keyword, String location, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        if (keyword != null && keyword.isBlank()) keyword = null;
+        if (location != null && location.equals("Select Location")) location = null;
+        return jobPostRepository.adminSearchJobs(keyword, location, pageable);
+    }
+
+    @Override
+    public JobPost updateJobStatus(Long jobId, String status) {
+        JobPost job = jobPostRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
+        job.setStatus(status);
+        return jobPostRepository.save(job);
+    }
+
 
 }

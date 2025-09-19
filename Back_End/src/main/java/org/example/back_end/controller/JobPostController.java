@@ -54,6 +54,27 @@ public class JobPostController {
         return jobService.getAllJobs(page, 6);
     }
 
+    // 1️⃣ Get all jobs (for admin)
+    @GetMapping("/all")
+    public ResponseEntity<Page<JobPost>> getAllJobs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<JobPost> jobs = jobService.getAllJobsForAdmin(page, size);
+        return ResponseEntity.ok(jobs);
+    }
+
+    // 2️⃣ Get jobs by status (Pending, Active, Rejected, Closed)
+    @GetMapping("/status/{status}")
+    public ResponseEntity<Page<JobPost>> getJobsByStatus(
+            @PathVariable String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<JobPost> jobs = jobService.getJobsByStatus(status, page, size);
+        return ResponseEntity.ok(jobs);
+    }
+
 
     // ✅ Get jobs by employee email
     @GetMapping("/employee/{email}")
@@ -150,6 +171,41 @@ public class JobPostController {
         return ResponseEntity.ok(response);
     }
 
+    // 3️⃣ Count jobs by status
+    @GetMapping("/status/{status}/count")
+    public ResponseEntity<Long> countJobsByStatus(@PathVariable String status) {
+        long count = jobService.countJobsByStatus(status);
+        return ResponseEntity.ok(count);
+    }
+
+//    @GetMapping("/search")
+//    public ResponseEntity<Map<String, Object>> adminSearchJobs(
+//            @RequestParam(required = false) String keyword,
+//            @RequestParam(required = false) String location,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size
+//    ) {
+//        Page<JobPost> jobsPage = jobService.adminSearchJobs(keyword, location, page, size);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("content", jobsPage.getContent());
+//        response.put("number", jobsPage.getNumber());
+//        response.put("totalPages", jobsPage.getTotalPages());
+//        response.put("first", jobsPage.isFirst());
+//        response.put("last", jobsPage.isLast());
+//
+//        return ResponseEntity.ok(response);
+//    }
+
+    // 5️⃣ Update job status (approve, reject, close)
+    @PutMapping("/{id}/status")
+    public ResponseEntity<JobPost> updateJobStatus(
+            @PathVariable Long id,
+            @RequestParam String status
+    ) {
+        JobPost updatedJob = jobService.updateJobStatus(id, status);
+        return ResponseEntity.ok(updatedJob);
+    }
 
 
 

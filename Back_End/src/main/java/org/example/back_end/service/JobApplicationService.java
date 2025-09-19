@@ -19,4 +19,5 @@ public interface JobApplicationService {
     List<JobApplication> getApplicationsBySeeker(String email);
     List<JobApplication> getApplicationsForEmployee(Long employeeId);
     List<JobApplicationDTO> getRecentApplicants(Long employeeId);
+    List<JobApplication> getAllApplicants();
 }

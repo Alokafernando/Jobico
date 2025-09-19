@@ -8,6 +8,7 @@ import org.example.back_end.util.ImgBBUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -92,6 +93,16 @@ public class JobSeekerController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to upload profile picture: " + e.getMessage());
         }
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<JobSeeker>> getAllJobSeekers() {
+        List<JobSeeker> seekers = jobSeekerService.getAllSeekers();
+        if (seekers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(seekers);
     }
 
 }

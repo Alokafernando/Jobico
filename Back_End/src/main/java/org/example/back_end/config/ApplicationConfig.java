@@ -1,8 +1,10 @@
 package org.example.back_end.config;
 
 import lombok.RequiredArgsConstructor;
+import org.example.back_end.entity.Admin;
 import org.example.back_end.entity.Employee;
 import org.example.back_end.entity.JobSeeker;
+import org.example.back_end.repository.AdminRepository;
 import org.example.back_end.repository.EmployeeRepository;
 import org.example.back_end.repository.JobSeekerRepository;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,7 @@ public class ApplicationConfig {
 
     private final JobSeekerRepository jobSeekerRepository;
     private final EmployeeRepository employeeRepository;
+    private final AdminRepository adminRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -43,12 +46,12 @@ public class ApplicationConfig {
                 );
             }
 
-            if (email.equals("admin@gmail.com")) {
-                String encodedPassword = "$2a$10$9vHHx0W0sLrTNh7vQqR1O.4wU4QOmZpY5cYZM7HryOQxjUl7sVix6";
+            if (adminRepository.findByEmail(email).isPresent()){
+                Admin user = adminRepository.findByEmail(email).get();
                 return new org.springframework.security.core.userdetails.User(
-                        "admin@gmail.com",
-                        encodedPassword,
-                        List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                        user.getEmail(),
+                        user.getPassword(),
+                        List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
                 );
             }
 

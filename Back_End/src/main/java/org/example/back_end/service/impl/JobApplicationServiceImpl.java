@@ -122,9 +122,10 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         return applications;
     }
 
-
-
-
+    @Override
+    public List<JobApplication> getAllApplicants() {
+        return  jobApplicationRepository.findAll();
+    }
 
 
 }
