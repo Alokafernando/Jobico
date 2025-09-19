@@ -1008,50 +1008,6 @@ nav {
     background: #f8f9fa;
 }
 
- #pagination {
-     margin-top: 20px;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     gap: 8px;
-     font-family: "Poppins", sans-serif;
- }
-
- .pagination-btn {
-     width: 40px;
-     height: 40px;
-     border-radius: 50%;
-     background: #f8f9fa;
-     border: none;
-     color: #666;
-     font-weight: 600;
-     cursor: pointer;
-     transition: all 0.3s ease;
-     display: flex;
-     align-items: center;
-     justify-content: center;
- }
-
- .pagination-btn.active,
- .pagination-btn:hover {
-     background: linear-gradient(45deg, #ff6b35, #f7931e);
-     color: white;
- }
-
- .pagination-btn:disabled {
-     opacity: 0.5;
-     cursor: not-allowed;
-     background: #f8f9fa;
-     color: #666;
- }
-
- .pagination-btn.disabled:hover {
-     transform: none;
-     box-shadow: none;
-     background: #f8f9fa;
- }
-
-
 /* Responsive design */
 @media (max-width: 768px) {
     .categories-grid,
