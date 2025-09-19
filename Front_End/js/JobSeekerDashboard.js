@@ -878,7 +878,7 @@ $(document).ready(function () {
             success: function (response) {
                 console.log('applications response:', response); // check what you get
                 const apps = response; // response is the array
-                const $tbody = $("#application-table");
+                const $tbody = $(".application-table");
                 $tbody.empty();
 
                 if (!apps || apps.length === 0) {
