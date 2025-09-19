@@ -115,11 +115,14 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         return jobApplicationRepository.findByEmployeeId(employeeId);
     }
 
+    ///get recent applications -> employee
     @Override
     public List<JobApplicationDTO> getRecentApplicants(Long employeeId) {
         List<JobApplicationDTO> applications = jobApplicationRepository.findRecentApplicationsByEmployeeId(employeeId);
         return applications;
     }
+
+
 
 
 

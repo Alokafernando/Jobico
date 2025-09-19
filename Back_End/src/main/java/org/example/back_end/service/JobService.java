@@ -14,12 +14,13 @@ public interface JobService {
     JobPost updateJobWithLogo(Long id, JobPost updatedJob, MultipartFile logoFile) throws IOException;
     void deleteJob(Long id);
     JobPost getJobById(Long id);
-    List<JobPost> getAllJobs();
+    Page<JobPost> getAllJobs(int page, int size);
     List<JobPost> getAllJobsByEmployeeEmail(String email);
     long countActiveJobsForEmployee(String email);
     Page<JobPost> getJobsForSeeker(String seekerTitle, String jobType, String experience, String salary, int page, int size);
     Page<JobPost> getRecommendedJobs(String seekerTitle, int page, int size);
     long getFilteredJobsCount(String title, String jobType, String experience, String salary);
+    Page<JobPost> searchJobs(String keyword, String location, int page, int size);
 
 
 

@@ -42,6 +42,22 @@ public interface JobRepository extends JpaRepository<JobPost, Long> {
             @Param("salary") String salary ///this is for getting filter data count
     );
 
+    @Query("SELECT j FROM JobPost j WHERE j.applicationDeadline > CURRENT_DATE")
+    Page<JobPost> findAllActiveJobs(Pageable pageable);
+
+
+    @Query("SELECT j FROM JobPost j WHERE " +
+            "(:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(j.companyName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND (:location IS NULL OR j.location = :location) " +
+            "AND j.applicationDeadline > CURRENT_DATE")
+    Page<JobPost> searchJobs(@Param("keyword") String keyword,
+                             @Param("location") String location,
+                             Pageable pageable);
+
+
+
+
 
 
 

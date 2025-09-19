@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -46,11 +48,12 @@ public class JobPostController {
     }
 
 
-    // ✅ Get all jobs
-    @GetMapping
-    public ResponseEntity<?> getAllJobs() {
-        return ResponseEntity.ok(jobService.getAllJobs());
+    /// Get all jobs
+    @GetMapping("/jobs")
+    public Page<JobPost> getJobs(@RequestParam(defaultValue = "0") int page) {
+        return jobService.getAllJobs(page, 6);
     }
+
 
     // ✅ Get jobs by employee email
     @GetMapping("/employee/{email}")
@@ -58,7 +61,7 @@ public class JobPostController {
         return ResponseEntity.ok(jobService.getAllJobsByEmployeeEmail(email));
     }
 
-    // ✅ Update job
+    /// Update job
     @PutMapping("/{id}")
     public ResponseEntity<JobPost> updateJob(
             @PathVariable Long id,
@@ -69,7 +72,7 @@ public class JobPostController {
         return ResponseEntity.ok(job);
     }
 
-    // ✅ Delete job
+    /// Delete job
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
         jobService.deleteJob(id);
@@ -127,6 +130,26 @@ public class JobPostController {
         long count = jobService.getFilteredJobsCount(title, jobType, experience, salary);
         return ResponseEntity.ok(count);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> searchJobs(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String location,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size) {
+
+        Page<JobPost> jobPage = jobService.searchJobs(keyword, location, page, size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", jobPage.getContent());
+        response.put("number", jobPage.getNumber());
+        response.put("totalPages", jobPage.getTotalPages());
+        response.put("first", jobPage.isFirst());
+        response.put("last", jobPage.isLast());
+
+        return ResponseEntity.ok(response);
+    }
+
 
 
 

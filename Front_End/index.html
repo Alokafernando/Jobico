@@ -92,10 +92,11 @@
             <h2 class="section-title">Your Career Journey <span class="highlight">Starts Here</span></h2>
             <p class="section-subtitle">Search through thousands of job opportunities across all industries in Sri Lanka</p>
 
-            <form class="search-form">
-                <input type="text" class="search-input" placeholder="Job title, keywords, or company name">
+            <!-- Search Form & Search Results -->
+            <form class="search-form" id="searchForm">
+                <input type="text" id="keyword" class="search-input" placeholder="Job title, keywords, or company name">
                 <div class="dropdown-wrapper">
-                    <select class="location-dropdown">
+                    <select id="location" class="location-dropdown">
                         <option>Select Location</option>
                         <option>Colombo</option>
                         <option>Kandy</option>
@@ -107,142 +108,20 @@
                         <option>Ratnapura</option>
                     </select>
                 </div>
-                <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i> Find Jobs </button>
+                <button type="submit" class="search-btn" id="find-job"><i class="fa-solid fa-magnifying-glass"></i> Find Jobs </button>
             </form>
 
+
+
+            <!-- Latest Jobs Section -->
             <div class="recent-jobs">
                 <h3 class="section-title"> Latest Job <span class="highlight">Opportunities</span></h3>
 
-                <div class="job-listings" id="job-listings">
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div class="days-left">
-                                <i class="fas fa-clock"></i> 3 days left
-                            </div>
-                            <div class="job-type">Full-time</div>
-                        </div>
-                        <div class="company-logo-container">
-                            <img src="https://via.placeholder.com/80x80?text=99X" alt="99X Technology" class="post-logo">
-                        </div>
-                        <h4 class="job-title">Senior Software Engineer</h4>
-                        <p class="job-company">99X Technology</p>
-                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Colombo 03, Sri Lanka</p>
-<!--                        <div class="job-meta">-->
-<!--                            <span class="job-salary">Rs. 80K - 120K</span>-->
-<!--                        </div>-->
-                        <div class="job-footer">
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
+                <div id="search-results" class="job-listings"></div>
+                <div id="search-pagination" class="pagination-controls"></div>
 
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div class="days-left">
-                                <i class="fas fa-clock"></i> 5 days left
-                            </div>
-                            <div class="job-type">Full-time</div>
-                        </div>
-                        <div class="company-logo-container">
-                            <img src="https://via.placeholder.com/80x80?text=Brandix" alt="Brandix Lanka" class="post-logo">
-                        </div>
-                        <h4 class="job-title">Digital Marketing Manager</h4>
-                        <p class="job-company">Brandix Lanka</p>
-                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Colombo 01, Sri Lanka</p>
-<!--                        <div class="job-meta">-->
-<!--                            <span class="job-salary">Rs. 60K - 90K</span>-->
-<!--                        </div>-->
-                        <div class="job-footer">
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
-
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div class="days-left">
-                                <i class="fas fa-clock"></i> 7 days left
-                            </div>
-                            <div class="job-type">Full-time</div>
-                        </div>
-                        <div class="company-logo-container">
-                            <img src="https://via.placeholder.com/80x80?text=Commercial" alt="Commercial Bank" class="post-logo">
-                        </div>
-                        <h4 class="job-title">Business Analyst</h4>
-                        <p class="job-company">Commercial Bank</p>
-                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Kandy, Sri Lanka</p>
-<!--                        <div class="job-meta">-->
-<!--                            <span class="job-salary">Rs. 70K - 100K</span>-->
-<!--                        </div>-->
-                        <div class="job-footer">
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
-
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div class="days-left">
-                                <i class="fas fa-clock"></i> 10 days left
-                            </div>
-                            <div class="job-type">Full-time</div>
-                        </div>
-                        <div class="company-logo-container">
-                            <img src="https://via.placeholder.com/80x80?text=Virtusa" alt="Virtusa Corporation" class="post-logo">
-                        </div>
-                        <h4 class="job-title">UX/UI Designer</h4>
-                        <p class="job-company">Virtusa Corporation</p>
-                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Colombo 07, Sri Lanka</p>
-<!--                        <div class="job-meta">-->
-<!--                            <span class="job-salary">Rs. 55K - 75K</span>-->
-<!--                        </div>-->
-                        <div class="job-footer">
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
-
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div class="days-left">
-                                <i class="fas fa-clock"></i> 2 days left
-                            </div>
-                            <div class="job-type">Remote</div>
-                        </div>
-                        <div class="company-logo-container">
-                            <img src="https://via.placeholder.com/80x80?text=WSO2" alt="WSO2" class="post-logo">
-                        </div>
-                        <h4 class="job-title">DevOps Engineer</h4>
-                        <p class="job-company">WSO2</p>
-                        <p class="job-location">🌐 Remote (Sri Lanka)</p>
-<!--                        <div class="job-meta">-->
-<!--                            <span class="job-salary">Rs. 90K - 140K</span>-->
-<!--                        </div>-->
-                        <div class="job-footer">
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
-
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div class="days-left">
-                                <i class="fas fa-clock"></i> 15 days left
-                            </div>
-                            <div class="job-type">Part-time</div>
-                        </div>
-                        <div class="company-logo-container">
-                            <img src="https://via.placeholder.com/80x80?text=Hype" alt="Hype Digital" class="post-logo">
-                        </div>
-                        <h4 class="job-title">Content Writer</h4>
-                        <p class="job-company">Hype Digital</p>
-                        <p class="job-location"><i class="fa-solid fa-location-dot"></i> Galle, Sri Lanka</p>
-<!--                        <div class="job-meta">-->
-<!--                            <span class="job-salary">Rs. 40K - 60K</span>-->
-<!--                        </div>-->
-                        <div class="job-footer">
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="browse-all-btn">Browse All <i class="fa-solid fa-circle-arrow-right" ></i></button>
             </div>
+
 
             <!-- Categories Section with Pagination -->
             <div class="categories-section">
@@ -572,8 +451,8 @@
     </div>
 </footer>
 
-<script src="js/main.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
 <script>
     $(document).ready(function () {
         let currentPage = 1;

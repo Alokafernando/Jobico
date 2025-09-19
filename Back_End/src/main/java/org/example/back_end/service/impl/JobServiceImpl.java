@@ -12,6 +12,7 @@ import org.example.back_end.util.ImgBBUploader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,7 @@ public class JobServiceImpl implements JobService {
     private final EmployeeService employeeService;
     private final ImgBBUploader imgBBUploader;
 
+    ///create job -> employee
     @Override
     public JobPost createJob(JobPostDTO jobDto, MultipartFile logo) throws IOException {
         // 1️⃣ Find employee
@@ -77,6 +79,7 @@ public class JobServiceImpl implements JobService {
         return jobPostRepository.save(job);
     }
 
+    ///update job  -> employee
     @Override
     public JobPost updateJobWithLogo(Long id, JobPost updatedJob, MultipartFile logoFile) throws IOException {
         JobPost existingJob = jobPostRepository.findById(id)
@@ -107,8 +110,7 @@ public class JobServiceImpl implements JobService {
         return jobPostRepository.save(existingJob);
     }
 
-
-
+    ///delete job -> admin
     @Override
     public void deleteJob(Long id) {
         JobPost job = jobPostRepository.findById(id)
@@ -123,8 +125,9 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobPost> getAllJobs() {
-        return null;
+    public Page<JobPost> getAllJobs(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return jobPostRepository.findAllActiveJobs(pageable);
     }
 
     @Override
@@ -133,11 +136,13 @@ public class JobServiceImpl implements JobService {
         return jobPostRepository.findByPostedByEmail(email);
     }
 
+    ///get active job post count -> seeker
     @Override
     public long countActiveJobsForEmployee(String email) {
         return jobPostRepository.countByPostedBy_EmailAndStatus(email, "Active");
     }
 
+    ///show jobs -> seeker
     @Override
     public Page<JobPost> getJobsForSeeker(String seekerTitle,
                                           String jobType,
@@ -152,6 +157,7 @@ public class JobServiceImpl implements JobService {
         return jobPostRepository.searchJobs(keyword, jobType, experience, salary, pageable);
     }
 
+    ///recommend job related professionTitle -> seeker
     @Override
     public Page<JobPost> getRecommendedJobs(String seekerTitle, int page, int size) {
         String keyword = seekerTitle.replaceAll("(?i)senior|junior|mid|lead|intern", "").trim();
@@ -160,12 +166,19 @@ public class JobServiceImpl implements JobService {
         return jobPostRepository.findRecommendedJobs(keyword, pageable);
     }
 
+    /// get filtering jobs count -> seeker
     @Override
     public long getFilteredJobsCount(String title, String jobType, String experience, String salary) {
         String keyword = title.replaceAll("(?i)senior|junior|mid|lead|intern", "").trim();
         return jobPostRepository.countFilteredJobs(keyword, jobType, experience, salary);
     }
 
-
+    @Override
+    public Page<JobPost> searchJobs(String keyword, String location, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        if (keyword != null && keyword.isBlank()) keyword = null;
+        if (location != null && location.equals("Select Location")) location = null;
+        return jobPostRepository.searchJobs(keyword, location, pageable);
+    }
 
 }
