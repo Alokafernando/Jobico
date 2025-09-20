@@ -112,5 +112,20 @@ public class JobSeekerServiceImpl implements JobSeekerService {
         return jobSeekerRepository.findAll();
     }
 
+    @Override
+    public JobSeeker toggleJobSeekerStatus(Long id) {
+        JobSeeker seeker = jobSeekerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job seeker not found with id: " + id));
+        seeker.setActive(!seeker.isActive());
+        return jobSeekerRepository.save(seeker);
+    }
+
+    @Override
+    public JobSeeker getJobSeekerById(Long id) {
+        return jobSeekerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job seeker not found with ID: " + id));
+    }
+
+
 
 }

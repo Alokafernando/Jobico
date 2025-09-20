@@ -3,6 +3,7 @@ package org.example.back_end.service;
 import org.example.back_end.dto.JobPostDTO;
 import org.example.back_end.entity.JobPost;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public interface JobService {
     // ✅ Seeker
     Page<JobPost> getAllJobs(int page, int size);
     Page<JobPost> getJobsForSeeker(String seekerTitle, String jobType, String experience, String salary, int page, int size);
-    Page<JobPost> getRecommendedJobs(String seekerTitle, int page, int size);
+    Page<JobPost> getRecommendedJobs(String seekerTitle, Pageable pageable);
     long getFilteredJobsCount(String title, String jobType, String experience, String salary);
     Page<JobPost> searchJobs(String keyword, String location, int page, int size);
 
@@ -30,4 +31,5 @@ public interface JobService {
     Page<JobPost> adminSearchJobs(String keyword, String location, int page, int size);
     JobPost updateJobStatus(Long jobId, String status);
     boolean deleteJob(Long id);
+
 }

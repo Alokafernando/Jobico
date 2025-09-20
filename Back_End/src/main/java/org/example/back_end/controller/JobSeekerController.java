@@ -105,4 +105,31 @@ public class JobSeekerController {
         return ResponseEntity.ok(seekers);
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<JobSeeker> getJobSeekerById(@PathVariable Long id) {
+        JobSeeker seeker = jobSeekerService.getJobSeekerById(id);
+        if (seeker == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(seeker);
+    }
+
+
+    // JobSeekerController.java
+    @PutMapping("/deactivate/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, String>> deactivateJobSeeker(@PathVariable Long id) {
+        try {
+            JobSeeker updatedSeeker = jobSeekerService.toggleJobSeekerStatus(id);
+            String statusMessage = updatedSeeker.isActive() ? "Job seeker activated" : "Job seeker deactivated";
+            return ResponseEntity.ok(Map.of("message", statusMessage));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+
+
 }

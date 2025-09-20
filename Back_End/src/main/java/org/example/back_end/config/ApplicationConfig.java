@@ -53,7 +53,7 @@ public class ApplicationConfig {
                         user.getPassword(),
                         List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
                 );
-            }
+            }//admin123
 
             throw new UsernameNotFoundException("User not found");
         };

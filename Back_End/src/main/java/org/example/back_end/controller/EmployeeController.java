@@ -1,6 +1,7 @@
 package org.example.back_end.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.back_end.dto.EmployeeRegisterDTO;
 import org.example.back_end.entity.Employee;
 import org.example.back_end.service.EmployeeService;
 import org.springframework.http.HttpStatus;
@@ -63,5 +64,17 @@ public class EmployeeController {
             return ResponseEntity.noContent().build();
         }
     }
+
+    @PutMapping("/status/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, String>> updateEmployeeStatus(
+            @PathVariable Long id,
+            @RequestBody EmployeeRegisterDTO dto
+    ) {
+        employeeService.updateStatus(id, dto.getStatus());
+        return ResponseEntity.ok(Map.of("message", "Employee status updated to " + dto.getStatus()));
+    }
+
+
 
 }

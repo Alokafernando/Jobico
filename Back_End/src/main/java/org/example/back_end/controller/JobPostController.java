@@ -148,9 +148,11 @@ public class JobPostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size
     ) {
-        Page<JobPost> recommendedJobs = jobService.getRecommendedJobs(title, page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending()); // Optional sorting
+        Page<JobPost> recommendedJobs = jobService.getRecommendedJobs(title, pageable);
         return ResponseEntity.ok(recommendedJobs);
     }
+
 
     @GetMapping("/for-seeker/count")
     public ResponseEntity<Long> getFilteredJobsCount(

@@ -39,4 +39,6 @@ public class EmployeeRegisterDTO {
 
     @NotBlank(message = "Password is mandatory")
     private String password;
+
+    private String status;
 }

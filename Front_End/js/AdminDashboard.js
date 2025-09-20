@@ -231,16 +231,17 @@ $(document).ready(function() {
                 }
 
                 data.forEach(emp => {
-                    let row = `
+                    const statusClass = emp.status === "Active" ? "active" : "inactive";
+
+                    const row = `
                 <tr>
                     <td>#E${emp.id}</td>
                     <td>${emp.companyName || emp.contactFirstName + ' ' + emp.contactLastName}</td>
                     <td>${emp.email}</td>
-                    <td><span class="status">${emp.role || 'Reviewing'}</span></td>
-                    <td>0</td>
+                    <td><span class="status-badge ${statusClass}">${emp.status}</span></td>
                     <td>
                         <button class="btn secondary"><i class="fas fa-edit"></i></button>
-                        <button class="btn danger"><i class="fas fa-trash"></i></button>
+                        <button class="btn danger change-status" data-id="${emp.id}"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
                     tbody.append(row);
@@ -252,6 +253,60 @@ $(document).ready(function() {
             }
         });
     }
+
+    $(document).on('click', '.change-status', function() {
+        const employeeId = $(this).data('id');
+        const $row = $(this).closest('tr');
+        const $statusBadge = $row.find('.status-badge');
+        const currentStatus = $statusBadge.text().trim();
+        const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
+
+        Swal.fire({
+            title: `Are you sure?`,
+            text: `You want to set this employee as ${newStatus}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: `Yes, ${newStatus}!`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `http://localhost:8080/api/employee/status/${employeeId}`,
+                    method: 'PUT',
+                    headers: {
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    },
+                    contentType: "application/json",
+                    data: JSON.stringify({ status: newStatus }),
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Updated!',
+                            text: `Employee status is now ${newStatus}`,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        // Update badge text and class
+                        $statusBadge
+                            .text(newStatus)
+                            .removeClass('active inactive')
+                            .addClass(newStatus.toLowerCase());
+                    },
+                    error: function(err) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed',
+                            text: 'Cannot update employee status'
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+
 
     function loadSeekers() {
         const $tbody = $('#admin-seeker-panel');
@@ -269,13 +324,18 @@ $(document).ready(function() {
                     return;
                 }
                 data.forEach(seeker => {
+                    const isActive = seeker.active;
+                    const statusClass = isActive ? 'active' : 'inactive';
+                    const statusText = isActive ? 'Active' : 'Inactive';
+
                     const row = `
                         <tr>
                             <td>#JS${seeker.id}</td>
                             <td>${seeker.firstName} ${seeker.lastName}</td>
                             <td>${seeker.email}</td>
-                            <td>0</td>
-<!--                            <td>${seeker.experience || '-'}</td>-->
+                            <td class="status" data-active="${isActive}">
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </td>
                             <td>
                                 <button class="btn secondary view-seeker" data-id="${seeker.id}">
                                     <i class="fas fa-eye"></i>
@@ -285,7 +345,7 @@ $(document).ready(function() {
                                 </button>
                             </td>
                         </tr>
-                    `;
+                        `;
                     $tbody.append(row);
                 });
             },
@@ -295,6 +355,130 @@ $(document).ready(function() {
             }
         });
     }
+
+    const $seekerModal = $("#seekerDetailsModal");
+    const $closeSeekerModal = $("#closeSeekerModal");
+
+    $(document).on("click", ".view-seeker", function () {
+        const seekerId = $(this).data("id");
+
+        $.ajax({
+            url: `http://localhost:8080/api/jobseekers/${seekerId}`,
+            method: "GET",
+            success: function (seeker) {
+                $("#seekerId").val(seeker.id);
+                $("#seekerFirstName").val(seeker.firstName + " " + seeker.lastName);
+                $("#seekerEmail").val(seeker.email);
+                $("#seekerPhone").val(seeker.phone);
+                $("#seekerAddress").val(seeker.address);
+                $("#seekerEducation").val(seeker.education);
+                $("#seekerExperience").val(seeker.experience);
+                $("#seekerProfession").val(seeker.professionTitle);
+                // $("#seekerJobType").val(seeker.preferredJobType);
+                // $("#seekerActive").val(seeker.active ? "true" : "false");
+
+                if (seeker.resumeUrl) {
+                    $("#seekerResume").attr("href", seeker.resumeUrl).show();
+                } else {
+                    $("#seekerResume").hide();
+                }
+
+                // ✅ Use the same method as Job modal
+                $seekerModal.addClass("show");
+                $("body").css("overflow", "hidden"); // prevent scroll
+            },
+            error: function () {
+                alert("Error fetching seeker details!");
+            }
+        });
+    });
+
+// Close modal
+    $closeSeekerModal.on("click", function () {
+        $seekerModal.removeClass("show");
+        $("body").css("overflow", "auto");
+    });
+
+// Close modal by clicking outside
+    $seekerModal.on("click", function (e) {
+        if ($(e.target).is($seekerModal)) {
+            $seekerModal.removeClass("show");
+            $("body").css("overflow", "auto");
+        }
+    });
+
+
+// Save changes (update status)
+    $("#editSeekerForm").on("submit", function (e) {
+        e.preventDefault();
+        const seekerId = $("#seekerId").val();
+        const active = $("#seekerActive").val() === "true";
+
+        $.ajax({
+            url: `http://localhost:8080/api/jobseekers/update-status/${seekerId}`, // backend endpoint for updating status
+            method: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({ active: active }),
+            success: function () {
+                alert("Seeker status updated!");
+                $seekerModal.fadeOut();
+                loadSeekers(0);
+            },
+            error: function () {
+                alert("Error updating seeker!");
+            }
+        });
+    });
+
+
+    // Handle Deactivate/Activate Seeker button click
+    $('#admin-seeker-panel').on('click', '.delete-seeker', function() {
+        const seekerId = $(this).data('id');
+        const $row = $(this).closest('tr');
+        const isActive = $row.find('.status').data('active')
+
+        const actionText = isActive ? 'deactivate' : 'activate';
+        const confirmBtnColor = isActive ? '#d33' : '#28a745';
+
+        Swal.fire({
+            title: `Are you sure?`,
+            text: `You are about to ${actionText} this job seeker.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: confirmBtnColor,
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: `Yes, ${actionText}!`,
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `http://localhost:8080/api/jobseekers/deactivate/${seekerId}`,
+                    method: 'PUT',
+                    headers: {
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        loadSeekers(); // reload table
+                    },
+                    error: function(err) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to update seeker status',
+                        });
+                    }
+                });
+            }
+        });
+    });
+
 
     function loadApplications() {
         const $tbody = $("#admin-application-panel");
@@ -404,6 +588,25 @@ $(document).ready(function() {
         });
     });
 
+
+    // Logout from sidebar menu
+    $(document).on("click", ".menu-item.logout", function() {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You will be logged out from the system.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, logout",
+            cancelButtonText: "Cancel",
+            confirmButtonColor: "#e74c3c",
+            cancelButtonColor: "#3085d6"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem("adminData");
+                window.location.href = "../index.html";
+            }
+        });
+    });
 
 
 

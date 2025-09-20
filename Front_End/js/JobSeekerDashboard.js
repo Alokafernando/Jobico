@@ -893,31 +893,31 @@ $(document).ready(function () {
                     if (app.status === "REJECTED") statusClass = "status-rejected";
 
                     const row = `
-<tr>
-  <td>
-    <div class="app-job-title">${app.jobPost?.title || "N/A"}</div>
-    <div class="app-company">${app.jobPost?.companyName || "Unknown"}</div>
-  </td>
-  <td>${app.jobPost?.companyName || "Unknown"}</td>
-  <td>${app.appliedAt
-                        ? new Date(app.appliedAt.replace(' ', 'T'))
-                            .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-                        : "N/A"}</td>
-  <td><span class="status-badge ${statusClass}">${app.status}</span></td>
-  <td>
-    <button class="action-btn btn-view"
-        data-position="${app.jobPost?.title || ''}"
-        data-company="${app.jobPost?.companyName || ''}"
-        data-date="${app.appliedAt
-                        ? new Date(app.appliedAt.replace(' ', 'T'))
-                            .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-                        : ''}"
-        data-status="${app.status || ''}"
-        data-resume="${app.resumeFile || '#'}"
-        >View</button>
-  </td>
-</tr>
-`;
+                        <tr>
+                          <td>
+                            <div class="app-job-title">${app.jobPost?.title || "N/A"}</div>
+                            <div class="app-company">${app.jobPost?.companyName || "Unknown"}</div>
+                          </td>
+                          <td>${app.jobPost?.companyName || "Unknown"}</td>
+                          <td>${app.appliedAt
+                                                ? new Date(app.appliedAt.replace(' ', 'T'))
+                                                    .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                                                : "N/A"}</td>
+                          <td><span class="status-badge ${statusClass}">${app.status}</span></td>
+                          <td>
+                            <button class="action-btn btn-view"
+                                data-position="${app.jobPost?.title || ''}"
+                                data-company="${app.jobPost?.companyName || ''}"
+                                data-date="${app.appliedAt
+                                                ? new Date(app.appliedAt.replace(' ', 'T'))
+                                                    .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                                                : ''}"
+                                data-status="${app.status || ''}"
+                                data-resume="${app.resumeFile || '#'}"
+                                >View</button>
+                          </td>
+                        </tr>
+                        `;
                     $tbody.append(row);
                 });
 

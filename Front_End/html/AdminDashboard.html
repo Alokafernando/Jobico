@@ -106,7 +106,6 @@
           <th>Company</th>
           <th>Contact</th>
           <th>Status</th>
-          <th>Jobs</th>
           <th>Actions</th>
         </tr>
         </thead>
@@ -137,18 +136,11 @@
           <th>ID</th>
           <th>Name</th>
           <th>Email</th>
-          <th>Applied Jobs</th>
+          <th>Is active</th>
           <th>Profile</th>
         </tr>
         </thead>
         <tbody id="admin-seeker-panel">
-<!--        <tr>-->
-<!--          <td>#S04</td>-->
-<!--          <td>Kavindu Fernando</td>-->
-<!--          <td>kavindu@mail.com</td>-->
-<!--          <td>12</td>-->
-<!--          <td><button class="btn secondary"><i class="fas fa-user"></i> View</button></td>-->
-<!--        </tr>-->
         </tbody>
       </table>
     </div>
@@ -170,16 +162,6 @@
         </tr>
         </thead>
         <tbody id="admin-application-panel">
-<!--        <tr>-->
-<!--          <td>#A23</td>-->
-<!--          <td>Kavindu Fernando</td>-->
-<!--          <td>Backend Developer</td>-->
-<!--          <td><span class="status pending">Pending</span></td>-->
-<!--          <td><a href="/uploads/resume.pdf" target="_blank">View</a></td>-->
-<!--          <td>-->
-<!--            <button class="btn primary"><i class="fas fa-envelope"></i> Invite</button>-->
-<!--          </td>-->
-<!--        </tr>-->
         </tbody>
       </table>
     </div>
@@ -301,6 +283,72 @@
 
         <button type="submit" class="btn primary">Save Changes</button>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- Seeker Details Modal -->
+<div id="seekerDetailsModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Job Seeker Details</h2>
+      <span class="close" id="closeSeekerModal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <form id="editSeekerForm">
+        <input type="hidden" id="seekerId">
+
+        <div class="form-group">
+          <label for="seekerFirstName">First Name</label>
+          <input type="text" id="seekerFirstName" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="seekerEmail">Email</label>
+          <input type="email" id="seekerEmail" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="seekerPhone">Phone Number</label>
+          <input type="text" id="seekerPhone" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="seekerAddress">Address</label>
+          <input type="text" id="seekerAddress" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="seekerProfession">Profession Title</label>
+          <input type="text" id="seekerProfession" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Resume</label>
+          <a id="seekerResume" href="#" target="_blank" class="btn secondary">View Resume</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Custom Confirmation Modal -->
+<div class="custom-modal" id="confirmation-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Confirm Action</h2>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+      <p>Are you sure you want to leave? Your progress will be lost.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-cancel" id="modal-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-confirm" id="modal-confirm">Yes, Leave</button>
     </div>
   </div>
 </div>

@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Check Admin
         if (authDTO.getEmail().equals("admin@gmail.com")) {
-            String encodedAdminPassword = "$2a$12$.4Wrlu3qNpQ2uLbCDcKB6Ogm7PvNdEid20a2e96pPjUpqRFltTQ5y"; // admin123
+            String encodedAdminPassword = "$2a$12$.4Wrlu3qNpQ2uLbCDcKB6Ogm7PvNdEid20a2e96pPjUpqRFltTQ5y";
             if (!passwordEncoder.matches(authDTO.getPassword(), encodedAdminPassword)) {
                 throw new BadCredentialsException("Invalid credentials for Admin");
             }
@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
                     "admin@gmail.com",
                     token,
                     "ROLE_ADMIN",
-                    "Admin" // or "Michael", whatever you want
+                    "Admin"
             );
         }
 
@@ -128,9 +128,12 @@ public class AuthServiceImpl implements AuthService {
                 .companyDescription(dto.getDescription())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .role(Role.EMPLOYEE)
+                .status("Active")
                 .build();
 
         employeeRepository.save(employee);
         return "Employee registered successfully";
     }
+
+
 }

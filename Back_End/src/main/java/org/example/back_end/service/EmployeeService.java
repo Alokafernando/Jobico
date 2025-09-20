@@ -10,5 +10,6 @@ public interface EmployeeService {
     Employee updateEmployee(String email, Employee updatedEmployee);
     Employee changePassword(String email, String currentPassword, String newPassword);
     List<Employee> getAllEmployees();
+    Employee updateStatus(Long id, String status);
 
 }

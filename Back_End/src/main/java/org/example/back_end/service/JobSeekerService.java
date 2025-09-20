@@ -14,5 +14,7 @@ public interface JobSeekerService {
     JobSeeker getById(Long id);
     JobSeeker updateProfilePicture(String email, String imageUrl);
     List<JobSeeker> getAllSeekers();
+    JobSeeker toggleJobSeekerStatus(Long id);
 
+    JobSeeker getJobSeekerById(Long id);
 }

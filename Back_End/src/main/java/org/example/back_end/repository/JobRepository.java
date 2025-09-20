@@ -76,7 +76,11 @@ public interface JobRepository extends JpaRepository<JobPost, Long> {
     @Query("UPDATE JobPost j SET j.status = 'Closed' WHERE j.id = :jobId")
     int closeJob(@Param("jobId") Long jobId);
 
-
+    @Query("SELECT j FROM JobPost j " +
+            "WHERE j.status = 'Active' " +
+            "AND (LOWER(j.title) LIKE LOWER(CONCAT('%', :title, '%')) " +
+            "     OR LOWER(j.description) LIKE LOWER(CONCAT('%', :title, '%')))")
+    Page<JobPost> getRecommendedJobs(@Param("title") String title, Pageable pageable);
 
 
 

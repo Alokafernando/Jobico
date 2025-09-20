@@ -154,14 +154,11 @@ public class JobServiceImpl implements JobService {
         return jobPostRepository.searchJobs(keyword, jobType, experience, salary, pageable);
     }
 
-    ///recommend job related professionTitle -> seeker
     @Override
-    public Page<JobPost> getRecommendedJobs(String seekerTitle, int page, int size) {
-        String keyword = seekerTitle.replaceAll("(?i)senior|junior|mid|lead|intern", "").trim();
-
-        Pageable pageable = PageRequest.of(page, size);
-        return jobPostRepository.findRecommendedJobs(keyword, pageable);
+    public Page<JobPost> getRecommendedJobs(String seekerTitle, Pageable pageable) {
+        return jobPostRepository.getRecommendedJobs(seekerTitle, pageable);
     }
+
 
     /// get filtering jobs count -> seeker
     @Override

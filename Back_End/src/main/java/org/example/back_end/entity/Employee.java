@@ -34,6 +34,7 @@ public class Employee {
     private String phoneNumber;
     private String companyLocation;
     private String companyDescription;
+    private String status;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.EMPLOYEE;

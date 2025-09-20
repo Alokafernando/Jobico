@@ -71,6 +71,29 @@ table th { background:var(--table-header); font-weight:600; color:var(--dark-gra
     color: #DC3545FF;
 }
 
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-block;
+    min-width: 70px;
+    text-align: center;
+}
+
+/* Active = Green */
+.status-badge.active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Inactive = Red */
+.status-badge.inactive {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+
 /* Buttons */
 .btn { padding:8px 12px; border:none; border-radius:6px; background:var(--orange); color:var(--white); cursor:pointer; transition:0.3s; display:inline-flex; align-items:center; gap:5px; font-size:0.9rem; }
 .btn:hover { background:#e65a00; }
@@ -216,4 +239,55 @@ table th { background:var(--table-header); font-weight:600; color:var(--dark-gra
         opacity: 1;
         transform: scale(1);
     }
+}
+
+.custom-modal {
+    display: none;               /* hidden by default */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    overflow: auto;
+}
+
+.custom-modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: center;
+}
+
+.modal-icon {
+    font-size: 40px;
+    color: #f39c12;
+    margin-bottom: 15px;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-btn-cancel {
+    background-color: #ccc;
+}
+
+.modal-btn-confirm {
+    background-color: #e74c3c;
+    color: white;
 }
