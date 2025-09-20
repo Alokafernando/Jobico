@@ -12,7 +12,6 @@ public interface JobService {
     // ✅ Employee
     JobPost createJob(JobPostDTO jobDto, MultipartFile logo) throws IOException;
     JobPost updateJobWithLogo(Long id, JobPost updatedJob, MultipartFile logoFile) throws IOException;
-    void deleteJob(Long id);
     JobPost getJobById(Long id);
     List<JobPost> getAllJobsByEmployeeEmail(String email);
     long countActiveJobsForEmployee(String email);
@@ -29,5 +28,6 @@ public interface JobService {
     Page<JobPost> getJobsByStatus(String status, int page, int size);
     long countJobsByStatus(String status);
     Page<JobPost> adminSearchJobs(String keyword, String location, int page, int size);
-    JobPost updateJobStatus(Long jobId, String status); // Approve/Reject jobs
+    JobPost updateJobStatus(Long jobId, String status);
+    boolean deleteJob(Long id);
 }

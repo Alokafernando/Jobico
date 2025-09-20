@@ -31,4 +31,13 @@ public class EmailServiceImpl {
 
         mailSender.send(message);
     }
+
+    public void sendSimpleEmail(String to, String subject, String body) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, false); // not multipart
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(body, true); // true = HTML
+        mailSender.send(message);
+    }
 }

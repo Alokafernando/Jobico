@@ -1,5 +1,7 @@
 package org.example.back_end.service.impl;
 
+import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.back_end.dto.JobPostDTO;
 import org.example.back_end.entity.Employee;
@@ -34,6 +36,7 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobPostRepository;
     private final EmployeeService employeeService;
     private final ImgBBUploader imgBBUploader;
+    private final EmailServiceImpl emailService;
 
 
     ///create job -> employee
@@ -111,13 +114,6 @@ public class JobServiceImpl implements JobService {
         return jobPostRepository.save(existingJob);
     }
 
-    ///delete job -> admin
-    @Override
-    public void deleteJob(Long id) {
-        JobPost job = jobPostRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
-        jobPostRepository.delete(job);
-    }
 
     @Override
     public JobPost getJobById(Long id) {
@@ -211,8 +207,35 @@ public class JobServiceImpl implements JobService {
     public JobPost updateJobStatus(Long jobId, String status) {
         JobPost job = jobPostRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
+
         job.setStatus(status);
-        return jobPostRepository.save(job);
+        JobPost updatedJob = jobPostRepository.save(job);
+
+        // Send email if status is ACTIVE
+        if ("ACTIVE".equalsIgnoreCase(status)) {
+            String employeeEmail = job.getPostedBy().getEmail();
+            String subject = "Your Job Post is Now Active!";
+            String body = "Hello " + job.getPostedBy().getCompanyName() + ",<br><br>"
+                    + "Your job post <strong>" + job.getTitle() + "</strong> is now ACTIVE.<br>"
+                    + "You can view it on the portal.<br><br>Best regards,<br>Jobico Team";
+
+            try {
+                emailService.sendSimpleEmail(employeeEmail, subject, body);
+            } catch (MessagingException e) {
+                // Handle email failure (log it or throw a runtime exception if critical)
+                System.err.println("Failed to send email: " + e.getMessage());
+            }
+        }
+
+        return updatedJob;
+    }
+
+
+    ///delete job -> admin
+    @Transactional
+    public boolean deleteJob(Long jobId) {
+        int updated = jobPostRepository.closeJob(jobId);
+        return updated > 0;
     }
 
 

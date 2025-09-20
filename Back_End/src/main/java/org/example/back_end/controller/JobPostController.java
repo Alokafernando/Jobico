@@ -1,16 +1,22 @@
 package org.example.back_end.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.example.back_end.dto.ApiResponseDTO;
 import org.example.back_end.dto.JobPostDTO;
 import org.example.back_end.entity.Employee;
 import org.example.back_end.entity.JobPost;
+import org.example.back_end.repository.JobRepository;
 import org.example.back_end.service.EmployeeService;
 import org.example.back_end.service.JobService;
+import org.example.back_end.service.impl.EmailServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +33,8 @@ import java.util.Map;
 public class JobPostController {
 
     private final JobService jobService;
-    private final EmployeeService employeeService;
+    private final JobRepository jobRepository;
+    private final EmailServiceImpl emailService;
 
     @PostMapping("/create")
     public ResponseEntity<?> createJob(
@@ -93,11 +100,15 @@ public class JobPostController {
         return ResponseEntity.ok(job);
     }
 
-    /// Delete job
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteJob(@PathVariable Long id) {
-        jobService.deleteJob(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{id}/close")
+    public ResponseEntity<Map<String, String>> closeJob(@PathVariable Long id) {
+        try {
+            jobService.deleteJob(id);
+            return ResponseEntity.ok(Map.of("message", "Job closed successfully"));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")
@@ -197,15 +208,42 @@ public class JobPostController {
 //        return ResponseEntity.ok(response);
 //    }
 
-    // 5️⃣ Update job status (approve, reject, close)
-    @PutMapping("/{id}/status")
-    public ResponseEntity<JobPost> updateJobStatus(
+    @PutMapping("/jobs/update-status/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponseDTO> updateJobStatus(
             @PathVariable Long id,
-            @RequestParam String status
-    ) {
-        JobPost updatedJob = jobService.updateJobStatus(id, status);
-        return ResponseEntity.ok(updatedJob);
+            @RequestBody Map<String, String> request) {
+
+        String newStatus = request.get("status");
+        JobPost job = jobRepository.findById(id).orElse(null);
+
+        if (job == null) {
+            return ResponseEntity.ok(new ApiResponseDTO(404, "Job not found", null));
+        }
+
+        job.setStatus(newStatus);
+        jobRepository.save(job);
+
+        // Send email if status changed to ACTIVE
+        if ("ACTIVE".equalsIgnoreCase(newStatus)) {
+            try {
+                String email = job.getPostedBy().getEmail(); // employer email
+                String subject = "Your job post is now ACTIVE!";
+                String body = "<p>Hello " + job.getPostedBy().getCompanyName() + ",</p>" +
+                        "<p>Your job post <strong>" + job.getTitle() + "</strong> is now ACTIVE and visible to job seekers.</p>" +
+                        "<p>Thank you,<br/>Jobico Team</p>";
+
+                emailService.sendSimpleEmail(email, subject, body); // make sure this method exists
+            } catch (Exception e) {
+                // Log the error but don’t break the response
+                e.printStackTrace();
+            }
+        }
+
+        return ResponseEntity.ok(new ApiResponseDTO(200, "Job status updated successfully", job));
     }
+
+
 
 
 
