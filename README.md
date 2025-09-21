@@ -45,7 +45,8 @@ This is the final project for the Advanced API Development module (ITS1114) at t
 
 ---
 
-## 📖 Project Overview
+## <a name="project-overview"></a>📖 Project Overview
+
 
 Jobico is a web-based **job search platform** that connects job seekers with employers. Users can **browse jobs, submit applications, and track their application status**, while employers can **post jobs, manage applicants, and view reports**.  
 
