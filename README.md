@@ -54,7 +54,7 @@ Built with **Java Spring Boot, JSP/Servlets, MySQL, and JavaScript**, Jobico pro
 
 ---
 
-## 🌟 Unique Highlights
+## <a name="unique-highlights"></a>🌟 Unique Highlights
 
 ✅ **Role-Specific Dashboards** – Separate interfaces for **Job Seekers** and **Employers/Admins**.  
 ✅ **Dynamic Job Search** – Real-time filtering by keywords, categories, and locations.  
@@ -65,9 +65,9 @@ Built with **Java Spring Boot, JSP/Servlets, MySQL, and JavaScript**, Jobico pro
 
 ---
 
-## ✨ Key Features
+## <a name="key-features"></a>✨ Key Features
 
-### 👤 For Job Seekers
+### <a name="for-job-seekers"></a>👤 For Job Seekers
 
 * Secure registration and login with JWT authentication  
 * Browse available jobs and view detailed job descriptions  
@@ -76,7 +76,7 @@ Built with **Java Spring Boot, JSP/Servlets, MySQL, and JavaScript**, Jobico pro
 * View personal dashboard with applied jobs and statuses  
 * Receive notifications for status updates  
 
-### 🛠 For Employers/Admins
+### <a name="for-employersadmins"></a>🛠 For Employers/Admins
 
 * Manage job postings and company profiles  
 * Post new jobs and assign details like location, salary, and requirements  
@@ -87,9 +87,9 @@ Built with **Java Spring Boot, JSP/Servlets, MySQL, and JavaScript**, Jobico pro
 
 ---
 
-## 🛠 Technology Stack
+## <a name="technology-stack"></a>🛠 Technology Stack
 
-### 🔹 Backend
+### <a name="backend"></a>🔹 Backend
 
 * Framework: Spring Boot 3.x  
 * Language: Java 17  
@@ -99,12 +99,12 @@ Built with **Java Spring Boot, JSP/Servlets, MySQL, and JavaScript**, Jobico pro
 * API: RESTful APIs  
 * Build Tool: Maven  
 
-### 🔹 Frontend
+### <a name="frontend"></a>🔹 Frontend
 
 * Languages: HTML, CSS, JavaScript  
 * Libraries: jQuery, SweetAlert2  
 
-### 🔹 Tools
+### <a name="tools"></a>🔹 Tools
 
 * IDE: IntelliJ IDEA (Backend), VS Code (Frontend)  
 * API Testing: Postman  
@@ -113,7 +113,7 @@ Built with **Java Spring Boot, JSP/Servlets, MySQL, and JavaScript**, Jobico pro
 
 ---
 
-## 🗂 Project Structure
+## <a name="project-structure"></a>🗂 Project Structure
 
 This section shows the complete project structure for **Jobico**, including backend, frontend, and configuration files.
 
@@ -159,7 +159,7 @@ Jobico/
 
 ---
 
-## 📸 Screenshots
+## <a name="screenshots"></a>📸 Screenshots
 
 1. Home Page  
    ![Home Page](uploads/screenshots/HomePage.png)
@@ -202,16 +202,16 @@ Jobico/
 
 ---
 
-## 🚀 Setup and Installation Guide
+## <a name="setup-and-installation-guide"></a>🚀 Setup and Installation Guide
 
-### 🔹 Prerequisites
+### <a name="prerequisites"></a>🔹 Prerequisites
 
 * Java 17+  
 * Apache Maven 3.8+  
 * MySQL Server  
 * IntelliJ IDEA or any Java IDE  
 
-### 🔹 Backend Setup
+### <a name="backend-setup"></a>🔹 Backend Setup
 
 ```bash
 # Clone the repository
@@ -232,7 +232,7 @@ java -jar target/jobico-0.0.1-SNAPSHOT.jar
 
 ```
 
-### ⚙️ Application Properties Setup
+### <a name="application-properties-setup"></a>⚙️ Application Properties Setup
 
 ```properties
 # Database Configuration
@@ -266,14 +266,14 @@ cd FrontEnd/
 
 ---
 
-## 🎬 YouTube Project Demo
+## <a name="youtube-project-demo"></a>🎬 YouTube Project Demo
 
 👉 [Watch the Project Demo](https://youtu.be/your-demo-link)
 
 > *Spring Boot Project - IJSE - GDSE71 - Panadura - Buddhika Fernando - Final Project*
 ---
 
-## 🔮 Future Enhancements
+## <a name="future-enhancements"></a>🔮 Future Enhancements
 
 🚀 Planned improvements for the next versions of *Jobico*:
 
@@ -286,13 +286,13 @@ cd FrontEnd/
 
 ---
 
-## 📜 License
+## <a name="license"></a>📜 License
 
 This project is licensed under the *MIT License* – see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 📧 Contact
+## <a name="contact"></a>📧 Contact
 
 📩 *Email*: [buddhika.fernando@example.com](mailto:buddhikafernando19@example.com)  
 🔗 *LinkedIn*: [Buddhika Fernando](https://www.linkedin.com/in/buddhika-fernando-73606131a/)
