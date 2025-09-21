@@ -193,7 +193,7 @@ $(document).ready(function () {
                 showPage("view-job");
             },
             error: function(xhr) {
-                console.error("Failed to fetch job details", xhr);
+                // console.error("Failed to fetch job details", xhr);
                 Swal.fire("Error", "Could not load job details.", "error");
             }
         });
@@ -597,11 +597,12 @@ $(document).ready(function () {
             success: function(applicants) {
                 if (applicants.length > 0) {
                     localStorage.setItem("applicationId", applicants[0].id);
-                    console.log("Saved Application ID:", localStorage.getItem("applicationId"));
+                     // console.log("Saved Application ID:", localStorage.getItem("applicationId"));
                 }
 
                 const applicationId = localStorage.getItem("applicationId");
-                console.log("Saved Application ID:", applicationId);
+                  // console.log("Saved Application ID:", applicationId);
+                loadApplicantDetails(applicationId);
 
                 const tbody = $("#applicants-table-body");
                 tbody.empty();
@@ -649,6 +650,7 @@ $(document).ready(function () {
         const applicationId = $(this).data("applicant-id");
         if (!applicationId) return Swal.fire("Error", "Applicant ID missing", "error");
 
+        console.log(applicationId)
         loadApplicantDetails(applicationId);
     });
 
@@ -660,7 +662,7 @@ $(document).ready(function () {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
             success: function(app) {
-                console.log("Applicant Data:", app);
+                // console.log("Applicant Data:", app);
                 $("#view-applicant-name").text(app.firstName + " " + app.lastName);
                 $("#applicant-profile-image").attr("src", app.profileImage || "default.jpg");
                 $("#view-applicant-email").text(app.email);
@@ -786,7 +788,7 @@ $(document).ready(function () {
         const token = localStorage.getItem("token");
         const employeeId = localStorage.getItem("employeeId");
 
-        console.log(employeeId)
+        // console.log(employeeId)
         if (!employeeId) {
             return Swal.fire("Error", "Employee ID missing. Please log in again.", "error");
         }
@@ -805,7 +807,7 @@ $(document).ready(function () {
                 }
 
                 applicants.forEach(app => {
-                    console.log(app)
+                    // console.log(app)
                     const rating = "N/A";
                     const appliedCount = 1;
                     const matchScore = "N/A";
