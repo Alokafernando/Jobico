@@ -54,24 +54,18 @@ public class JobPostController {
         }
     }
 
-
-    /// Get all jobs
     @GetMapping("/jobs")
     public Page<JobPost> getJobs(@RequestParam(defaultValue = "0") int page) {
         return jobService.getAllJobs(page, 6);
     }
 
-    // 1️⃣ Get all jobs (for admin)
-    @GetMapping("/all")
-    public ResponseEntity<Page<JobPost>> getAllJobs(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        Page<JobPost> jobs = jobService.getAllJobsForAdmin(page, size);
+    @GetMapping("/admin/jobs")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<JobPost>> getAllJobsForAdmin() {
+        List<JobPost> jobs = jobService.getAllJobsForAdmin();
         return ResponseEntity.ok(jobs);
     }
 
-    // 2️⃣ Get jobs by status (Pending, Active, Rejected, Closed)
     @GetMapping("/status/{status}")
     public ResponseEntity<Page<JobPost>> getJobsByStatus(
             @PathVariable String status,
@@ -82,14 +76,11 @@ public class JobPostController {
         return ResponseEntity.ok(jobs);
     }
 
-
-    // ✅ Get jobs by employee email
     @GetMapping("/employee/{email}")
     public ResponseEntity<?> getJobsByEmployee(@PathVariable String email) {
         return ResponseEntity.ok(jobService.getAllJobsByEmployeeEmail(email));
     }
 
-    /// Update job
     @PutMapping("/{id}")
     public ResponseEntity<JobPost> updateJob(
             @PathVariable Long id,
@@ -121,13 +112,11 @@ public class JobPostController {
         }
     }
 
-
     @GetMapping("/my/active-job-count")
     public ResponseEntity<Long> getMyActiveJobCount(@RequestParam String email) {
         long count = jobService.countActiveJobsForEmployee(email);
         return ResponseEntity.ok(count);
     }
-
 
     @GetMapping("/for-seeker")
     public ResponseEntity<Page<JobPost>> getJobsForSeeker(
@@ -184,31 +173,11 @@ public class JobPostController {
         return ResponseEntity.ok(response);
     }
 
-    // 3️⃣ Count jobs by status
     @GetMapping("/status/{status}/count")
     public ResponseEntity<Long> countJobsByStatus(@PathVariable String status) {
         long count = jobService.countJobsByStatus(status);
         return ResponseEntity.ok(count);
     }
-
-//    @GetMapping("/search")
-//    public ResponseEntity<Map<String, Object>> adminSearchJobs(
-//            @RequestParam(required = false) String keyword,
-//            @RequestParam(required = false) String location,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size
-//    ) {
-//        Page<JobPost> jobsPage = jobService.adminSearchJobs(keyword, location, page, size);
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("content", jobsPage.getContent());
-//        response.put("number", jobsPage.getNumber());
-//        response.put("totalPages", jobsPage.getTotalPages());
-//        response.put("first", jobsPage.isFirst());
-//        response.put("last", jobsPage.isLast());
-//
-//        return ResponseEntity.ok(response);
-//    }
 
     @PutMapping("/jobs/update-status/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -226,7 +195,6 @@ public class JobPostController {
         job.setStatus(newStatus);
         jobRepository.save(job);
 
-        // Send email if status changed to ACTIVE
         if ("ACTIVE".equalsIgnoreCase(newStatus)) {
             try {
                 String email = job.getPostedBy().getEmail(); // employer email
@@ -235,9 +203,8 @@ public class JobPostController {
                         "<p>Your job post <strong>" + job.getTitle() + "</strong> is now ACTIVE and visible to job seekers.</p>" +
                         "<p>Thank you,<br/>Jobico Team</p>";
 
-                emailService.sendSimpleEmail(email, subject, body); // make sure this method exists
+                emailService.sendSimpleEmail(email, subject, body);
             } catch (Exception e) {
-                // Log the error but don’t break the response
                 e.printStackTrace();
             }
         }

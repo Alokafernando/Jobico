@@ -17,15 +17,13 @@ public interface JobService {
     List<JobPost> getAllJobsByEmployeeEmail(String email);
     long countActiveJobsForEmployee(String email);
 
-    // ✅ Seeker
     Page<JobPost> getAllJobs(int page, int size);
     Page<JobPost> getJobsForSeeker(String seekerTitle, String jobType, String experience, String salary, int page, int size);
     Page<JobPost> getRecommendedJobs(String seekerTitle, Pageable pageable);
     long getFilteredJobsCount(String title, String jobType, String experience, String salary);
     Page<JobPost> searchJobs(String keyword, String location, int page, int size);
 
-    // ✅ Admin
-    Page<JobPost> getAllJobsForAdmin(int page, int size);
+    List<JobPost> getAllJobsForAdmin();
     Page<JobPost> getJobsByStatus(String status, int page, int size);
     long countJobsByStatus(String status);
     Page<JobPost> adminSearchJobs(String keyword, String location, int page, int size);

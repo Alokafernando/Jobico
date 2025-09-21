@@ -176,10 +176,10 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Page<JobPost> getAllJobsForAdmin(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        return jobPostRepository.findAll(pageable);
+    public List<JobPost> getAllJobsForAdmin() {
+        return jobPostRepository.findAll();
     }
+
 
     @Override
     public Page<JobPost> getJobsByStatus(String status, int page, int size) {

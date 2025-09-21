@@ -22,7 +22,7 @@ $(document).ready(function() {
 
     function openModal() {
         $("#editJobModal").removeClass("hidden");
-        $("body").css("overflow", "hidden"); // prevent scroll
+        $("body").css("overflow", "hidden");
     }
 
     function closeModal() {
@@ -37,32 +37,32 @@ $(document).ready(function() {
         $tbody.empty();
 
         $.ajax({
-            url: 'http://localhost:8080/api/jobs/jobs',
+            url: 'http://localhost:8080/api/jobs/admin/jobs',
             method: 'GET',
             dataType: 'json',
-            success: function (data) {
-                const jobs = data.content || [];
-                if (jobs.length > 0) {
-                    jobs.forEach(job => {
-                        const row = `
-                            <tr>
-                                <td>#${job.id}</td>
-                                <td>${job.title}</td>
-                                <td>${job.companyName || job.postedBy?.companyName}</td>
-                                <td><span class="status ${job.status.toLowerCase()}">${job.status}</span></td>
-                                <td>${job.applicantsCount || 0}</td>
-                                <td>
-                                    <button class="btn secondary view-job" id="postEdit" data-id="${job.id}"><i class="fas fa-edit"></i></button>
-                                    <button class="btn danger delete-job" id="deletePost" data-id="${job.id}"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                        `;
-                        $tbody.append(row);
-                    });
-                } else {
-                    $tbody.append('<tr><td colspan="6" style="text-align:center;">No jobs found</td></tr>');
-                }
-            },
+                success: function (data) {
+                    const jobs = data || [];   // not data.content
+                    if (jobs.length > 0) {
+                        jobs.forEach(job => {
+                            const row = `
+                <tr>
+                    <td>#${job.id}</td>
+                    <td>${job.title}</td>
+                    <td>${job.companyName || job.postedBy?.companyName}</td>
+                    <td><span class="status ${job.status.toLowerCase()}">${job.status}</span></td>
+                    <td>${job.applicantsCount || 0}</td>
+                    <td>
+                        <button class="btn secondary view-job" id="postEdit" data-id="${job.id}"><i class="fas fa-edit"></i></button>
+                        <button class="btn danger delete-job" id="deletePost" data-id="${job.id}"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+                            $tbody.append(row);
+                        });
+                    } else {
+                        $tbody.append('<tr><td colspan="6" style="text-align:center;">No jobs found</td></tr>');
+                    }
+                },
             error: function (err) {
                 console.error('Failed to load jobs:', err);
                 $tbody.append('<tr><td colspan="6" style="text-align:center;color:red;">Error loading jobs</td></tr>');
@@ -70,6 +70,7 @@ $(document).ready(function() {
         });
     }
 
+    localStorage.getItem("token");
     $(document).on("click", ".view-job", function () {
         const jobId = $(this).data("id");
         console.log("Clicked jobId:", jobId);
@@ -77,21 +78,21 @@ $(document).ready(function() {
         $.ajax({
             url: "http://localhost:8080/api/jobs/" + jobId,
             method: "GET",
-            headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
+             headers: { "Authorization": "Bearer "},
             success: function(job) {
                 console.log("Job received:", job);
 
-                // Fill modal inputs
+                // Fill modal inputs correctly
                 $("#editJobId").val(job.id);
                 $("#editJobTitle").val(job.title);
                 $("#editJobStatus").val(job.status);
                 $("#editCompany").val(job.companyName);
                 $("#editLocation").val(job.location);
-                $("#editJobType").val(job.employmentType);
+                $("#editJobType").val(job.jobType);
                 $("#editSalary").val(job.salaryRange);
-                $("#editDeadline").val(job.applicationDeadline)
+                $("#editDeadline").val(job.applicationDeadline);
 
-                // Show modal - FIXED: Use .show class instead of removing hidden
+                // Show modal
                 $("#editJobModal").addClass("show");
             },
             error: function(err) {
@@ -99,7 +100,7 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: "error",
                     title: "Error",
-                    text: "Failed to fetch job details.",
+                    text: err,
                     confirmButtonText: "OK"
                 });
             }
@@ -128,7 +129,7 @@ $(document).ready(function() {
         $.ajax({
             url: "http://localhost:8080/api/jobs/jobs/update-status/" + jobId,
             method: "PUT",
-            headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
+            headers: { "Authorization": "Bearer "},
             contentType: "application/json",
             data: JSON.stringify({ status: updatedStatus }),
             success: function () {
@@ -196,7 +197,6 @@ $(document).ready(function() {
     });
 
 
-    // Optional: add click handlers for dynamically created buttons
     // $('#admin-post-panel').on('click', '.view-job', function() {
     //     const jobId = $(this).data('id');
     //     console.log('View job:', jobId);
@@ -220,8 +220,9 @@ $(document).ready(function() {
         $.ajax({
             url: "http://localhost:8080/api/employee",
             method: "GET",
-            headers: { "Authorization": "Bearer " + token },
+            headers: { "Authorization": "Bearer "},
             success: function(data) {
+                console.log(data)
                 let tbody = $("#admin-employee-panel");
                 tbody.empty();
 
@@ -275,8 +276,7 @@ $(document).ready(function() {
                     url: `http://localhost:8080/api/employee/status/${employeeId}`,
                     method: 'PUT',
                     headers: {
-                        "Authorization": "Bearer " + localStorage.getItem("token")
-                    },
+                        "Authorization": "Bearer " },
                     contentType: "application/json",
                     data: JSON.stringify({ status: newStatus }),
                     success: function(response) {
@@ -316,8 +316,7 @@ $(document).ready(function() {
             url: "http://localhost:8080/api/jobseekers",
             method: "GET",
             headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            },
+                "Authorization": "Bearer "},
             success: function(data) {
                 if (data.length === 0) {
                     $tbody.append('<tr><td colspan="6" style="text-align:center;">No job seekers found</td></tr>');
@@ -455,8 +454,7 @@ $(document).ready(function() {
                     url: `http://localhost:8080/api/jobseekers/deactivate/${seekerId}`,
                     method: 'PUT',
                     headers: {
-                        "Authorization": "Bearer " + localStorage.getItem("token")
-                    },
+                        "Authorization": "Bearer "},
                     success: function(response) {
                         Swal.fire({
                             icon: 'success',
@@ -488,8 +486,7 @@ $(document).ready(function() {
             url: "http://localhost:8080/api/applications",
             method: "GET",
             headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            },
+                "Authorization": "Bearer "},
             success: function(data) {
                 if (!data || data.length === 0) {
                     $tbody.append('<tr><td colspan="6" style="text-align:center;">No applications found</td></tr>');
@@ -541,8 +538,7 @@ $(document).ready(function() {
             url: "http://localhost:8080/admin/details",
             method: "GET",
             headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            },
+                "Authorization": "Bearer " },
             success: function(response) {
                 if (response.status === 200 && response.data) {
                     $("#adminName").val(response.data.name);
@@ -570,11 +566,10 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: "http://localhost:8080/admin/update", // backend endpoint to update admin
+            url: "http://localhost:8080/admin/update",
             method: "PUT",
             headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            },
+                "Authorization": "Bearer " },
             contentType: "application/json",
             data: JSON.stringify(adminData),
             success: function(response) {
@@ -607,12 +602,6 @@ $(document).ready(function() {
             }
         });
     });
-
-
-
-
-
-
 
 
     // // Chart (Reports)

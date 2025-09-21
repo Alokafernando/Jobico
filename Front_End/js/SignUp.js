@@ -45,9 +45,10 @@ $(document).ready(function() {
     }
 
     function validateName(name) {
-        const pattern = /^[a-zA-Z]+$/;
+        const pattern = /^[a-zA-Z\s]+$/;
         return pattern.test(name);
     }
+
 
     function validateTextWithSpaces(text) {
         const pattern = /^[a-zA-Z\s]+$/;
@@ -72,14 +73,13 @@ $(document).ready(function() {
             firstName: $('#seekerFirstName').val().trim(),
             lastName: $('#seekerLastName').val().trim(),
             email: $('#seekerEmail').val().trim(),
-            phone_number: $('#seekerPhone').val().trim(),
+            phoneNumber: $('#seekerPhone').val().trim(),
             address: $('#seekerLocation').val().trim(),
-            profession_title: $('#seekerProfession').val().trim(),
+            professionTitle: $('#seekerProfession').val().trim(),
             experience: $('#seekerExperience').val().trim(),
             education: $('#seekerEducation').val().trim(),
             skills: $('#seekerSkills').val().split(",").map(s => s.trim()).filter(s => s),
             password: password,
-            resumeUrl: $('#seekerResume').val().trim()
         };
 
         // Client-side validations
