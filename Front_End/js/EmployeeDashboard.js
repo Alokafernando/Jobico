@@ -1,19 +1,12 @@
-// ==============================
-// Employee Dashboard JS
-// ==============================
 $(document).ready(function () {
     const token = localStorage.getItem("token");
 
-    // -----------------------------
-    // Cached Selectors
-    // -----------------------------
     const $pageContents = $(".page-content");
     const $menuLinks = $(".menu-link");
     const $profileImg = $(".profile-img");
     const $logoutLink = $("#logout-link");
     const $confirmationModal = $("#confirmation-modal");
 
-    // Profile display fields
     const $profileName = $("#profileName");
     const $contactPosition = $("#profile-position");
     const $profileFullName = $("#profile-name");
@@ -24,7 +17,6 @@ $(document).ready(function () {
     const $companyLocation = $("#profile-address");
     const $companyDescription = $("#company-description");
 
-    // Account Settings inputs
     const $editCompanyName = $("#company-name-setting");
     const $editEmail = $("#company-email-setting");
     const $editPhone = $("#company-number-setting");
@@ -34,10 +26,6 @@ $(document).ready(function () {
     const $editContactPosition = $("#contact-person-position-setting");
     const $editCompanyDescription = $("#companyDescription");
 
-
-    // -----------------------------
-    // SPA Page Navigation
-    // -----------------------------
     function showPage(pageId) {
         $pageContents.removeClass("active");
         $(`#${pageId}-page`).addClass("active");
@@ -67,9 +55,6 @@ $(document).ready(function () {
 
     window.addEventListener("popstate", () => showPage(window.location.hash.substring(1) || "dashboard"));
 
-    // -----------------------------
-    // Employee Details
-    // -----------------------------
     function setEmployeeDetails(emp) {
         const firstName = emp.contactFirstName || "";
         const lastName = emp.contactLastName || "";
@@ -84,7 +69,6 @@ $(document).ready(function () {
         $companyLocation.text(emp.companyLocation || "");
         $companyDescription.text(emp.companyDescription || "");
 
-        // Set into account settings form
         $editCompanyName.val(emp.companyName || "");
         $editEmail.val(emp.email || "");
         $editPhone.val(emp.phoneNumber || "");
@@ -116,14 +100,10 @@ $(document).ready(function () {
 
     loadEmployeeDetails();
 
-    // -----------------------------
-    // Job Posts
-    // -----------------------------
     function loadEmployeeJobsAndCount() {
         const email = localStorage.getItem("userEmail");
         if (!token || !email) return;
 
-        // Load all jobs for employee
         $.ajax({
             url: `http://localhost:8080/api/jobs/employee/${encodeURIComponent(email)}`,
             method: "GET",
@@ -161,7 +141,6 @@ $(document).ready(function () {
             error: () => Swal.fire({ icon: "error", title: "Failed", text: "Could not load your jobs." })
         });
 
-        // Load active jobs count
         $.ajax({
             url: `http://localhost:8080/api/jobs/my/active-job-count?email=${encodeURIComponent(email)}`,
             method: "GET",
@@ -259,7 +238,6 @@ $(document).ready(function () {
         const jobId = $(this).data("job-id");
         const token = localStorage.getItem("token");
 
-        // Build job object
         const jobData = {
             title: $("#jobTitle-update2").val().trim(),
             department: $("#jobDepartment-update").val(),
@@ -276,7 +254,6 @@ $(document).ready(function () {
 
         const logoFile = $("#jobLogo-update")[0].files[0];
 
-        // Convert JPG to PNG if needed
         function convertToPng(file) {
             return new Promise((resolve, reject) => {
                 if (!file) return resolve(null);
@@ -324,12 +301,6 @@ $(document).ready(function () {
         });
     });
 
-
-
-
-    // -----------------------------
-    // Settings Tabs & Password Toggle
-    // -----------------------------
     $(".settings-tab").on("click", function () {
         const tab = $(this).data("tab");
         $(".settings-tab").removeClass("active");
@@ -365,7 +336,6 @@ $(document).ready(function () {
             return $(selector).length ? ($(selector).val() || "").trim() : "";
         }
 
-        // ✅ Build object with updated values safely
         const fullName = safeVal("#contact-person-name-setting").split(" ");
         const updates = {
             companyName: safeVal("#company-name-setting"),
@@ -376,7 +346,7 @@ $(document).ready(function () {
             contactFirstName: fullName[0] || "",
             contactLastName: fullName.slice(1).join(" ") || "",
             contactPosition: safeVal("#contact-person-position-setting"),
-            companyDescription: safeVal("#companyDescription") // will be "" if field missing
+            companyDescription: safeVal("#companyDescription")
         };
 
         $.ajax({
@@ -454,7 +424,6 @@ $(document).ready(function () {
                     title: 'Success',
                     text: response.message || 'Password changed successfully!'
                 });
-                // Clear fields
                 $("#currentPassword, #newPassword, #confirmPassword").val('');
             },
             error: function (xhr) {
@@ -467,9 +436,7 @@ $(document).ready(function () {
             }
         });
     });
-    // -----------------------------
-    // Logout
-    // -----------------------------
+
     $logoutLink.on("click", function(e){
         e.preventDefault();
         $confirmationModal.show();
@@ -500,7 +467,6 @@ $(document).ready(function () {
             text: "You are not logged in."
         });
 
-        // Collect form values
         const title = $("#jobTitle").val().trim();
         const department = $("#jobDepartment").val();
         const type = $("#jobType").val();
@@ -526,7 +492,6 @@ $(document).ready(function () {
             });
         }
 
-        // Prepare job data
         const jobData = {
             title,
             department,
@@ -547,10 +512,9 @@ $(document).ready(function () {
             companyPhone: localStorage.getItem("phoneNumber")
         };
 
-        // Function to convert JPG to PNG
         function convertToPng(file) {
             return new Promise((resolve, reject) => {
-                if (!file) return resolve(null); // no file
+                if (!file) return resolve(null);
 
                 const img = new Image();
                 const reader = new FileReader();
@@ -612,18 +576,16 @@ $(document).ready(function () {
     });
 
     $("#toggleFilterBtn").on('click', function(e){
-        e.preventDefault(); // prevent default link behavior
-        $("#filter-options").toggle(); // toggle visibility
+        e.preventDefault();
+        $("#filter-options").toggle();
     });
 
     $("#profile-view").on('click', function(e){
-        e.preventDefault(); // prevent default link behavior
-        $("#view-applicant-page").show(); // toggle visibility
+        e.preventDefault();
+        $("#view-applicant-page").show();
     });
 
-    // ==============================
-// Applicants Section
-// ==============================
+
     function loadApplicants(employeeId) {
         const token = localStorage.getItem("token");
         if (!token || !employeeId) return Swal.fire("Error", "Not logged in", "error");
@@ -634,7 +596,7 @@ $(document).ready(function () {
             headers: { "Authorization": `Bearer ${token}` },
             success: function(applicants) {
                 if (applicants.length > 0) {
-                    localStorage.setItem("applicationId", applicants[0].id); // ✅ save first application ID
+                    localStorage.setItem("applicationId", applicants[0].id);
                     console.log("Saved Application ID:", localStorage.getItem("applicationId"));
                 }
 
@@ -683,7 +645,6 @@ $(document).ready(function () {
         });
     }
 
-    // Show applicant detail page when clicking "View"
     $("#applicants-table-body").on("click", ".btn-view-applicant", function () {
         const applicationId = $(this).data("applicant-id");
         if (!applicationId) return Swal.fire("Error", "Applicant ID missing", "error");
@@ -691,58 +652,6 @@ $(document).ready(function () {
         loadApplicantDetails(applicationId);
     });
 
-
-    // Show applicant page when clicking "View"
-    // $("#applicants-table-body").on("click", ".btn-view", function() {
-    //     // const applicationId = $(this).data("applicant-id");
-    //     // if (!applicationId) {
-    //     //     return Swal.fire("Error", "Applicant ID is missing!", "error");
-    //     // }
-    //     console.lo
-    //     $("#view-applicant-page").show();
-    //     $("#applicants-page").hide();
-    //
-    //     // localStorage.setItem("applicationId", applicationId);
-    //     //
-    //     // loadApplicantDetails(applicationId);
-    // });
-
-    // $("#backToApplicants").on("click", function() {
-    //     $("#view-applicant-page").hide();
-    //     $("#applicants-page").show(); // show the applicants list page again
-    // });
-
-
-
-    // function loadApplicantDetails(applicationId) {
-    //     const token = localStorage.getItem("token");
-    //
-    //     $.ajax({
-    //         url: `http://localhost:8080/api/applications/${applicationId}`,
-    //         method: "GET",
-    //         headers: { "Authorization": `Bearer ${token}` },
-    //         success: function(app) {
-    //             console.log("Applicant details:", app);
-    //
-    //             // Populate details with flattened fields
-    //             $("#view-applicant-name").text(app.firstName + " " + app.lastName);
-    //             $("#applicant-profile-image").attr("src", app.profileImage || "default.jpg");
-    //             $("#view-applicant-email").text(app.email);
-    //             $("#view-applicant-phone").text(app.phoneNumber || "N/A");
-    //             $("#view-applicant-status").text(app.status);
-    //             $("#view-applicant-date").text(new Date(app.appliedAt).toLocaleDateString('en-GB'));
-    //             $("#view-applicant-status-text").text(app.status);
-    //             $(".detail-subtitle").text(`${app.professionTitle || "N/A"} • Applied for ${app.jobTitle}`);
-    //
-    //             // Hide list, show detail page
-    //             $("#applicants-page").hide();
-    //             $("#view-applicant-page").show();
-    //         },
-    //         error: function() {
-    //             Swal.fire("Error", "Failed to load applicant details.", "error");
-    //         }
-    //     });
-    // }
     function loadApplicantDetails(applicationId) {
         const token = localStorage.getItem("token");
 
@@ -752,7 +661,7 @@ $(document).ready(function () {
             headers: { "Authorization": `Bearer ${token}` },
             success: function(app) {
                 console.log("Applicant Data:", app);
-                $("#view-applicant-name").text(app.firstName + " " + app.lastName);//not set
+                $("#view-applicant-name").text(app.firstName + " " + app.lastName);
                 $("#applicant-profile-image").attr("src", app.profileImage || "default.jpg");
                 $("#view-applicant-email").text(app.email);
                 $("#view-applicant-phone").text(app.phoneNumber || "N/A");
@@ -798,7 +707,6 @@ $(document).ready(function () {
         });
     }
 
-    // data matching
     function calculateMatch(job, seeker) {
         let score = 0;
         const jobSkills = job.keySkills || [];
@@ -808,9 +716,9 @@ $(document).ready(function () {
         score += skillScore;
         const jobExp = parseInt(job.requiredExperience) || 0;
         const seekerExp = parseInt(seeker.experience) || 0;
-        const expScore = seekerExp >= jobExp ? 30 : (seekerExp / jobExp) * 30; // 30% weight
+        const expScore = seekerExp >= jobExp ? 30 : (seekerExp / jobExp) * 30;
         score += expScore;
-        const educationScore = seeker.education === job.requiredEducation ? 20 : 0; // 20% weight
+        const educationScore = seeker.education === job.requiredEducation ? 20 : 0;
         score += educationScore;
         return Math.round(score);
     }
@@ -839,7 +747,6 @@ $(document).ready(function () {
         });
     }
 
-// Save Review
     $("#save-applicant-review").on("click", function() {
         const applicationId = localStorage.getItem("applicationId");
         const employeeId = localStorage.getItem("employeeId");
@@ -865,7 +772,6 @@ $(document).ready(function () {
             success: function(response) {
                 Swal.fire("Success", "Review saved successfully!", "success");
 
-                // Update status in UI
                 $("#view-applicant-status").text(status);
             },
             error: function() {
@@ -900,9 +806,9 @@ $(document).ready(function () {
 
                 applicants.forEach(app => {
                     console.log(app)
-                    const rating = "N/A"; // placeholder
-                    const appliedCount = 1; // placeholder
-                    const matchScore = "N/A"; // placeholder
+                    const rating = "N/A";
+                    const appliedCount = 1;
+                    const matchScore = "N/A";
 
                     const card = `
                         <div class="applicant-card">

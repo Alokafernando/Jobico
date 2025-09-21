@@ -1,6 +1,5 @@
 $(document).ready(function() {
 
-    // --- Sidebar Navigation ---
     $('.menu-item').on('click', function () {
         $('.menu-item').removeClass('active');
         $(this).addClass('active');
@@ -13,7 +12,6 @@ $(document).ready(function() {
         }
     });
 
-    // --- Load Data ---
     loadAllJobs();
     loadEmployees();
     loadSeekers();
@@ -41,7 +39,7 @@ $(document).ready(function() {
             method: 'GET',
             dataType: 'json',
                 success: function (data) {
-                    const jobs = data || [];   // not data.content
+                    const jobs = data || [];
                     if (jobs.length > 0) {
                         jobs.forEach(job => {
                             const row = `
@@ -82,7 +80,6 @@ $(document).ready(function() {
             success: function(job) {
                 console.log("Job received:", job);
 
-                // Fill modal inputs correctly
                 $("#editJobId").val(job.id);
                 $("#editJobTitle").val(job.title);
                 $("#editJobStatus").val(job.status);
@@ -92,7 +89,6 @@ $(document).ready(function() {
                 $("#editSalary").val(job.salaryRange);
                 $("#editDeadline").val(job.applicationDeadline);
 
-                // Show modal
                 $("#editJobModal").addClass("show");
             },
             error: function(err) {
@@ -107,19 +103,16 @@ $(document).ready(function() {
         });
     });
 
-// Close modal
     $("#closeEditModal").on("click", function () {
         $("#editJobModal").removeClass("show");
     });
 
-// Close modal when clicking outside
     $(window).on("click", function(event) {
         if ($(event.target).is("#editJobModal")) {
             $("#editJobModal").removeClass("show");
         }
     });
 
-// --- Submit Job Status Update ---
     $("#editJobForm").on("submit", function (e) {
         e.preventDefault();
 
@@ -155,7 +148,6 @@ $(document).ready(function() {
         });
     });
 
-    // Handle Delete (Close) Job
     $(document).on("click", ".delete-job", function () {
         const jobId = $(this).data("id");
 
@@ -179,7 +171,6 @@ $(document).ready(function() {
                             text: response.message,
                             confirmButtonColor: "#3085d6"
                         }).then(() => {
-                            // Refresh job table
                             loadAllJobs(0);
                         });
                     },
@@ -196,18 +187,6 @@ $(document).ready(function() {
         });
     });
 
-
-    // $('#admin-post-panel').on('click', '.view-job', function() {
-    //     const jobId = $(this).data('id');
-    //     console.log('View job:', jobId);
-    //     // open view modal
-    // });
-    //
-    // $('#admin-post-panel').on('click', '.delete-job', function() {
-    //     const jobId = $(this).data('id');
-    //     console.log('Delete job:', jobId);
-    //     // call delete API
-    // });
 
     function loadEmployees() {
         const token = localStorage.getItem("token");
@@ -288,7 +267,6 @@ $(document).ready(function() {
                             showConfirmButton: false
                         });
 
-                        // Update badge text and class
                         $statusBadge
                             .text(newStatus)
                             .removeClass('active inactive')
@@ -373,8 +351,6 @@ $(document).ready(function() {
                 $("#seekerEducation").val(seeker.education);
                 $("#seekerExperience").val(seeker.experience);
                 $("#seekerProfession").val(seeker.professionTitle);
-                // $("#seekerJobType").val(seeker.preferredJobType);
-                // $("#seekerActive").val(seeker.active ? "true" : "false");
 
                 if (seeker.resumeUrl) {
                     $("#seekerResume").attr("href", seeker.resumeUrl).show();
@@ -382,9 +358,8 @@ $(document).ready(function() {
                     $("#seekerResume").hide();
                 }
 
-                // ✅ Use the same method as Job modal
                 $seekerModal.addClass("show");
-                $("body").css("overflow", "hidden"); // prevent scroll
+                $("body").css("overflow", "hidden");
             },
             error: function () {
                 alert("Error fetching seeker details!");
@@ -392,13 +367,11 @@ $(document).ready(function() {
         });
     });
 
-// Close modal
     $closeSeekerModal.on("click", function () {
         $seekerModal.removeClass("show");
         $("body").css("overflow", "auto");
     });
 
-// Close modal by clicking outside
     $seekerModal.on("click", function (e) {
         if ($(e.target).is($seekerModal)) {
             $seekerModal.removeClass("show");
@@ -407,14 +380,13 @@ $(document).ready(function() {
     });
 
 
-// Save changes (update status)
     $("#editSeekerForm").on("submit", function (e) {
         e.preventDefault();
         const seekerId = $("#seekerId").val();
         const active = $("#seekerActive").val() === "true";
 
         $.ajax({
-            url: `http://localhost:8080/api/jobseekers/update-status/${seekerId}`, // backend endpoint for updating status
+            url: `http://localhost:8080/api/jobseekers/update-status/${seekerId}`,
             method: "PUT",
             contentType: "application/json",
             data: JSON.stringify({ active: active }),
@@ -430,7 +402,6 @@ $(document).ready(function() {
     });
 
 
-    // Handle Deactivate/Activate Seeker button click
     $('#admin-seeker-panel').on('click', '.delete-seeker', function() {
         const seekerId = $(this).data('id');
         const $row = $(this).closest('tr');
@@ -463,7 +434,7 @@ $(document).ready(function() {
                             timer: 1500,
                             showConfirmButton: false
                         });
-                        loadSeekers(); // reload table
+                        loadSeekers();
                     },
                     error: function(err) {
                         Swal.fire({
@@ -525,14 +496,11 @@ $(document).ready(function() {
         });
     }
 
-// Handle invite button click
     $('#admin-application-panel').on('click', '.invite-applicant', function() {
         const appId = $(this).data('id');
         console.log("Invite applicant for application ID:", appId);
-        // Call your backend invite API here
     });
 
-    // Load admin details into the form
     function loadAdmin() {
         $.ajax({
             url: "http://localhost:8080/admin/details",
@@ -543,7 +511,7 @@ $(document).ready(function() {
                 if (response.status === 200 && response.data) {
                     $("#adminName").val(response.data.name);
                     $("#adminEmail").val(response.data.email);
-                    $("#adminPassword").val(""); // Never show real password
+                    $("#adminPassword").val("");
                 } else {
                     $("#statusMessage").text("Admin details not found").css("color", "red");
                 }
@@ -555,14 +523,13 @@ $(document).ready(function() {
         });
     }
 
-// Handle form submission
     $("#admin-settings-form").on("submit", function(e) {
         e.preventDefault();
 
         const adminData = {
             name: $("#adminName").val(),
             email: $("#adminEmail").val(),
-            password: $("#adminPassword").val() // send only if changed
+            password: $("#adminPassword").val()
         };
 
         $.ajax({
@@ -584,7 +551,6 @@ $(document).ready(function() {
     });
 
 
-    // Logout from sidebar menu
     $(document).on("click", ".menu-item.logout", function() {
         Swal.fire({
             title: "Are you sure?",
@@ -602,20 +568,5 @@ $(document).ready(function() {
             }
         });
     });
-
-
-    // // Chart (Reports)
-    // const ctx = $('#reportChart')[0].getContext('2d');
-    // new Chart(ctx, {
-    //     type: 'bar',
-    //     data: {
-    //         labels: ['Jobs', 'Employers', 'Seekers', 'Applications'],
-    //         datasets: [{
-    //             label: 'Platform Stats',
-    //             data: [120, 45, 350, 560],
-    //             backgroundColor: '#FF6A00'
-    //         }]
-    //     }
-    // });
 
 });

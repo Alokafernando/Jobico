@@ -1,7 +1,4 @@
 $(document).ready(function() {
-    // =======================
-    // Form Toggle
-    // =======================
     $('#seekerBtn').click(function () {
         $(this).addClass('active');
         $('#employeeBtn').removeClass('active');
@@ -16,9 +13,6 @@ $(document).ready(function() {
         $('#seekerForm').removeClass('active');
     });
 
-    // =======================
-    // Password Toggle
-    // =======================
     window.togglePassword = function(inputId, toggleIconId) {
         const $pwd = $('#' + inputId);
         const $icon = $('#' + toggleIconId);
@@ -31,9 +25,6 @@ $(document).ready(function() {
         }
     };
 
-    // =======================
-    // Validations
-    // =======================
     function validateEmail(email) {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return pattern.test(email);
@@ -55,9 +46,6 @@ $(document).ready(function() {
         return pattern.test(text);
     }
 
-    // =======================
-    // Job Seeker Registration
-    // =======================
     $('#seekerSignupForm').submit(function(e) {
         e.preventDefault();
 
@@ -82,7 +70,6 @@ $(document).ready(function() {
             password: password,
         };
 
-        // Client-side validations
         if (!seekerData.firstName || !seekerData.lastName || !seekerData.email || !seekerData.password) {
             Swal.fire('Error', 'Please fill all mandatory fields.', 'error');
             return;
@@ -118,7 +105,6 @@ $(document).ready(function() {
             return;
         }
 
-        // AJAX request
         $.ajax({
             url: "http://localhost:8080/auth/register/jobseeker",
             type: "POST",
@@ -148,9 +134,6 @@ $(document).ready(function() {
         });
     });
 
-    // =======================
-    // Employer Registration
-    // =======================
     $('#employeeSignupForm').submit(function(e) {
         e.preventDefault();
 
@@ -167,7 +150,6 @@ $(document).ready(function() {
             password: $('#employeePassword').val().trim()
         };
 
-        // Basic validations
         if (!employeeData.companyName || !employeeData.email || !employeeData.password) {
             Swal.fire('Error', 'Please fill all mandatory fields.', 'error');
             return;
@@ -203,7 +185,6 @@ $(document).ready(function() {
             return;
         }
 
-        // AJAX request
         $.ajax({
             url: "http://localhost:8080/auth/register/employee",
             type: "POST",
@@ -233,9 +214,6 @@ $(document).ready(function() {
         });
     });
 
-    // =======================
-    // Clear Forms
-    // =======================
     function clearSeekerForm() {
         $('#seekerSignupForm')[0].reset();
     }

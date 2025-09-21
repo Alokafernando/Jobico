@@ -9,7 +9,6 @@ $('#loginForm').on('submit', function(e) {
 
     const loginData = { email, password };
 
-    // Login API call
     $.ajax({
         url: "http://localhost:8080/auth/login",
         method: "POST",
@@ -68,11 +67,9 @@ $('#loginForm').on('submit', function(e) {
                         const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
                         showMessage(`Welcome back, ${fullName}! 🎉`);
 
-                        // ✅ Redirect only after user data is stored
                         window.location.href = "JobSeekerDashboard.html";
                     },
                     error: function(xhr) {
-                        // ❌ Do NOT redirect if AJAX fails
                         showMessage("Failed to get user details. Please try logging in again.");
                         console.error("Error fetching user details:", xhr);
                     }
@@ -93,7 +90,6 @@ $('#loginForm').on('submit', function(e) {
     });
 });
 
-// Toggle password visibility
 function togglePassword() {
     const passwordField = $('#password');
     const toggleBtn = $('.password-toggle');
@@ -107,7 +103,6 @@ function togglePassword() {
     }
 }
 
-// Display temporary notification
 function showMessage(message) {
     $('.notification').remove();
     const notification = $('<div class="notification"></div>').text(message);
