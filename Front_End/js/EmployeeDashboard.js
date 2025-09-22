@@ -206,8 +206,10 @@ $(document).ready(function () {
 
     $(".job-table-body").on("click", ".btn-view-job", function () {
         const jobId = $(this).data("job-id");
-        console.log("Clicked View Job:", jobId);
+        // console.log("Clicked View Job:", jobId);
         loadJobDetails(jobId);
+        // const jobId = $(this).data("job-id"); // get job ID from button
+        loadApplicantsByJob(jobId);
     });
 
     // function loadJobDetails(jobId) {
@@ -318,7 +320,7 @@ $(document).ready(function () {
 
     $(".job-table-body").on("click", ".btn-edit-job", function () {
         const jobId = $(this).data("job-id");
-        console.log("Clicked Edit Job:", jobId);
+        // console.log("Clicked Edit Job:", jobId);
         if (!token) return Swal.fire("Error", "Not logged in.", "error");
 
         $.ajax({
@@ -710,7 +712,7 @@ $(document).ready(function () {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
             success: function(applicants) {
-                console.log("Applicants Response:", applicants);
+                // console.log("Applicants Response:", applicants);
 
                 const tbody = $("#applicants-table-body");
                 tbody.empty();
@@ -760,7 +762,7 @@ $(document).ready(function () {
         const applicationId = $(this).data("applicant-id");
         if (!applicationId) return Swal.fire("Error", "Applicant ID missing", "error");
 
-        console.log("Clicked applicant ID:", applicationId);
+        // console.log("Clicked applicant ID:", applicationId);
         loadApplicantDetails(applicationId);
     });
 
@@ -775,7 +777,7 @@ $(document).ready(function () {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
             success: function(app) {
-                console.log(app)
+                // console.log(app)
 
                  $("#view-applicant-name").text(app.firstName + " " + app.lastName);
                 $("#applicant-profile-image").attr("src", app.profileImage || "default.jpg");
@@ -958,8 +960,55 @@ $(document).ready(function () {
         });
     }
 
+    function loadApplicantsByJob(jobId) {
+        const token = localStorage.getItem("token");
+        if (!token) return Swal.fire("Error", "Not logged in", "error");
 
+        $.ajax({
+            url: `http://localhost:8080/api/applications/job/${jobId}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(applicants) {
+                const $list = $(".applicant-list");
+                $list.empty(); // clear previous list
 
+                if (!applicants.length) {
+                    $list.append("<li>No applicants found.</li>");
+                    return;
+                }
 
+                applicants.forEach(app => {
+                    console.log(app)
+                    const appliedDate = new Date(app.appliedAt).toLocaleDateString('en-GB', {
+                        day: 'numeric', month: 'short', year: 'numeric'
+                    });
+
+                    const applicantItem = `
+                    <li class="applicant-list-item">
+                        <img src="${app.profileImage || 'default.jpg'}" alt="Applicant" class="applicant-list-img">
+                        <div class="applicant-list-info">
+                            <div class="applicant-list-name">${app.jobSeekerName}</div>
+                            <div class="applicant-list-details">Applied on ${appliedDate} • ${app.rating || 'N/A'}/5 Rating</div>
+                        </div>
+                        <div class="applicant-list-actions">
+                            <button class="action-btn btn-view" data-id="${app.id}">View</button>
+                            <button class="action-btn btn-edit">Contact</button>
+                        </div>
+                    </li>
+                `;
+                    $list.append(applicantItem);
+                });
+
+                $(".btn-view").off("click").on("click", function() {
+                    const appId = $(this).data("id");
+                    loadApplicantDetails(appId);
+                });
+            },
+            error: function(err) {
+                console.error("Failed to load applicants:", err);
+                Swal.fire("Error", "Failed to load applicants.", "error");
+            }
+        });
+    }
 
 });

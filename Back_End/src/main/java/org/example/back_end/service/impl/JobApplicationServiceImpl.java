@@ -25,7 +25,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     private final JobApplicationRepository jobApplicationRepository;
     private final FileStorageService fileStorageService;
-    private final EmailServiceImpl emailService; // Injected
+    private final EmailServiceImpl emailService;
     private final ApplicationReviewRepository applicationReviewRepository;
 
     @Override
