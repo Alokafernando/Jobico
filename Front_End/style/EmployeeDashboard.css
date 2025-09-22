@@ -413,6 +413,25 @@ body {
     transition: all 0.3s;
 }
 
+.btn-view-job{
+    background: rgba(23, 162, 184, 0.1);
+    color: var(--info);
+}
+
+.btn-view-job:hover {
+    background: var(--info);
+    color: white;
+}
+
+.btn-edit-job{
+    background: rgba(255, 193, 7, 0.1);
+    color: var(--warning);
+}
+
+.btn-edit-job:hover {
+    background: var(--warning);
+    color: white;
+}
 .btn-view {
     background: rgba(23, 162, 184, 0.1);
     color: var(--info);

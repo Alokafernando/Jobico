@@ -100,10 +100,61 @@ $(document).ready(function () {
 
     loadEmployeeDetails();
 
+    // function loadEmployeeJobsAndCount() {
+    //     const email = localStorage.getItem("userEmail");
+    //     if (!token || !email) return;
+    //
+    //     $.ajax({
+    //         url: `http://localhost:8080/api/jobs/employee/${encodeURIComponent(email)}`,
+    //         method: "GET",
+    //         headers: { "Authorization": `Bearer ${token}` },
+    //         success: function (jobs) {
+    //             const tbody = $(".job-table-body");
+    //             tbody.empty();
+    //
+    //             jobs.forEach(job => {
+    //                 const postedDate = new Date(job.postedAt).toLocaleDateString('en-US', {
+    //                     year: 'numeric',
+    //                     month: 'short',
+    //                     day: 'numeric'
+    //                 });
+    //
+    //                 const row = `
+    //                     <tr id="job-${job.id}">
+    //                         <td>
+    //                             <div class="job-title">${job.title}</div>
+    //                             <div class="job-company">${job.companyName}</div>
+    //                         </td>
+    //                         <td>0</td>
+    //                         <td>
+    //                             <span class="status-badge status-${job.status.toLowerCase()}">${job.status}</span>
+    //                         </td>
+    //                         <td>${postedDate}</td>
+    //                         <td>
+    //                             <button class="action-btn btn-view" data-job-id="${job.id}">View</button>
+    //                             <button class="action-btn btn-edit" data-job-id="${job.id}">Edit</button>
+    //                         </td>
+    //                     </tr>`;
+    //                 tbody.append(row);
+    //             });
+    //         },
+    //         error: () => Swal.fire({ icon: "error", title: "Failed", text: "Could not load your jobs." })
+    //     });
+    //
+    //     $.ajax({
+    //         url: `http://localhost:8080/api/jobs/my/active-job-count?email=${encodeURIComponent(email)}`,
+    //         method: "GET",
+    //         headers: { "Authorization": `Bearer ${token}` },
+    //         success: count => $("#active-post-count").text(count),
+    //         error: xhr => console.error("Failed to fetch active job count", xhr)
+    //     });
+    // }
     function loadEmployeeJobsAndCount() {
+        const token = localStorage.getItem("token");
         const email = localStorage.getItem("userEmail");
         if (!token || !email) return;
 
+        // Load jobs
         $.ajax({
             url: `http://localhost:8080/api/jobs/employee/${encodeURIComponent(email)}`,
             method: "GET",
@@ -120,27 +171,28 @@ $(document).ready(function () {
                     });
 
                     const row = `
-                        <tr id="job-${job.id}">
-                            <td>
-                                <div class="job-title">${job.title}</div>
-                                <div class="job-company">${job.companyName}</div>
-                            </td>
-                            <td>0</td>
-                            <td>
-                                <span class="status-badge status-${job.status.toLowerCase()}">${job.status}</span>
-                            </td>
-                            <td>${postedDate}</td>
-                            <td>
-                                <button class="action-btn btn-view" data-job-id="${job.id}">View</button>
-                                <button class="action-btn btn-edit" data-job-id="${job.id}">Edit</button>
-                            </td>
-                        </tr>`;
+                    <tr id="job-${job.id}">
+                        <td>
+                            <div class="job-title">${job.title}</div>
+                            <div class="job-company">${job.companyName}</div>
+                        </td>
+                        <td>0</td>
+                        <td>
+                            <span class="status-badge status-${job.status.toLowerCase()}">${job.status}</span>
+                        </td>
+                        <td>${postedDate}</td>
+                        <td>
+                            <button class="action-btn btn-view-job" data-job-id="${job.id}">View</button>
+                            <button class="action-btn btn-edit-job" data-job-id="${job.id}">Edit</button>
+                        </td>
+                    </tr>`;
                     tbody.append(row);
                 });
             },
             error: () => Swal.fire({ icon: "error", title: "Failed", text: "Could not load your jobs." })
         });
 
+        // Load active job count
         $.ajax({
             url: `http://localhost:8080/api/jobs/my/active-job-count?email=${encodeURIComponent(email)}`,
             method: "GET",
@@ -152,29 +204,88 @@ $(document).ready(function () {
 
     loadEmployeeJobsAndCount();
 
+    $(".job-table-body").on("click", ".btn-view-job", function () {
+        const jobId = $(this).data("job-id");
+        console.log("Clicked View Job:", jobId);
+        loadJobDetails(jobId);
+    });
+
+    // function loadJobDetails(jobId) {
+    //     if (!token) return;
+    //
+    //     $.ajax({
+    //         url: `http://localhost:8080/api/jobs/${jobId}`,
+    //         method: "GET",
+    //         headers: { "Authorization": `Bearer ${token}` },
+    //         success: function(job) {
+    //             $(".detail-title").text(job.title);
+    //             const postedDate = new Date(job.postedAt).toLocaleDateString("en-US", {
+    //                 year: "numeric",
+    //                 month: "long",
+    //                 day: "numeric"
+    //             });
+    //             $(".detail-subtitle").text(`${job.companyName} • Posted on ${postedDate}`);
+    //             $(".detail-status").text(job.status).removeClass().addClass(`detail-status status-${job.status.toLowerCase()}`);
+    //
+    //             $("#view-job-department").text(job.department);
+    //             $("#view-job-type").text(job.employmentType);
+    //             $("#view-job-address").text(job.location);
+    //             $("#view-job-experience").text(job.requiredExperience);
+    //             $("#view-job-salaryRange").text(job.salaryRange);
+    //             $("#view-job-deadline").text(new Date(job.applicationDeadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }));
+    //             $("#view-job-description").text(job.description);
+    //
+    //             $("#view-all-requirement").empty();
+    //             if (job.requirements) {
+    //                 job.requirements.split(/[.\n]/).forEach(item => {
+    //                     let trimmed = item.trim();
+    //                     if (trimmed) $("#view-all-requirement").append(`<li>${trimmed.charAt(0).toUpperCase() + trimmed.slice(1)}</li>`);
+    //                 });
+    //             }
+    //
+    //             $("#view-all-skills").empty();
+    //             if (Array.isArray(job.keySkills)) {
+    //                 job.keySkills.forEach(skill => $("#view-all-skills").append(`<li>${skill}</li>`));
+    //             }
+    //
+    //             showPage("view-job");
+    //         },
+    //         error: function(xhr) {
+    //             // console.error("Failed to fetch job details", xhr);
+    //             Swal.fire("Error", "Could not load job details.", "error");
+    //         }
+    //     });
+    // }
     function loadJobDetails(jobId) {
+        const token = localStorage.getItem("token");
         if (!token) return;
 
         $.ajax({
             url: `http://localhost:8080/api/jobs/${jobId}`,
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
-            success: function(job) {
+            success: function (job) {
                 $(".detail-title").text(job.title);
+
                 const postedDate = new Date(job.postedAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric"
                 });
                 $(".detail-subtitle").text(`${job.companyName} • Posted on ${postedDate}`);
-                $(".detail-status").text(job.status).removeClass().addClass(`detail-status status-${job.status.toLowerCase()}`);
+                $(".detail-status")
+                    .text(job.status)
+                    .removeClass()
+                    .addClass(`detail-status status-${job.status.toLowerCase()}`);
 
                 $("#view-job-department").text(job.department);
                 $("#view-job-type").text(job.employmentType);
                 $("#view-job-address").text(job.location);
                 $("#view-job-experience").text(job.requiredExperience);
                 $("#view-job-salaryRange").text(job.salaryRange);
-                $("#view-job-deadline").text(new Date(job.applicationDeadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }));
+                $("#view-job-deadline").text(
+                    new Date(job.applicationDeadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+                );
                 $("#view-job-description").text(job.description);
 
                 $("#view-all-requirement").empty();
@@ -192,19 +303,22 @@ $(document).ready(function () {
 
                 showPage("view-job");
             },
-            error: function(xhr) {
-                // console.error("Failed to fetch job details", xhr);
+            error: function (xhr) {
+                console.error("Failed to fetch job details", xhr);
                 Swal.fire("Error", "Could not load job details.", "error");
             }
         });
     }
 
-    $(".job-table-body").on("click", ".btn-view", function () {
-        loadJobDetails($(this).data("job-id"));
-    });
+    // $(".job-table-body").on("click", ".btn-view", function () {
+    //     const jobId = $(this).data("job-id");
+    //     loadJobDetails(jobId);
+    // });
 
-    $(".job-table-body").on("click", ".btn-edit", function () {
+
+    $(".job-table-body").on("click", ".btn-edit-job", function () {
         const jobId = $(this).data("job-id");
+        console.log("Clicked Edit Job:", jobId);
         if (!token) return Swal.fire("Error", "Not logged in.", "error");
 
         $.ajax({
@@ -249,7 +363,7 @@ $(document).ready(function () {
             requirements: $("#requirements-update").val().trim(),
             keySkills: $("#keySkills-update").val() ? $("#keySkills-update").val().split(",").map(s => s.trim()) : [],
             gender: $("#gender-update").val() || "Any",
-            status: "Pending" // optional: force status
+            status: "Pending"
         };
 
         const logoFile = $("#jobLogo-update")[0].files[0];
@@ -588,26 +702,21 @@ $(document).ready(function () {
 
     function loadApplicants(employeeId) {
         const token = localStorage.getItem("token");
-        if (!token || !employeeId) return Swal.fire("Error", "Not logged in", "error");
+        if (!token) return Swal.fire("Error", "Not logged in", "error");
+        if (!employeeId) return Swal.fire("Error", "Employee ID missing", "error");
 
         $.ajax({
             url: `http://localhost:8080/api/applications/employee/${employeeId}`,
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
             success: function(applicants) {
-                if (applicants.length > 0) {
-                    localStorage.setItem("applicationId", applicants[0].id);
-                     // console.log("Saved Application ID:", localStorage.getItem("applicationId"));
-                }
-
-                const applicationId = localStorage.getItem("applicationId");
-                  // console.log("Saved Application ID:", applicationId);
-                loadApplicantDetails(applicationId);
+                console.log("Applicants Response:", applicants);
 
                 const tbody = $("#applicants-table-body");
                 tbody.empty();
 
                 applicants.forEach(app => {
+
                     const appliedDate = new Date(app.appliedAt).toLocaleDateString('en-GB', {
                         day: 'numeric', month: 'short', year: 'numeric'
                     });
@@ -621,72 +730,65 @@ $(document).ready(function () {
                     const statusInfo = statusMap[app.status] || { class: "pending", label: app.status };
 
                     const row = `
-                        <tr>
-                            <td>
-                                <div class="job-title">${app.jobSeeker.firstName} ${app.jobSeeker.lastName}</div>
-                                <div class="job-company">${app.jobSeeker.email}</div>
-                            </td>
-                            <td>${app.jobPost.title}</td>
-                            <td><span class="status-badge status-${statusInfo.class}">${statusInfo.label}</span></td>
-                            <td>${appliedDate}</td>
-                            <td>
-                                <button class="action-btn btn-view btn-view-applicant" data-applicant-id="${app.id}">View</button>
-                                <button class="action-btn btn-edit">Contact</button>
-                            </td>
-                        </tr>
-                        `;
-
+                    <tr>
+                        <td>
+                            <div class="job-title">${app.jobSeeker.firstName} ${app.jobSeeker.lastName}</div>
+                            <div class="job-company">${app.jobSeeker.email}</div>
+                        </td>
+                        <td>${app.jobPost.title}</td>
+                        <td><span class="status-badge status-${statusInfo.class}">${statusInfo.label}</span></td>
+                        <td>${appliedDate}</td>
+                        <td>
+                        <button class="action-btn btn-view btn-view-applicant" data-applicant-id="${app.id}">View</button>
+                            <button class="action-btn btn-edit">Contact</button>
+                        </td>
+                    </tr>
+                `;
                     tbody.append(row);
                 });
 
             },
-            error: function() {
+            error: function(err) {
+                console.error("Failed to load applicants:", err);
                 Swal.fire("Error", "Failed to load applicants.", "error");
             }
         });
     }
 
+
     $("#applicants-table-body").on("click", ".btn-view-applicant", function () {
         const applicationId = $(this).data("applicant-id");
         if (!applicationId) return Swal.fire("Error", "Applicant ID missing", "error");
 
-        console.log(applicationId)
+        console.log("Clicked applicant ID:", applicationId);
         loadApplicantDetails(applicationId);
     });
 
-    function loadApplicantDetails(applicationId) {
+
+
+    function loadApplicantDetails(id) {
         const token = localStorage.getItem("token");
+        if (!token) return Swal.fire("Error", "Not logged in", "error");
 
         $.ajax({
-            url: `http://localhost:8080/api/applications/${applicationId}`,
+            url: `http://localhost:8080/api/applications/${id}`,
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` },
             success: function(app) {
-                // console.log("Applicant Data:", app);
-                $("#view-applicant-name").text(app.firstName + " " + app.lastName);
+                console.log(app)
+
+                 $("#view-applicant-name").text(app.firstName + " " + app.lastName);
                 $("#applicant-profile-image").attr("src", app.profileImage || "default.jpg");
                 $("#view-applicant-email").text(app.email);
                 $("#view-applicant-phone").text(app.phoneNumber || "N/A");
+                $("#view-applicant-address").text(app.address);
+                $("#view-applicant-about").text(app.about || "N/A");
                 $("#view-applicant-status").text(app.status);
                 $("#view-applicant-date").text(new Date(app.appliedAt).toLocaleDateString('en-GB'));
-                $("#view-applicant-status-text").text(app.status);
-                $(".detail-subtitle").text(`${app.professionTitle || "N/A"} • Applied for ${app.jobTitle}`);
-                $("#view-applicant-address").text(app.address);
-
-                const job = {
-                    keySkills: app.jobSkills || [],
-                    requiredExperience: app.jobExperience,
-                    requiredEducation: app.jobEducation
-                };
-                const matchScore = calculateMatch(job, app);
-                $("#view-applicant-matching-score").text(matchScore + "%");
-
-                $("#view-applicant-about").text(app.about);
 
                 const $skillsContainer = $("#view-applicant-skills");
                 $skillsContainer.empty();
-
-                app.skills.forEach(skill => {
+                (app.skills || []).forEach(skill => {
                     $skillsContainer.append(`<span class="skill-tag">${skill}</span>`);
                 });
 
@@ -703,11 +805,13 @@ $(document).ready(function () {
 
                 showPage("view-applicant");
             },
-            error: function() {
+            error: function(err) {
+                console.error("Failed to load applicant details:", err);
                 Swal.fire("Error", "Failed to load applicant details.", "error");
             }
         });
     }
+
 
     function calculateMatch(job, seeker) {
         let score = 0;
@@ -788,7 +892,6 @@ $(document).ready(function () {
         const token = localStorage.getItem("token");
         const employeeId = localStorage.getItem("employeeId");
 
-        // console.log(employeeId)
         if (!employeeId) {
             return Swal.fire("Error", "Employee ID missing. Please log in again.", "error");
         }
@@ -807,7 +910,6 @@ $(document).ready(function () {
                 }
 
                 applicants.forEach(app => {
-                    // console.log(app)
                     const rating = "N/A";
                     const appliedCount = 1;
                     const matchScore = "N/A";
@@ -836,7 +938,7 @@ $(document).ready(function () {
                                 </div>
                             </div>
                             <div class="applicant-actions">
-                                <button class="action-btn btn-view" data-applicant-id="${app.id}">View Profile</button>
+                                <button class="action-btn btn-view"  data-applicant-id="${app.id}">View Profile</button>
                                 <a href="${app.resumeUrl}" target="_blank" class="action-btn btn-edit">View Resume</a>
                             </div>
                         </div>
