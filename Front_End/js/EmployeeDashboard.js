@@ -706,6 +706,7 @@ $(document).ready(function () {
         const token = localStorage.getItem("token");
         if (!token) return Swal.fire("Error", "Not logged in", "error");
         if (!employeeId) return Swal.fire("Error", "Employee ID missing", "error");
+        localStorage.setItem("employeeId" , employeeId);
 
         $.ajax({
             url: `http://localhost:8080/api/applications/employee/${employeeId}`,
@@ -764,6 +765,7 @@ $(document).ready(function () {
 
         // console.log("Clicked applicant ID:", applicationId);
         loadApplicantDetails(applicationId);
+        localStorage.setItem("application-id", applicationId);
     });
 
 
@@ -809,7 +811,7 @@ $(document).ready(function () {
             },
             error: function(err) {
                 console.error("Failed to load applicant details:", err);
-                Swal.fire("Error", "Failed to load applicant details.", "error");
+                // Swal.fire("Error", "Failed to load applicant details.", "error");
             }
         });
     }
@@ -856,8 +858,9 @@ $(document).ready(function () {
     }
 
     $("#save-applicant-review").on("click", function() {
-        const applicationId = localStorage.getItem("applicationId");
+        const applicationId = localStorage.getItem("application-id");
         const employeeId = localStorage.getItem("employeeId");
+        console.log(employeeId);
         const rating = parseInt($("#applicant-rating").val());
         const notes = $("#applicant-notes").val().trim();
         const status = $("#applicant-status-select").val();
@@ -865,6 +868,7 @@ $(document).ready(function () {
 
         if (!applicationId || !employeeId)
             return Swal.fire("Error", "Missing IDs.", "error");
+
 
         $.ajax({
             url: `http://localhost:8080/api/reviews/save?status=${encodeURIComponent(status)}`,

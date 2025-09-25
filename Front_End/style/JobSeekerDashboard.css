@@ -653,30 +653,37 @@ body {
 }
 
 .status-badge {
+    display: inline-block;
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 500;
+    text-transform: capitalize;
 }
 
+/* Variants */
 .status-submitted {
-    background: rgba(255, 193, 7, 0.1);
+    background: rgba(255, 193, 7, 0.15);
     color: var(--warning);
+    border: 1px solid var(--warning);
 }
 
 .status-reviewing {
-    background: rgba(23, 162, 184, 0.1);
+    background: rgba(23, 162, 184, 0.15);
     color: var(--info);
+    border: 1px solid var(--info);
 }
 
 .status-interview {
-    background: rgba(40, 167, 69, 0.1);
+    background: rgba(40, 167, 69, 0.15);
     color: var(--success);
+    border: 1px solid var(--success);
 }
 
 .status-rejected {
-    background: rgba(220, 53, 69, 0.1);
+    background: rgba(220, 53, 69, 0.15);
     color: var(--danger);
+    border: 1px solid var(--danger);
 }
 
 .action-btn {
